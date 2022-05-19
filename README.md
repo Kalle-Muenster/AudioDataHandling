@@ -1,2 +1,6 @@
 # WaveDataHandling
-Library for handling noncompressed, multichannel Audio data (can build: native c++ lib, qt dll, dotnet48/50 dll)
+Library for handling noncompressed, multichannel Audio data which can be build as either:
+- native c++ lib,
+- dll for qt,
+- dll for dotnet48
+- dll for dotnet50
