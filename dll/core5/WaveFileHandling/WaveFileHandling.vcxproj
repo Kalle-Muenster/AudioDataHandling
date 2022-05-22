@@ -1,0 +1,320 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{56FD61D4-9163-4BAD-8E39-13E35D4E9EA5}</ProjectGuid>
+    <Keyword>NetCoreCProj</Keyword>
+    <RootNamespace>WaveFileHandling</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CLRSupport>NetCore</CLRSupport>
+    <CharacterSet>MultiByte</CharacterSet>
+    <VCToolsVersion>
+    </VCToolsVersion>
+    <PreferredToolArchitecture>
+    </PreferredToolArchitecture>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CLRSupport>NetCore</CLRSupport>
+    <CharacterSet>MultiByte</CharacterSet>
+    <VCToolsVersion>
+    </VCToolsVersion>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PreferredToolArchitecture>
+    </PreferredToolArchitecture>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CLRSupport>NetCore</CLRSupport>
+    <CharacterSet>MultiByte</CharacterSet>
+    <VCToolsVersion>
+    </VCToolsVersion>
+    <PreferredToolArchitecture>
+    </PreferredToolArchitecture>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CLRSupport>NetCore</CLRSupport>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <VCToolsVersion>
+    </VCToolsVersion>
+    <PreferredToolArchitecture>
+    </PreferredToolArchitecture>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>../../../inc;$(ProjectDir)..\;./;../../../../Int24Types/src;../../../../ControlledValues/inc;D:\LIBRARIES\INCLUDES;C:\CMD\CCommands;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)..\..\..\bin\dotnet\core5\$(Configuration)\$(PlatformTarget)\</OutDir>
+    <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
+    <CopyLocalProjectReference>true</CopyLocalProjectReference>
+    <CopyLocalDebugSymbols>true</CopyLocalDebugSymbols>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkKeyFile>$(ProjectDir)..\..\..\WaveLib.snk</LinkKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>../../../inc;$(ProjectDir)..\;./;../../../../Int24Types/src;../../../../ControlledValues/inc;D:\LIBRARIES\INCLUDES;C:\CMD\CCommands;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)..\..\..\bin\dotnet\core5\$(Configuration)\$(PlatformTarget)\</OutDir>
+    <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
+    <CopyLocalProjectReference>true</CopyLocalProjectReference>
+    <CopyLocalDebugSymbols>true</CopyLocalDebugSymbols>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkKeyFile>$(ProjectDir)..\..\..\WaveLib.snk</LinkKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>../../../inc;$(ProjectDir)..\;./;../../../../Int24Types/src;../../../../ControlledValues/inc;D:\LIBRARIES\INCLUDES;C:\CMD\CCommands;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)..\..\..\bin\dotnet\core5\$(Configuration)\$(PlatformTarget)\</OutDir>
+    <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
+    <CopyLocalProjectReference>true</CopyLocalProjectReference>
+    <CopyLocalDebugSymbols>true</CopyLocalDebugSymbols>
+    <LinkKeyFile>$(ProjectDir)..\..\..\WaveLib.snk</LinkKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>../../../inc;$(ProjectDir)..\;./;../../../../Int24Types/src;../../../../ControlledValues/inc;D:\LIBRARIES\INCLUDES;C:\CMD\CCommands;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)..\..\..\bin\dotnet\core5\$(Configuration)\$(PlatformTarget)\</OutDir>
+    <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
+    <CopyLocalProjectReference>true</CopyLocalProjectReference>
+    <CopyLocalDebugSymbols>true</CopyLocalDebugSymbols>
+    <LinkKeyFile>$(ProjectDir)..\..\..\WaveLib.snk</LinkKeyFile>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>_DEBUG;WAVELIB_SETTINGS_HEADER="$(ProjectDir)..\exportsettings.h";_CRT_SECURE_NO_WARNINGS;STATUS_DEBUGGER_INACTIVE;SET_WAVELIB_VERSION="$(WaveLibVersionString)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <SDLCheck>true</SDLCheck>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies />
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <CLRThreadAttribute>
+      </CLRThreadAttribute>
+      <ImageHasSafeExceptionHandlers>
+      </ImageHasSafeExceptionHandlers>
+      <Version>$(WaveLibVersionNumber)</Version>
+      <PreventDllBinding>false</PreventDllBinding>
+    </Link>
+    <Manifest>
+      <AssemblyIdentity>WaveFileHandling, Version=$(WaveLibVersionString), PublicKeyToken=bdcda9deaec8cc68, processorArchitecture=x86</AssemblyIdentity>
+    </Manifest>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>_DEBUG;WAVELIB_SETTINGS_HEADER="$(ProjectDir)..\exportsettings.h";_CRT_SECURE_NO_WARNINGS;STATUS_DEBUGGER_INACTIVE;SET_WAVELIB_VERSION="$(WaveLibVersionString)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <SDLCheck>true</SDLCheck>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies />
+      <ImageHasSafeExceptionHandlers>
+      </ImageHasSafeExceptionHandlers>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <CLRThreadAttribute>
+      </CLRThreadAttribute>
+      <Version>$(WaveLibVersionNumber)</Version>
+      <PreventDllBinding>false</PreventDllBinding>
+    </Link>
+    <Manifest>
+      <AssemblyIdentity>WaveFileHandling, Version=$(WaveLibVersionString), PublicKeyToken=bdcda9deaec8cc68, processorArchitecture=AMD64</AssemblyIdentity>
+    </Manifest>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;NDEBUG;WAVELIB_SETTINGS_HEADER="$(ProjectDir)..\exportsettings.h";STATUS_DEBUGGER_INACTIVE;SET_WAVELIB_VERSION="$(WaveLibVersionString)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <SDLCheck>false</SDLCheck>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <CompileAsWinRT>
+      </CompileAsWinRT>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <IntelJCCErratum>false</IntelJCCErratum>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <RuntimeTypeInfo>
+      </RuntimeTypeInfo>
+      <UseFullPaths>true</UseFullPaths>
+      <AdditionalOptions>/std:c++14 /std:cpp-14 %(AdditionalOptions)</AdditionalOptions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies />
+      <ImageHasSafeExceptionHandlers>
+      </ImageHasSafeExceptionHandlers>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AssemblyDebug>false</AssemblyDebug>
+      <SubSystem>Console</SubSystem>
+      <Version>$(WaveLibVersionNumber)</Version>
+      <PreventDllBinding>false</PreventDllBinding>
+    </Link>
+    <Manifest>
+      <AssemblyIdentity>WaveFileHandling, Version=$(WaveLibVersionString), PublicKeyToken=bdcda9deaec8cc68, processorArchitecture=x86</AssemblyIdentity>
+    </Manifest>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>NDEBUG;WAVELIB_SETTINGS_HEADER="$(ProjectDir)..\exportsettings.h";STATUS_DEBUGGER_INACTIVE;SET_WAVELIB_VERSION="$(WaveLibVersionString)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <SDLCheck>false</SDLCheck>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <UseFullPaths>true</UseFullPaths>
+      <OmitFramePointers>false</OmitFramePointers>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies />
+      <SubSystem>Console</SubSystem>
+      <CLRUnmanagedCodeCheck>
+      </CLRUnmanagedCodeCheck>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AssemblyDebug>false</AssemblyDebug>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <Version>$(WaveLibVersionNumber)</Version>
+      <PreventDllBinding>false</PreventDllBinding>
+    </Link>
+    <Manifest>
+      <AssemblyIdentity>WaveFileHandling, Version=$(WaveLibVersionString), PublicKeyToken=bdcda9deaec8cc68, processorArchitecture=AMD64</AssemblyIdentity>
+    </Manifest>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\inc\importsettings.h" />
+    <ClInclude Include="..\..\..\inc\settings.h" />
+    <ClInclude Include="..\..\..\inc\WaveFileIO.h" />
+    <ClInclude Include="..\..\..\src\CleanupMacros.h" />
+    <ClInclude Include="..\..\..\src\Panorama.hpp" />
+    <ClInclude Include="..\..\..\src\settings.h" />
+    <ClInclude Include="..\..\..\src\WaveAudio.hpp" />
+    <ClInclude Include="..\..\..\src\WaveBuffers.hpp" />
+    <ClInclude Include="..\..\..\src\WaveFileReader.hpp" />
+    <ClInclude Include="..\..\..\src\WaveFileWriter.hpp" />
+    <ClInclude Include="..\..\..\src\WaveFilter.hpp" />
+    <ClInclude Include="..\..\..\src\WaveFormat.hpp" />
+    <ClInclude Include="..\..\..\src\WaveHandling.hpp" />
+    <ClInclude Include="..\..\..\src\WaveMacros.hpp" />
+    <ClInclude Include="..\..\..\src\WaveSpacer.h" />
+    <ClInclude Include="..\..\..\src\WaveStream.hpp" />
+    <ClInclude Include="..\..\dotnet\Audio.hpp" />
+    <ClInclude Include="..\..\dotnet\AudioBuffer.hpp" />
+    <ClInclude Include="..\..\dotnet\AudioStreamBuffer.hpp" />
+    <ClInclude Include="..\..\dotnet\CircularBuffer.hpp" />
+    <ClInclude Include="..\..\dotnet\CreationMacros.h" />
+    <ClInclude Include="..\..\dotnet\WavReader.hpp" />
+    <ClInclude Include="..\..\dotnet\WavWriter.hpp" />
+    <ClInclude Include="..\exportsettings.h" />
+    <ClInclude Include="D:\LIBRARIES\INCLUDES\enumoperators.h" />
+    <ClInclude Include="D:\LIBRARIES\INCLUDES\indiaccessfuncs.h" />
+    <ClInclude Include="D:\LIBRARIES\INCLUDES\namespacer.h" />
+    <ClInclude Include="Resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\WaveAudio.cpp" />
+    <ClCompile Include="..\..\..\src\WaveBuffers.cpp" />
+    <ClCompile Include="..\..\..\src\WaveFileReader.cpp" />
+    <ClCompile Include="..\..\..\src\WaveFileWriter.cpp" />
+    <ClCompile Include="..\..\..\src\WaveFormat.cpp" />
+    <ClCompile Include="..\..\..\src\WaveStream.cpp" />
+    <ClCompile Include="..\..\dotnet\Audio.cpp" />
+    <ClCompile Include="..\..\dotnet\AudioBuffer.cpp" />
+    <ClCompile Include="..\..\dotnet\AudioStreamBuffer.cpp" />
+    <ClCompile Include="..\..\dotnet\CircularBuffer.cpp" />
+    <ClCompile Include="..\..\dotnet\WavReader.cpp" />
+    <ClCompile Include="..\..\dotnet\WavWriter.cpp" />
+    <ClCompile Include="AssemblyInfo.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="app.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="app.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Int24Types">
+      <HintPath>..\..\..\..\Int24Types\bin\core5\x64\Release\Int24Types.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
