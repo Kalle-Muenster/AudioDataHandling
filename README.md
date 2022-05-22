@@ -11,7 +11,7 @@ Library for handling noncompressed, multichannel Audio data which can be build a
 
 - Windows (wav)
 - Sun audio (au, snd)
-- NetPbm (pam) ... (quite uncommon for transporting audiodata.. but really handy format for this.. see: http://netpbm.sourceforge.net/doc/pam.html)
+- NetPbm (pam) ... (quite uncommon for transporting audiodata.. but turned out really handy format for this.. see: http://netpbm.sourceforge.net/doc/pam.html)
  
 
     
