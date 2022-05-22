@@ -146,7 +146,7 @@
       <ImageHasSafeExceptionHandlers>
       </ImageHasSafeExceptionHandlers>
       <Version>$(WaveLibVersionNumber)</Version>
-      <PreventDllBinding>false</PreventDllBinding>
+      <PreventDllBinding>true</PreventDllBinding>
     </Link>
     <Manifest>
       <AssemblyIdentity>WaveFileHandling, Version=$(WaveLibVersionString), PublicKeyToken=bdcda9deaec8cc68, processorArchitecture=x86</AssemblyIdentity>
@@ -174,7 +174,7 @@
       <CLRThreadAttribute>
       </CLRThreadAttribute>
       <Version>$(WaveLibVersionNumber)</Version>
-      <PreventDllBinding>false</PreventDllBinding>
+      <PreventDllBinding>true</PreventDllBinding>
     </Link>
     <Manifest>
       <AssemblyIdentity>WaveFileHandling, Version=$(WaveLibVersionString), PublicKeyToken=bdcda9deaec8cc68, processorArchitecture=AMD64</AssemblyIdentity>
@@ -212,7 +212,7 @@
       <AssemblyDebug>false</AssemblyDebug>
       <SubSystem>Console</SubSystem>
       <Version>$(WaveLibVersionNumber)</Version>
-      <PreventDllBinding>false</PreventDllBinding>
+      <PreventDllBinding>true</PreventDllBinding>
     </Link>
     <Manifest>
       <AssemblyIdentity>WaveFileHandling, Version=$(WaveLibVersionString), PublicKeyToken=bdcda9deaec8cc68, processorArchitecture=x86</AssemblyIdentity>
@@ -304,15 +304,17 @@
     <ClCompile Include="AssemblyInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Int24Types">
+      <HintPath>$(Int24TypesBinRoot)\$(PlatformTarget)\$(Configuration)\Int24Types.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Int24Types">
-      <HintPath>..\..\..\..\Int24Types\bin\core5\x64\Release\Int24Types.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

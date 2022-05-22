@@ -29,12 +29,6 @@
 
 #define PAM_WAVEFILE_HEADERS (1)
 
-#define WAVELIB_VERSION_STRING SET_WAVELIB_VERSION
-#ifdef _DEBUG
-#define WAVE_LIB_CONFIGURATION "Debug"
-#else
-#define WAVE_LIB_CONFIGURATION "Release"
-#endif
 
 // for enabling AudioFX features using stepflow controlled types
 // HAVE_CONTROLLED_VALUES may be set 1 as global compiler switch:
