@@ -1,5 +1,5 @@
 bin/
-*/.vs
+*.vs/
 *obj/
 *.vc.db
 *x64/
