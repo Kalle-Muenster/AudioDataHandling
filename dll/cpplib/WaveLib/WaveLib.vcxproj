@@ -1,0 +1,496 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="StaticDebug|Win32">
+      <Configuration>StaticDebug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="StaticDebug|x64">
+      <Configuration>StaticDebug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="StaticRelease|Win32">
+      <Configuration>StaticRelease</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="StaticRelease|x64">
+      <Configuration>StaticRelease</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{F5E2D1D8-8E65-4A70-82A0-78D82662CE1B}</ProjectGuid>
+    <Version>00000001</Version>
+    <RootNamespace>WaveLib</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticDebug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticRelease|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticDebug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticRelease|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='StaticDebug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='StaticRelease|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='StaticDebug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='StaticRelease|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;D:\LIBRARIES\INCLUDES;D:\LIBRARIES\ControlledValues\inc;../../../src;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticDebug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;D:\LIBRARIES\INCLUDES;D:\LIBRARIES\ControlledValues\inc;../../../src;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;D:\LIBRARIES\INCLUDES;D:\LIBRARIES\ControlledValues\inc;../../../src;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticDebug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;D:\LIBRARIES\INCLUDES;D:\LIBRARIES\ControlledValues\inc;../../../src;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;D:\LIBRARIES\INCLUDES;D:\LIBRARIES\ControlledValues\inc;../../../src;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticRelease|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;D:\LIBRARIES\INCLUDES;D:\LIBRARIES\ControlledValues\inc;../../../src;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;D:\LIBRARIES\INCLUDES;D:\LIBRARIES\ControlledValues\inc;../../../src;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticRelease|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;D:\LIBRARIES\INCLUDES;D:\LIBRARIES\ControlledValues\inc;../../../src;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <AdditionalOptions>/std:c++14 %(AdditionalOptions)</AdditionalOptions>
+      <StructMemberAlignment>1Byte</StructMemberAlignment>
+      <OmitFramePointers />
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <NoEntryPoint>false</NoEntryPoint>
+      <LinkStatus>false</LinkStatus>
+      <ShowProgress>NotSet</ShowProgress>
+      <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
+      <Version>$(Version)</Version>
+    </Link>
+    <PostBuildEvent>
+      <Command>"$(ProjectDir)TargetHeaders.bat" "$(OutDir)" "$(SolutionDir)" "WITHOUT_OUTPUT"</Command>
+      <Message>copy header files to lib output's include folder</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='StaticDebug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";_BUILD_STATIC_LIB;INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <AdditionalOptions>/std:c++14 %(AdditionalOptions)</AdditionalOptions>
+      <StructMemberAlignment>1Byte</StructMemberAlignment>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeaderFile>precomphead.hpp</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(OutDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <NoEntryPoint>false</NoEntryPoint>
+      <LinkStatus>false</LinkStatus>
+      <ShowProgress>NotSet</ShowProgress>
+      <AdditionalOptions>/std:c++14 %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <PostBuildEvent>
+      <Command>"$(ProjectDir)TargetHeaders.bat" "$(OutDir)" "$(SolutionDir)" "WITHOUT_OUTPUT"</Command>
+      <Message>copy header files to lib output's include folder</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <AdditionalOptions>/std:c++14 %(AdditionalOptions)</AdditionalOptions>
+      <StructMemberAlignment>1Byte</StructMemberAlignment>
+      <MinimalRebuild>true</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <NoEntryPoint>false</NoEntryPoint>
+      <LinkStatus>false</LinkStatus>
+      <ShowProgress>NotSet</ShowProgress>
+      <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
+      <Version>$(Version)</Version>
+    </Link>
+    <PostBuildEvent>
+      <Command>"$(ProjectDir)TargetHeaders.bat" "$(OutDir)" "$(SolutionDir)" "WITHOUT_OUTPUT"</Command>
+      <Message>copy header files to lib output's include folder</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='StaticDebug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";_BUILD_STATIC_LIB;INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <AdditionalOptions>/std:c++14 %(AdditionalOptions)</AdditionalOptions>
+      <StructMemberAlignment>1Byte</StructMemberAlignment>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeaderFile>precomphead.hpp</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(OutDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <NoEntryPoint>false</NoEntryPoint>
+      <LinkStatus>false</LinkStatus>
+      <ShowProgress>NotSet</ShowProgress>
+      <AdditionalOptions>/std:c++14 %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <PostBuildEvent>
+      <Command>"$(ProjectDir)TargetHeaders.bat" "$(OutDir)" "$(SolutionDir)" "WITHOUT_OUTPUT"</Command>
+      <Message>copy header files to lib output's include folder</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>
+      </FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <AdditionalOptions>/std:c++14 %(AdditionalOptions)</AdditionalOptions>
+      <StructMemberAlignment>1Byte</StructMemberAlignment>
+      <Optimization>Full</Optimization>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <NoEntryPoint>false</NoEntryPoint>
+      <LinkStatus>false</LinkStatus>
+      <ShowProgress>NotSet</ShowProgress>
+      <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
+      <AssemblyDebug>false</AssemblyDebug>
+      <Version>$(Version)</Version>
+    </Link>
+    <PostBuildEvent>
+      <Command>"$(ProjectDir)TargetHeaders.bat" "$(OutDir)" "$(SolutionDir)" "WITHOUT_OUTPUT"</Command>
+      <Message>copy header files to lib output's include folder</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='StaticRelease|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";_BUILD_STATIC_LIB;INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <AdditionalOptions>/std:c++14 %(AdditionalOptions)</AdditionalOptions>
+      <StructMemberAlignment>1Byte</StructMemberAlignment>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Full</Optimization>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <PrecompiledHeaderFile>precomphead.hpp</PrecompiledHeaderFile>
+      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>$(OutDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <NoEntryPoint>false</NoEntryPoint>
+      <LinkStatus>false</LinkStatus>
+      <ShowProgress>NotSet</ShowProgress>
+      <AdditionalOptions>/std:c++14 %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <PostBuildEvent>
+      <Command>"$(ProjectDir)TargetHeaders.bat" "$(OutDir)" "$(SolutionDir)" "WITHOUT_OUTPUT"</Command>
+      <Message>copy header files to lib output's include folder</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>
+      </FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <AdditionalOptions>/std:c++14 %(AdditionalOptions)</AdditionalOptions>
+      <StructMemberAlignment>1Byte</StructMemberAlignment>
+      <Optimization>Full</Optimization>
+      <OmitFramePointers>false</OmitFramePointers>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <NoEntryPoint>false</NoEntryPoint>
+      <LinkStatus>false</LinkStatus>
+      <ShowProgress>NotSet</ShowProgress>
+      <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
+      <AssemblyDebug>false</AssemblyDebug>
+      <Version>$(Version)</Version>
+    </Link>
+    <PostBuildEvent>
+      <Command>"$(ProjectDir)TargetHeaders.bat" "$(OutDir)" "$(SolutionDir)" "WITHOUT_OUTPUT"</Command>
+      <Message>copy header files to lib output's include folder</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='StaticRelease|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>
+      </FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";_BUILD_STATIC_LIB;INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <AdditionalOptions>/std:c++14 %(AdditionalOptions)</AdditionalOptions>
+      <StructMemberAlignment>1Byte</StructMemberAlignment>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Full</Optimization>
+      <OmitFramePointers>false</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeaderFile>precomphead.hpp</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(OutDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <NoEntryPoint>false</NoEntryPoint>
+      <LinkStatus>false</LinkStatus>
+      <ShowProgress>NotSet</ShowProgress>
+      <AdditionalOptions>/std:c++14 %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <PostBuildEvent>
+      <Command>"$(ProjectDir)TargetHeaders.bat" "$(OutDir)" "$(SolutionDir)" "WITHOUT_OUTPUT"</Command>
+      <Message>copy header files to lib output's include folder</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\output\AbstractInterfaceStream.cpp" />
+    <ClCompile Include="..\..\..\src\output\ALInterfaceStream.cpp" />
+    <ClCompile Include="..\..\..\src\output\ASIOInterfaceStream.cpp" />
+    <ClCompile Include="..\..\..\src\output\Bass24InterfaceStream.cpp" />
+    <ClCompile Include="..\..\..\src\output\IrrklangInterfaceStream.cpp" />
+    <ClCompile Include="..\..\..\src\output\WinDXInterfaceStream.cpp" />
+    <ClCompile Include="..\..\..\src\output\WinMMInterfaceStream.cpp" />
+    <ClCompile Include="..\..\..\src\WaveAudio.cpp" />
+    <ClCompile Include="..\..\..\src\WaveBuffers.cpp" />
+    <ClCompile Include="..\..\..\src\WaveFileReader.cpp" />
+    <ClCompile Include="..\..\..\src\WaveFileWriter.cpp" />
+    <ClCompile Include="..\..\..\src\WaveFormat.cpp" />
+    <ClCompile Include="..\..\..\src\WaveStream.cpp" />
+    <ClCompile Include="precomphead.cpp" />
+    <ClCompile Include="wavelib.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\Int24Types\src\int24bittypes.hpp" />
+    <ClInclude Include="..\..\..\inc\importsettings.h" />
+    <ClInclude Include="..\..\..\inc\settings.h" />
+    <ClInclude Include="..\..\..\inc\WaveFileIO.h" />
+    <ClInclude Include="..\..\..\inc\WaveHardIO.h" />
+    <ClInclude Include="..\..\..\src\AudioChannel.hpp" />
+    <ClInclude Include="..\..\..\src\AudioInline.hpp" />
+    <ClInclude Include="..\..\..\src\CleanupMacros.h" />
+    <ClInclude Include="..\..\..\src\output\AbstractInterfaceStream.hpp" />
+    <ClInclude Include="..\..\..\src\output\ALInterfaceStream.hpp" />
+    <ClInclude Include="..\..\..\src\output\ASIOInterfaceStream.hpp" />
+    <ClInclude Include="..\..\..\src\output\Bass24InterfaceStream.hpp" />
+    <ClInclude Include="..\..\..\src\output\IrrklangInterfaceStream.hpp" />
+    <ClInclude Include="..\..\..\src\output\WinDXInterfaceStream.hpp" />
+    <ClInclude Include="..\..\..\src\output\WinMMInterfaceStream.hpp" />
+    <ClInclude Include="..\..\..\src\Panorama.hpp" />
+    <ClInclude Include="..\..\..\src\settings.h" />
+    <ClInclude Include="..\..\..\src\WaveAudio.hpp" />
+    <ClInclude Include="..\..\..\src\WaveBuffers.hpp" />
+    <ClInclude Include="..\..\..\src\WaveFileReader.hpp" />
+    <ClInclude Include="..\..\..\src\WaveFileWriter.hpp" />
+    <ClInclude Include="..\..\..\src\WaveFilter.hpp" />
+    <ClInclude Include="..\..\..\src\WaveFormat.hpp" />
+    <ClInclude Include="..\..\..\src\WaveHandling.hpp" />
+    <ClInclude Include="..\..\..\src\WaveMacros.hpp" />
+    <ClInclude Include="..\..\..\src\WaveSpacer.h" />
+    <ClInclude Include="..\..\..\src\WaveStream.hpp" />
+    <ClInclude Include="..\buildsettings.h" />
+    <ClInclude Include="precomphead.hpp" />
+    <ClInclude Include="wavelib.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TargetHeaders.bat" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

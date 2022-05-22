@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Ressourcendateien">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="cpplib">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="inc">
+      <UniqueIdentifier>{b589d66d-c678-49a9-a008-9cd4c01d8e92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\DeviceIO">
+      <UniqueIdentifier>{e91b38cb-2d26-4294-a78a-07a036e70848}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\WaveStream.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\WaveFormat.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\WaveFileWriter.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\WaveFileReader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\WaveBuffers.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\WaveAudio.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="wavelib.cpp">
+      <Filter>cpplib</Filter>
+    </ClCompile>
+    <ClCompile Include="precomphead.cpp">
+      <Filter>cpplib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\output\AbstractInterfaceStream.cpp">
+      <Filter>src\DeviceIO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\output\ALInterfaceStream.cpp">
+      <Filter>src\DeviceIO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\output\ASIOInterfaceStream.cpp">
+      <Filter>src\DeviceIO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\output\Bass24InterfaceStream.cpp">
+      <Filter>src\DeviceIO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\output\IrrklangInterfaceStream.cpp">
+      <Filter>src\DeviceIO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\output\WinDXInterfaceStream.cpp">
+      <Filter>src\DeviceIO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\output\WinMMInterfaceStream.cpp">
+      <Filter>src\DeviceIO</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\inc\settings.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\WaveFileIO.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveMacros.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveHandling.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveFormat.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveFilter.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveFileWriter.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveFileReader.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveBuffers.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveAudio.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Panorama.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\AudioInline.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\AudioChannel.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveSpacer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\settings.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\CleanupMacros.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\importsettings.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="wavelib.hpp">
+      <Filter>cpplib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveStream.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Int24Types\src\int24bittypes.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="precomphead.hpp">
+      <Filter>cpplib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\buildsettings.h">
+      <Filter>cpplib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\output\AbstractInterfaceStream.hpp">
+      <Filter>src\DeviceIO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\output\ALInterfaceStream.hpp">
+      <Filter>src\DeviceIO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\output\ASIOInterfaceStream.hpp">
+      <Filter>src\DeviceIO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\output\Bass24InterfaceStream.hpp">
+      <Filter>src\DeviceIO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\output\IrrklangInterfaceStream.hpp">
+      <Filter>src\DeviceIO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\output\WinDXInterfaceStream.hpp">
+      <Filter>src\DeviceIO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\output\WinMMInterfaceStream.hpp">
+      <Filter>src\DeviceIO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\WaveHardIO.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TargetHeaders.bat">
+      <Filter>cpplib</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Quelldateien">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Ressourcendateien">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="commandliner">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Quelldateien\PerFrameTypeTests">
+      <UniqueIdentifier>{f5d9a641-9ef7-44a8-827e-8ede9ebfb4e2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="frametypetests\FrameTypesTests.hpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClInclude>
+    <ClInclude Include="frametypetests\PanoramaTests.hpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClInclude>
+    <ClInclude Include="frametypetests\ReadWriteFiles.hpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClInclude>
+    <ClInclude Include="frametypetests\TrimmingTests.hpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\CMD\CCommands\.poolBottom.h">
+      <Filter>commandliner</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\CMD\CCommands\.stringPool.h">
+      <Filter>commandliner</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\CMD\CCommands\.commandLiner.h">
+      <Filter>commandliner</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\ResourceIterator.h">
+      <Filter>Ressourcendateien</Filter>
+    </ClInclude>
+    <ClInclude Include="frametypetests\TestCaseBase.hpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\trimming108_Resources.h">
+      <Filter>Ressourcendateien</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\trimming224_Resources.h">
+      <Filter>Ressourcendateien</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\trimming232_Resources.h">
+      <Filter>Ressourcendateien</Filter>
+    </ClInclude>
+    <ClInclude Include="frametypetests\AudioStreamTests.hpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClInclude>
+    <ClInclude Include="frametypetests\SplittingTests.hpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClInclude>
+    <ClInclude Include="frametypetests\BufferConversionTests.hpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\trimming216_Resources.h">
+      <Filter>Ressourcendateien</Filter>
+    </ClInclude>
+    <ClInclude Include="ScopedPointer.hpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClInclude>
+    <ClInclude Include="frametypetests\ByFrameApi.hpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClInclude>
+    <ClInclude Include="frametypetests\PamHeaderTests.hpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="frametypetests\FrameTypesTests.cpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClCompile>
+    <ClCompile Include="frametypetests\PanoramaTests.cpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClCompile>
+    <ClCompile Include="frametypetests\ReadWriteFiles.cpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClCompile>
+    <ClCompile Include="frametypetests\TrimmingTests.cpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClCompile>
+    <ClCompile Include="WaveLibTests.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\CMD\CCommands\.stringPool.cc">
+      <Filter>commandliner</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\CMD\CCommands\.commandLiner.cc">
+      <Filter>commandliner</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\ResourceIterator.c">
+      <Filter>Ressourcendateien</Filter>
+    </ClCompile>
+    <ClCompile Include="frametypetests\TestCaseBase.cpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\trimming108_Resource.c">
+      <Filter>Ressourcendateien</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\trimming224_Resource.c">
+      <Filter>Ressourcendateien</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\trimming232_Resource.c">
+      <Filter>Ressourcendateien</Filter>
+    </ClCompile>
+    <ClCompile Include="frametypetests\AudioStreamTests.cpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClCompile>
+    <ClCompile Include="frametypetests\SplittingTests.cpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClCompile>
+    <ClCompile Include="frametypetests\BufferConversionTests.cpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\trimming216_Resource.c">
+      <Filter>Ressourcendateien</Filter>
+    </ClCompile>
+    <ClCompile Include="frametypetests\ByFrameApi.cpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClCompile>
+    <ClCompile Include="frametypetests\PamHeaderTests.cpp">
+      <Filter>Quelldateien\PerFrameTypeTests</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="copylinkage.bat">
+      <Filter>Quelldateien</Filter>
+    </None>
+  </ItemGroup>
+</Project>
