@@ -1,0 +1,15 @@
+﻿TestWaveFileOutput.wav
+1000
+4
+sin
+1x1
+128~1280
+saw
+0x1
+128~1280
+pls
+1x0
+128~1280
+tri
+0x0
+128~1280

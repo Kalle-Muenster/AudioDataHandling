@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Core5WaveLibTests": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\WORKSPACE\\PROJECTS\\WaveFileHandling\\bin\\tests\\core5\\x86\\Debug\\net5.0"
+    }
+  }
+}
