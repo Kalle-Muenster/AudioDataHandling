@@ -1,7 +1,7 @@
 @echo off
 
-set ConsolaProject=C:\WORKSPACE\PROJECTS\GITSPACE\Consola\ConsolaDot48
-set Int24TypesProject=C:\WORKSPACE\PROJECTS\GITSPACE\Int24Types\dot48
+set ConsolaProject=%~dp0..\..\..\Consola\ConsolaDot48
+set Int24TypesProject=%~dp0..\..\..\Int24Types\dot48
 
 set ARCH=%~1
 set CONF=%~2

@@ -75,22 +75,22 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>./;../../../inc;C:\CMD\CCommands;../../../../ControlledValues/inc;../../../../Int24Types/src;D:\LIBRARIES\INCLUDES;$(IncludePath)</IncludePath>
+    <IncludePath>./;../../../inc;C:\CMD\CCommands;../../../../ControlledValues/inc;../../../../Int24Types/src;..\..\..\etc;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)..\..\..\bin\dot48\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LinkKeyFile>$(ProjectDir)..\..\..\WaveLib.snk</LinkKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>./;../../../inc;C:\CMD\CCommands;../../../../Int24Types/src;../../../../ControlledValues/inc;D:\LIBRARIES\INCLUDES;$(IncludePath)</IncludePath>
+    <IncludePath>./;../../../inc;C:\CMD\CCommands;../../../../Int24Types/src;../../../../ControlledValues/inc;..\..\..\etc;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)..\..\..\bin\dot48\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LinkKeyFile>$(ProjectDir)..\..\..\WaveLib.snk</LinkKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>./;../../../inc;C:\CMD\CCommands;../../../../Int24Types/src;../../../../ControlledValues/inc;D:\LIBRARIES\INCLUDES;$(IncludePath)</IncludePath>
+    <IncludePath>./;../../../inc;C:\CMD\CCommands;../../../../Int24Types/src;../../../../ControlledValues/inc;..\..\..\etc;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)..\..\..\bin\dot48\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LinkKeyFile>$(ProjectDir)..\..\..\WaveLib.snk</LinkKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>./;../../../inc;C:\CMD\CCommands;../../../../Int24Types/src;../../../../ControlledValues/inc;D:\LIBRARIES\INCLUDES;$(IncludePath)</IncludePath>
+    <IncludePath>./;../../../inc;C:\CMD\CCommands;../../../../Int24Types/src;../../../../ControlledValues/inc;..\..\..\etc;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)..\..\..\bin\dot48\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LinkKeyFile>$(ProjectDir)..\..\..\WaveLib.snk</LinkKeyFile>
   </PropertyGroup>
@@ -215,7 +215,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\GITSPACE\Int24Types\src\int24bittypes.hpp" />
+    <ClInclude Include="..\..\..\..\Int24Types\src\int24bittypes.hpp" />
     <ClInclude Include="..\..\..\inc\importsettings.h" />
     <ClInclude Include="..\..\..\inc\precomphead.hpp" />
     <ClInclude Include="..\..\..\inc\WaveFileIO.h" />
@@ -257,9 +257,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="settings.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\..\tonegenerator\tonegenerator\tonegenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Int24Types">

@@ -16,13 +16,13 @@ set DotNetVersionString=core5
 
 :: Set Dependencies
 if "%ConsolaBinRoot%"=="" (
-set ConsolaBinRoot=C:\WORKSPACE\PROJECTS\GITSPACE\Consola\bin\%DotNetVersionString%
+set ConsolaBinRoot=%_root_%\..\Consola\bin\%DotNetVersionString%
 )
 if "%Int24TypesBinRoot%"=="" (
-set Int24TypesBinRoot=C:\WORKSPACE\PROJECTS\GITSPACE\Int24Types\bin\%DotNetVersionString%
+set Int24TypesBinRoot=%_root_%\..\Int24Types\bin\%DotNetVersionString%
 )
 if "%ControlledValuesBinRoot%"=="" (
-set ControlledValuesBinRoot=C:\WORKSPACE\PROJECTS\GITSPACE\ControlledValues\bin\%DotNetVersionString%
+set ControlledValuesBinRoot=%_root_%\..\ControlledValues\bin\%DotNetVersionString%
 )
 
 :: Set parameters and solution files

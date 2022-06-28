@@ -92,7 +92,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>../../../inc;$(ProjectDir)..\;./;../../../../Int24Types/src;../../../../ControlledValues/inc;D:\LIBRARIES\INCLUDES;C:\CMD\CCommands;$(IncludePath)</IncludePath>
+    <IncludePath>../../../inc;$(ProjectDir)..\;./;../../../../Int24Types/src;../../../../ControlledValues/inc;../../../etc;C:\CMD\CCommands;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)..\..\..\bin\dotnet\core5\$(Configuration)\$(PlatformTarget)\</OutDir>
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
     <CopyLocalProjectReference>true</CopyLocalProjectReference>
@@ -101,7 +101,7 @@
     <LinkKeyFile>$(ProjectDir)..\..\..\WaveLib.snk</LinkKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>../../../inc;$(ProjectDir)..\;./;../../../../Int24Types/src;../../../../ControlledValues/inc;D:\LIBRARIES\INCLUDES;C:\CMD\CCommands;$(IncludePath)</IncludePath>
+    <IncludePath>../../../inc;$(ProjectDir)..\;./;../../../../Int24Types/src;../../../../ControlledValues/inc;../../../etc;C:\CMD\CCommands;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)..\..\..\bin\dotnet\core5\$(Configuration)\$(PlatformTarget)\</OutDir>
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
     <CopyLocalProjectReference>true</CopyLocalProjectReference>
@@ -110,7 +110,7 @@
     <LinkKeyFile>$(ProjectDir)..\..\..\WaveLib.snk</LinkKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>../../../inc;$(ProjectDir)..\;./;../../../../Int24Types/src;../../../../ControlledValues/inc;D:\LIBRARIES\INCLUDES;C:\CMD\CCommands;$(IncludePath)</IncludePath>
+    <IncludePath>../../../inc;$(ProjectDir)..\;./;../../../../Int24Types/src;../../../../ControlledValues/inc;../../../etc;C:\CMD\CCommands;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)..\..\..\bin\dotnet\core5\$(Configuration)\$(PlatformTarget)\</OutDir>
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
     <CopyLocalProjectReference>true</CopyLocalProjectReference>
@@ -118,7 +118,7 @@
     <LinkKeyFile>$(ProjectDir)..\..\..\WaveLib.snk</LinkKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>../../../inc;$(ProjectDir)..\;./;../../../../Int24Types/src;../../../../ControlledValues/inc;D:\LIBRARIES\INCLUDES;C:\CMD\CCommands;$(IncludePath)</IncludePath>
+    <IncludePath>../../../inc;$(ProjectDir)..\;./;../../../../Int24Types/src;../../../../ControlledValues/inc;../../../etc;C:\CMD\CCommands;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)..\..\..\bin\dotnet\core5\$(Configuration)\$(PlatformTarget)\</OutDir>
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
     <CopyLocalProjectReference>true</CopyLocalProjectReference>
@@ -283,9 +283,9 @@
     <ClInclude Include="..\..\dotnet\WavReader.hpp" />
     <ClInclude Include="..\..\dotnet\WavWriter.hpp" />
     <ClInclude Include="..\exportsettings.h" />
-    <ClInclude Include="D:\LIBRARIES\INCLUDES\enumoperators.h" />
-    <ClInclude Include="D:\LIBRARIES\INCLUDES\indiaccessfuncs.h" />
-    <ClInclude Include="D:\LIBRARIES\INCLUDES\namespacer.h" />
+    <ClInclude Include="..\..\..\etc\enumoperators.h" />
+    <ClInclude Include="..\..\..\etc\indiaccessfuncs.h" />
+    <ClInclude Include="..\..\..\etc\namespacer.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>

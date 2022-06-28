@@ -35,15 +35,15 @@ cd..
 set _rootdr_=%CD%
 popd
 
-set INT24_TYPES=c:\WORKSPACE\PROJECTS\GITSPACE\Int24Types\src
+set INT24_TYPES=%~dp0..\..\..\..\Int24Types\src
 
 copy "%_rootdr_%\inc\settings.h" "%_output_%\inc"
 copy "%_rootdr_%\inc\WaveFileIO.h" "%_output_%\inc"
 copy "%_rootdr_%\inc\WaveHardIO.h" "%_output_%\inc"
 copy "%_rootdr_%\inc\importsettings.h" "%_output_%\inc"
-copy "D:\LIBRARIES\INCLUDES\namespacer.h" "%_output_%"
-copy "D:\LIBRARIES\INCLUDES\enumoperators.h" "%_output_%"
-copy "D:\LIBRARIES\INCLUDES\indiaccessfuncs.h" "%_output_%"
+copy "%_rootdr_%\etc\namespacer.h" "%_output_%"
+copy "%_rootdr_%\etc\enumoperators.h" "%_output_%"
+copy "%_rootdr_%\etc\indiaccessfuncs.h" "%_output_%"
 copy "%INT24_TYPES%\int24bittypes.hpp" "%_output_%"
 copy "%_rootdr_%\dll\cpplib\WaveLib\wavelib.hpp" "%_output_%\src"
 copy "%_rootdr_%\dll\cpplib\WaveLib\precomphead.hpp" "%_output_%\src"
