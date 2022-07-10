@@ -39,7 +39,7 @@
     <ProjectGuid>{F5E2D1D8-8E65-4A70-82A0-78D82662CE1B}</ProjectGuid>
     <Version>00000001</Version>
     <RootNamespace>WaveLib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -126,53 +126,53 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;D:\LIBRARIES\INCLUDES;D:\LIBRARIES\ControlledValues\inc;../../../src;$(IncludePath)</IncludePath>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticDebug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;D:\LIBRARIES\INCLUDES;D:\LIBRARIES\ControlledValues\inc;../../../src;$(IncludePath)</IncludePath>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;D:\LIBRARIES\INCLUDES;D:\LIBRARIES\ControlledValues\inc;../../../src;$(IncludePath)</IncludePath>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticDebug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;D:\LIBRARIES\INCLUDES;D:\LIBRARIES\ControlledValues\inc;../../../src;$(IncludePath)</IncludePath>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;D:\LIBRARIES\INCLUDES;D:\LIBRARIES\ControlledValues\inc;../../../src;$(IncludePath)</IncludePath>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticRelease|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;D:\LIBRARIES\INCLUDES;D:\LIBRARIES\ControlledValues\inc;../../../src;$(IncludePath)</IncludePath>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;D:\LIBRARIES\INCLUDES;D:\LIBRARIES\ControlledValues\inc;../../../src;$(IncludePath)</IncludePath>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticRelease|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;D:\LIBRARIES\INCLUDES;D:\LIBRARIES\ControlledValues\inc;../../../src;$(IncludePath)</IncludePath>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -439,13 +439,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\output\AbstractInterfaceStream.cpp" />
-    <ClCompile Include="..\..\..\src\output\ALInterfaceStream.cpp" />
-    <ClCompile Include="..\..\..\src\output\ASIOInterfaceStream.cpp" />
-    <ClCompile Include="..\..\..\src\output\Bass24InterfaceStream.cpp" />
-    <ClCompile Include="..\..\..\src\output\IrrklangInterfaceStream.cpp" />
-    <ClCompile Include="..\..\..\src\output\WinDXInterfaceStream.cpp" />
-    <ClCompile Include="..\..\..\src\output\WinMMInterfaceStream.cpp" />
     <ClCompile Include="..\..\..\src\WaveAudio.cpp" />
     <ClCompile Include="..\..\..\src\WaveBuffers.cpp" />
     <ClCompile Include="..\..\..\src\WaveFileReader.cpp" />
@@ -460,17 +453,9 @@
     <ClInclude Include="..\..\..\inc\importsettings.h" />
     <ClInclude Include="..\..\..\inc\settings.h" />
     <ClInclude Include="..\..\..\inc\WaveFileIO.h" />
-    <ClInclude Include="..\..\..\inc\WaveHardIO.h" />
     <ClInclude Include="..\..\..\src\AudioChannel.hpp" />
     <ClInclude Include="..\..\..\src\AudioInline.hpp" />
     <ClInclude Include="..\..\..\src\CleanupMacros.h" />
-    <ClInclude Include="..\..\..\src\output\AbstractInterfaceStream.hpp" />
-    <ClInclude Include="..\..\..\src\output\ALInterfaceStream.hpp" />
-    <ClInclude Include="..\..\..\src\output\ASIOInterfaceStream.hpp" />
-    <ClInclude Include="..\..\..\src\output\Bass24InterfaceStream.hpp" />
-    <ClInclude Include="..\..\..\src\output\IrrklangInterfaceStream.hpp" />
-    <ClInclude Include="..\..\..\src\output\WinDXInterfaceStream.hpp" />
-    <ClInclude Include="..\..\..\src\output\WinMMInterfaceStream.hpp" />
     <ClInclude Include="..\..\..\src\Panorama.hpp" />
     <ClInclude Include="..\..\..\src\settings.h" />
     <ClInclude Include="..\..\..\src\WaveAudio.hpp" />

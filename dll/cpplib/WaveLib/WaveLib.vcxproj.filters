@@ -16,9 +16,6 @@
     <Filter Include="inc">
       <UniqueIdentifier>{b589d66d-c678-49a9-a008-9cd4c01d8e92}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\DeviceIO">
-      <UniqueIdentifier>{e91b38cb-2d26-4294-a78a-07a036e70848}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\WaveStream.cpp">
@@ -44,27 +41,6 @@
     </ClCompile>
     <ClCompile Include="precomphead.cpp">
       <Filter>cpplib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\output\AbstractInterfaceStream.cpp">
-      <Filter>src\DeviceIO</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\output\ALInterfaceStream.cpp">
-      <Filter>src\DeviceIO</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\output\ASIOInterfaceStream.cpp">
-      <Filter>src\DeviceIO</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\output\Bass24InterfaceStream.cpp">
-      <Filter>src\DeviceIO</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\output\IrrklangInterfaceStream.cpp">
-      <Filter>src\DeviceIO</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\output\WinDXInterfaceStream.cpp">
-      <Filter>src\DeviceIO</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\output\WinMMInterfaceStream.cpp">
-      <Filter>src\DeviceIO</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -133,30 +109,6 @@
     </ClInclude>
     <ClInclude Include="..\buildsettings.h">
       <Filter>cpplib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\output\AbstractInterfaceStream.hpp">
-      <Filter>src\DeviceIO</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\output\ALInterfaceStream.hpp">
-      <Filter>src\DeviceIO</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\output\ASIOInterfaceStream.hpp">
-      <Filter>src\DeviceIO</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\output\Bass24InterfaceStream.hpp">
-      <Filter>src\DeviceIO</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\output\IrrklangInterfaceStream.hpp">
-      <Filter>src\DeviceIO</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\output\WinDXInterfaceStream.hpp">
-      <Filter>src\DeviceIO</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\output\WinMMInterfaceStream.hpp">
-      <Filter>src\DeviceIO</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\inc\WaveHardIO.h">
-      <Filter>inc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

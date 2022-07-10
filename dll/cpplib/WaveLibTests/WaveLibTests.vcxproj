@@ -123,56 +123,56 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\WaveLib.inl;D:\LIBRARIES\ControlledValues\inc;D:\LIBRARIES\INCLUDES;C:\CMD\CCommands;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\WaveLib.inl;$(ProjectDir)..\..\..\..\ControlledValues\inc;$(ProjectDir)..\..\..\etc;C:\CMD\CCommands;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ExecutablePath)</ExecutablePath>
     <OutDir>$(ProjectDir)..\..\..\bin\tests\cpplib\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticRelease|Win32'">
-    <IncludePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\WaveLib.inl;D:\LIBRARIES\ControlledValues\inc;D:\LIBRARIES\INCLUDES;C:\CMD\CCommands;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\WaveLib.inl;$(ProjectDir)..\..\..\..\ControlledValues\inc;$(ProjectDir)..\..\..\etc;C:\CMD\CCommands;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ExecutablePath)</ExecutablePath>
     <OutDir>$(ProjectDir)..\..\..\bin\tests\cpplib\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\WaveLib.inl;D:\LIBRARIES\ControlledValues\inc;D:\LIBRARIES\INCLUDES;C:\CMD\CCommands;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\WaveLib.inl;$(ProjectDir)..\..\..\..\ControlledValues\inc;$(ProjectDir)..\..\..\etc;C:\CMD\CCommands;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ExecutablePath)</ExecutablePath>
     <OutDir>$(ProjectDir)..\..\..\bin\tests\cpplib\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticRelease|x64'">
-    <IncludePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\WaveLib.inl;D:\LIBRARIES\ControlledValues\inc;D:\LIBRARIES\INCLUDES;C:\CMD\CCommands;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\WaveLib.inl;$(ProjectDir)..\..\..\..\ControlledValues\inc;$(ProjectDir)..\..\..\etc;C:\CMD\CCommands;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ExecutablePath)</ExecutablePath>
     <OutDir>$(ProjectDir)..\..\..\bin\tests\cpplib\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\WaveLib.inl;D:\LIBRARIES\ControlledValues\inc;D:\LIBRARIES\INCLUDES;C:\CMD\CCommands;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\WaveLib.inl;$(ProjectDir)..\..\..\..\ControlledValues\inc;$(ProjectDir)..\..\..\etc;C:\CMD\CCommands;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ExecutablePath)</ExecutablePath>
     <OutDir>$(ProjectDir)..\..\..\bin\tests\cpplib\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticDebug|x64'">
-    <IncludePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\WaveLib.inl;D:\LIBRARIES\ControlledValues\inc;D:\LIBRARIES\INCLUDES;C:\CMD\CCommands;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\WaveLib.inl;$(ProjectDir)..\..\..\..\ControlledValues\inc;$(ProjectDir)..\..\..\etc;C:\CMD\CCommands;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ExecutablePath)</ExecutablePath>
     <OutDir>$(ProjectDir)..\..\..\bin\tests\cpplib\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\WaveLib.inl;D:\LIBRARIES\ControlledValues\inc;D:\LIBRARIES\INCLUDES;C:\CMD\CCommands;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\WaveLib.inl;$(ProjectDir)..\..\..\..\ControlledValues\inc;$(ProjectDir)..\..\..\etc;C:\CMD\CCommands;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ExecutablePath)</ExecutablePath>
     <OutDir>$(ProjectDir)..\..\..\bin\tests\cpplib\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticDebug|Win32'">
-    <IncludePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\WaveLib.inl;D:\LIBRARIES\ControlledValues\inc;D:\LIBRARIES\INCLUDES;C:\CMD\CCommands;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\WaveLib.inl;$(ProjectDir)..\..\..\..\ControlledValues\inc;$(ProjectDir)..\..\..\etc;C:\CMD\CCommands;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ProjectDir)..\..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration);$(ExecutablePath)</ExecutablePath>
     <OutDir>$(ProjectDir)..\..\..\bin\tests\cpplib\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>

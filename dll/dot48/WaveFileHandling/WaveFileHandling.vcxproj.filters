@@ -105,7 +105,7 @@
     <ClInclude Include="..\..\..\inc\precomphead.hpp">
       <Filter>native\inc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\GITSPACE\Int24Types\src\int24bittypes.hpp">
+    <ClInclude Include="..\..\..\..\Int24Types\src\int24bittypes.hpp">
       <Filter>Libraries</Filter>
     </ClInclude>
   </ItemGroup>
@@ -151,8 +151,5 @@
     <Text Include="settings.h">
       <Filter>native\inc</Filter>
     </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\..\tonegenerator\tonegenerator\tonegenerator.cs" />
   </ItemGroup>
 </Project>

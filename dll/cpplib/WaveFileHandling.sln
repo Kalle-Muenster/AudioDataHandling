@@ -1,11 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WaveLib", "WaveLib\WaveLib.vcxproj", "{F5E2D1D8-8E65-4A70-82A0-78D82662CE1B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WaveLibTests", "WaveLibTests\WaveLibTests.vcxproj", "{59833836-6284-4BF3-AD47-D2BE97BB15B3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F5E2D1D8-8E65-4A70-82A0-78D82662CE1B} = {F5E2D1D8-8E65-4A70-82A0-78D82662CE1B}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,5 +60,6 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		        SolutionGuid = {2E326E1E-66E2-4B5A-9109-CC2585C848CD}
+		SolutionGuid = {95438F80-F916-4E5D-B51A-A7BA38F7F5B1}
 	EndGlobalSection
 EndGlobal

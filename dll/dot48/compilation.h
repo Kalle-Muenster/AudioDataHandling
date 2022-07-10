@@ -6,6 +6,7 @@
 // settings which apply to the relaying 'WaveFileHandling' native (c++) sources in 'src' folder 
 #define SET_WAVESPACE stepflow
 #define DECLARE_24BIT_NAMESPACE stepflow
+#define PAM_WAVEFILE_HEADERS (1)
 #define USE_NAMESPACER (1)
 
 // this makes the *24bit audio data types* (which are separate (inline) include header) also being exported

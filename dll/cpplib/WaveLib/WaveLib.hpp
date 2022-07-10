@@ -13,7 +13,7 @@
 #include <WaveLib.inl/indiaccessfuncs.h>
 #include <WaveLib.inl/int24bittypes.hpp>
 #include <WaveFileIO.h>
-#include <WaveHardIO.h>
+//#include <WaveHardIO.h>
 #endif
 
 BEGIN_WAVESPACE
