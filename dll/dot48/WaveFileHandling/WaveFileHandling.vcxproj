@@ -216,6 +216,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Int24Types\src\int24bittypes.hpp" />
+    <ClInclude Include="..\..\..\etc\enumoperators.h" />
+    <ClInclude Include="..\..\..\etc\indiaccessfuncs.h" />
+    <ClInclude Include="..\..\..\etc\namespacer.h" />
+    <ClInclude Include="..\..\..\etc\WaveLib.inl\enumoperators.h" />
+    <ClInclude Include="..\..\..\etc\WaveLib.inl\indiaccessfuncs.h" />
+    <ClInclude Include="..\..\..\etc\WaveLib.inl\int24bittypes.hpp" />
+    <ClInclude Include="..\..\..\etc\WaveLib.inl\namespacer.h" />
     <ClInclude Include="..\..\..\inc\importsettings.h" />
     <ClInclude Include="..\..\..\inc\precomphead.hpp" />
     <ClInclude Include="..\..\..\inc\WaveFileIO.h" />

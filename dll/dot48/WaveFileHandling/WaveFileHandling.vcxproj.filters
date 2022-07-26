@@ -31,6 +31,12 @@
     <Filter Include="native\src\fx">
       <UniqueIdentifier>{f56c1f50-ac3b-4ca3-b27b-1abaa166ba7e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="etc">
+      <UniqueIdentifier>{b87fe183-8498-4c2d-b807-25f9986f1228}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="etc\WaveInl">
+      <UniqueIdentifier>{0c8d3ea8-d47b-42b9-b32a-5d85ac8fda57}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\inc\WaveFileIO.h">
@@ -107,6 +113,27 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\Int24Types\src\int24bittypes.hpp">
       <Filter>Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\etc\enumoperators.h">
+      <Filter>etc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\etc\indiaccessfuncs.h">
+      <Filter>etc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\etc\namespacer.h">
+      <Filter>etc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\etc\WaveLib.inl\enumoperators.h">
+      <Filter>etc\WaveInl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\etc\WaveLib.inl\indiaccessfuncs.h">
+      <Filter>etc\WaveInl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\etc\WaveLib.inl\int24bittypes.hpp">
+      <Filter>etc\WaveInl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\etc\WaveLib.inl\namespacer.h">
+      <Filter>etc\WaveInl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
