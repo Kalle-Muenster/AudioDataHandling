@@ -385,8 +385,10 @@ void WaveSpace(Audio)::drop()
             } else {
                 removeOffset();
             } removeEndcut();
-            if(!mode.hasFlag(RAW_FILE_DATA))
-                free( data );
+            if (!mode.hasFlag(RAW_FILE_DATA)) {
+                if (frameCount>1)
+                    free(data);
+            }
             data = Silence;
         }
     } else if (own) {
