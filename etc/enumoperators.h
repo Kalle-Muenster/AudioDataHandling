@@ -61,15 +61,15 @@
 #define NOTAND_ASSIGN(value) &= ~##value
 #endif
 
-#ifdef  USE_NAMESPACER
-#include <WaveLib.inl/namespacer.h>
-#elif defined(ENUM_OPERATOR_NAMESPACE)
+//#ifdef  USE_NAMESPACER
+//#include <WaveLib.inl/namespacer.h>
+//#elif defined(ENUM_OPERATOR_NAMESPACE)
 #define BEGIN_NAMESPACE namespace ENUM_OPERATOR_NAMESPACE {
 #define ENDOF_NAMESPACE }
-#else
-#define BEGIN_NAMESPACE
-#define ENDOF_NAMESPACE
-#endif
+//#else
+//#define BEGIN_NAMESPACE
+//#define ENDOF_NAMESPACE
+//#endif
 
 
 BEGIN_NAMESPACE

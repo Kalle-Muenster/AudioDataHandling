@@ -2,7 +2,7 @@
 
 // namespace in which exported WaveLib types are
 #define SET_WAVESPACE Wave
-#define USE_NAMESPACER (1)
+//#define USE_NAMESPACER (1)
 
 // defines if the WaveLib librarie was compiled
 // with usage of ControlledValues inline library

@@ -550,7 +550,7 @@ WaveSpace(WaveFileWriter)::Flush(void)
                         elm = whdr.AudioFormat.BlockAlign;
                         written = WRITE_DATA(src, elm, cnt, f) * elm;
                     } // if(mode == Store)
-                    else if ( is_val(fixedSize) ) {
+                    else if ( enum_utils::is_val(fixedSize) ) {
                         elm = whdr.AudioFormat.BlockAlign;
                         cnt = (fixedSize - write) / elm;
                         src = &((byte*)attachedBuffer)[write];
@@ -681,19 +681,19 @@ WaveSpace(WaveFileWriter)::SetFormat( unsigned sFreq, unsigned bitDepth, unsigne
 unsigned
 WaveSpace(WaveFileWriter)::GetLength(void) const
 {
-    return (NameSpace(is_val)(fixedSize)?fixedSize / whdr.AudioFormat.BlockAlign : GetPosition( WRITE ) );
+    return ( enum_utils::is_val(fixedSize) ? fixedSize / whdr.AudioFormat.BlockAlign : GetPosition( WRITE ) );
 }
 
 void
 WaveSpace(WaveFileWriter)::Seek( unsigned frame, StreamDirection origin )
 {
     int seekdst;
-    if( NameSpace( hasFlag( origin, StreamDirection::CUR ) ) ) {
+    if( enum_utils::hasFlag( origin, StreamDirection::CUR ) ) {
         seekdst = (frame * whdr.AudioFormat.BlockAlign);
         FSEEK_FUNC( f, seekdst, SEEK_CUR );
         write += seekdst;
     } else {
-        if( NameSpace( hasFlag( origin, StreamDirection::END ) ) )
+        if( enum_utils::hasFlag( origin, StreamDirection::END ) )
             seekdst = ((GetLength() - frame) * whdr.AudioFormat.BlockAlign);
         else
             seekdst = (frame * whdr.AudioFormat.BlockAlign);
@@ -720,7 +720,7 @@ WaveSpace(WaveFileWriter)::Write(Audio::Data data, uint cbSize, uint offset)
 uint
 WaveSpace(WaveFileWriter)::framesWritable(void) const
 {
-    return NameSpace(is_val)(fixedSize)
+    return enum_utils::is_val(fixedSize)
          ? fixedSize - GetWritePosition()
          : EMPTY;
 }

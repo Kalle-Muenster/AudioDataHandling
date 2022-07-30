@@ -186,10 +186,10 @@ BEGIN_WAVESPACE
             return flag == (flags.value & flag);
         }
         void addFlag(Initiatio flag) {
-            NameSpace(operator|=)( flags.all, flag );
+            enum_utils::operator|=( flags.all, flag );
         }
         void remFlag(Initiatio flag) {
-            NameSpace(operator&=)( flags.all, flag );
+            enum_utils::operator&=( flags.all, flag );
         }
         void setFlags(Initiatio inits) {
             flags.all = inits;

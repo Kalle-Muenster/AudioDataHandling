@@ -145,7 +145,7 @@ WaveSpace(CreateWaveFormat)( int frq, int bit, int chn )
 WaveSpace(Format)
 WaveSpace(CreateWaveFormat)( int frq, int bit, int chn, WAV_PCM_TYPE_ID tag )
 {
-    word pcm = is_val( tag ) ? tag : word(bit >= 32 ? (bit <= 64 ? 3 : bit) : 1);
+    word pcm = enum_utils::is_val( tag ) ? tag : word(bit >= 32 ? (bit <= 64 ? 3 : bit) : 1);
     return { WAV_PCM_TYPE_ID(pcm), word(chn), uint(frq), uint(frq*chn*(bit >> 3)), word(chn*(bit >> 3)),
              word(bit) };
 }
@@ -411,7 +411,7 @@ WaveSpace(WavFileHeader)::GetFormat(Format* getter) const
 bool
 WaveSpace(WavFileHeader)::isValid(void) const {
     return (( FileFormat == WavFormat )
-           && NameSpace(is_val)( AudioFormat.PCMFormatTag ));
+           && enum_utils::is_val( AudioFormat.PCMFormatTag ));
 }
 
 word

@@ -297,9 +297,9 @@
       </FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <AdditionalOptions>/std:c++14 %(AdditionalOptions)</AdditionalOptions>
@@ -329,12 +329,13 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='StaticRelease|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <FunctionLevelLinking>
+      </FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";_BUILD_STATIC_LIB;INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";_BUILD_STATIC_LIB;INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <AdditionalOptions>/std:c++14 %(AdditionalOptions)</AdditionalOptions>
@@ -369,7 +370,7 @@
       </FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
@@ -407,7 +408,7 @@
       </FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";_BUILD_STATIC_LIB;INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";_BUILD_STATIC_LIB;INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
