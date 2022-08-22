@@ -11,8 +11,8 @@ namespace Core3WaveLibTests
 {
     public class PanoramaTests : Test
     {
-        public PanoramaTests(bool logall)
-            : base(logall)
+        public PanoramaTests(bool logall,bool logxml)
+            : base(logall,logxml)
         {
             AddTestCase("PanoramaArithmetic", arithmetic);
             AddTestCase("AssigningAmplifiers", assignment);
