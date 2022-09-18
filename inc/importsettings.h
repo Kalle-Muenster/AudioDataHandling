@@ -9,3 +9,4 @@
 
 #define COMMANDLINER_EXTERN_C extern "C" {
 #define COMMANDCLOSER_EXTERN_C }
+#define USE_NAMESPACER (1)
