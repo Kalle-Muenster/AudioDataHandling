@@ -16,7 +16,6 @@
 #include <WaveLib.inl/int24bittypes.hpp>
 
 #include <WaveFileIO.h>
-//#include <WaveHardIO.h>
 
 #endif
 #endif

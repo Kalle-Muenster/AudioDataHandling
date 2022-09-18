@@ -2,12 +2,10 @@
 #define _WaveFileIO_h_
 
 #include "../src/WaveSpacer.h"
-
 #include "../src/WaveMacros.hpp"
 #include "../src/WaveHandling.hpp"
 #include "../src/WaveFileReader.hpp"
 #include "../src/WaveFileWriter.hpp"
-#include "../src/WaveFilter.hpp"
 
 BEGIN_WAVESPACE
 

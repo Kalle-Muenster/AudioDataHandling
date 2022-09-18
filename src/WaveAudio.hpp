@@ -23,6 +23,7 @@
 #include "Panorama.hpp"
 #endif
 
+#include <WaveLib.inl/int24bittypes.hpp>
 
 BEGIN_WAVESPACE
 
@@ -115,12 +116,6 @@ frameSpliter( const FT& frame, Panorama::Axis axis )
 
 WAVELIB_API IAudioFrame*  CreateAudioFrame( uint typecode );
 
-/*
-typedef enum Similean : byte {
-    Yes = 1, No = 0, Maybe = EMPTY_(byte)
-} Similean;
-*/
-
 struct WAVELIB_API IAudioFrame;
 struct WAVELIB_API AudioFrameType {
 public:
@@ -134,7 +129,7 @@ public:
         Info( uint argum ) : data(argum) {}
     }   info;
 
-    f64  Time() const { return info.time[1] ? ((1.0 / (double)info.time[1]) / 1000.0) : std::numeric_limits<double>::quiet_NaN(); }
+    double  Time() const { return info.time[1] ? ((1.0 / (double)info.time[1]) / 1000.0) : std::numeric_limits<double>::quiet_NaN(); }
     FrameTypeCode Code() const { return info.type.code; }
     word Rate() const { return info.time[1]; }
 

@@ -451,6 +451,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Int24Types\src\int24bittypes.hpp" />
+    <ClInclude Include="..\..\..\etc\enumoperators.h" />
     <ClInclude Include="..\..\..\inc\importsettings.h" />
     <ClInclude Include="..\..\..\inc\settings.h" />
     <ClInclude Include="..\..\..\inc\WaveFileIO.h" />
@@ -463,7 +464,6 @@
     <ClInclude Include="..\..\..\src\WaveBuffers.hpp" />
     <ClInclude Include="..\..\..\src\WaveFileReader.hpp" />
     <ClInclude Include="..\..\..\src\WaveFileWriter.hpp" />
-    <ClInclude Include="..\..\..\src\WaveFilter.hpp" />
     <ClInclude Include="..\..\..\src\WaveFormat.hpp" />
     <ClInclude Include="..\..\..\src\WaveHandling.hpp" />
     <ClInclude Include="..\..\..\src\WaveMacros.hpp" />

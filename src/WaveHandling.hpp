@@ -23,7 +23,6 @@
 #include "WaveAudio.hpp"
 #include "WaveStream.hpp"
 #include "WaveBuffers.hpp"
-#include "WaveFilter.hpp"
 
 
 #endif

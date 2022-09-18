@@ -59,9 +59,6 @@
     <ClInclude Include="..\..\..\src\WaveFormat.hpp">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\WaveFilter.hpp">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\WaveFileWriter.hpp">
       <Filter>src</Filter>
     </ClInclude>
@@ -109,6 +106,9 @@
     </ClInclude>
     <ClInclude Include="..\buildsettings.h">
       <Filter>cpplib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\etc\enumoperators.h">
+      <Filter>inc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
