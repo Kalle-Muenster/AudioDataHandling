@@ -96,10 +96,6 @@ WaveSpace(Audio)::Audio(const Audio& wrap)
     , nxt(wrap.nxt)
 {}
 
-/*container copy (copied container will use same buffer data)
-WaveSpace(Audio)::Audio(Audio &wrap)
-    : Audio(*(const Audio*)&wrap)
-{} */
 
 //buffer copy (copied container will allocate a new, own buffer)
 WaveSpace(Audio)::Audio(const Audio& clone, float amplificator)
