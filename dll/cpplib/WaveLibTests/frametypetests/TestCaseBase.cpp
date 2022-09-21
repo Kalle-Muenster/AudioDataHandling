@@ -121,7 +121,7 @@ Wave::Test::AbstractTestCase::FormatToString( const Format& fmt )
 { pool_scope
     pool_set("Format:------------\n");
     pool_set("pcmtag: ");
-    pool_seti( PcmTagToFourCC( WAV_PCM_TYPE_ID(fmt.PCMFormatTag) ) );
+    pool_set4( PcmTagToFourCC( WAV_PCM_TYPE_ID(fmt.PCMFormatTag) ) );
     pool_set("\n");
     pool_setfi("bitdepth: %i\n", fmt.BitsPerSample);
     pool_setfi("channels: %i\n", fmt.NumChannels);
@@ -154,7 +154,7 @@ Wave::Test::AbstractTestCase::TypeCodeToString( uint typecode )
     pool_set("FrameType tag: ");
     if (f.PCMFormatTag != t.FormatTag()) {
         pool_set("FAIL"); return pool_merge(6);
-    } pool_seti(PcmTagToFourCC(t.FormatTag()));
+    } pool_set4(PcmTagToFourCC(t.FormatTag()));
     pool_setc('\n', 1);
     
     pool_set("FrameType len: ");
