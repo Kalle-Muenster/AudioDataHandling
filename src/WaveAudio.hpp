@@ -1031,21 +1031,21 @@ public:
     }
 };
 
-template<> class datatype_limits<s24>
+template<> class datatype_limits<s24> : public std::numeric_limits<s24>
 {
 public:
     static constexpr s24::AritmeticType(db0)() _THROW0()
     { /* return maximum value */ return INT24_0DB; }
 };
 
-template<> class datatype_limits<i24>
+template<> class datatype_limits<i24> : public std::numeric_limits<i24>
 {
 public:
     static constexpr i24::AritmeticType(db0)() _THROW0()
     { /* return maximum value */ return UINT24_0DB; }
 };
 
-template<> class datatype_limits<i8>
+template<> class datatype_limits<i8> : public std::numeric_limits<i8>
 {
 public:
     static constexpr i8(db0)() _THROW0()
@@ -1053,7 +1053,7 @@ public:
     }
 };
 
-template<> class datatype_limits<i16>
+template<> class datatype_limits<i16> : public std::numeric_limits<i16>
 {
 public:
     static constexpr i16(db0)() _THROW0()
@@ -1061,7 +1061,7 @@ public:
     }
 };
 
-template<> class datatype_limits<i32>
+template<> class datatype_limits<i32> : public std::numeric_limits<i32>
 {
 public:
     static constexpr i32(db0)() _THROW0()
@@ -1069,6 +1069,29 @@ public:
     }
 };
 
+template<> class datatype_limits<s8> : public std::numeric_limits<s8>
+{
+public:
+    static constexpr s8(db0)() _THROW0()
+    { /* return maximum value */ return INT8_0DB;
+    }
+};
+
+template<> class datatype_limits<s16> : public std::numeric_limits<s16>
+{
+public:
+    static constexpr s16(db0)() _THROW0()
+    { /* return maximum value */ return INT16_0DB;
+    }
+};
+
+template<> class datatype_limits<s32> : public std::numeric_limits<s32>
+{
+public:
+    static constexpr s32(db0)() _THROW0()
+    { /* return maximum value */ return INT32_0DB;
+    }
+};
 ENDOF_WAVESPACE
 
 
