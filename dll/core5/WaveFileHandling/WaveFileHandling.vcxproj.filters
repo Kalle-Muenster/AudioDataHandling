@@ -102,14 +102,14 @@
     <ClInclude Include="..\exportsettings.h">
       <Filter>Quelldateien</Filter>
     </ClInclude>
-    <ClInclude Include="D:\LIBRARIES\INCLUDES\enumoperators.h">
-      <Filter>includes</Filter>
+    <ClInclude Include="..\..\..\etc\enumoperators.h">
+      <Filter>native</Filter>
     </ClInclude>
-    <ClInclude Include="D:\LIBRARIES\INCLUDES\indiaccessfuncs.h">
-      <Filter>includes</Filter>
+    <ClInclude Include="..\..\..\etc\indiaccessfuncs.h">
+      <Filter>native</Filter>
     </ClInclude>
-    <ClInclude Include="D:\LIBRARIES\INCLUDES\namespacer.h">
-      <Filter>includes</Filter>
+    <ClInclude Include="..\..\..\etc\namespacer.h">
+      <Filter>native</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
