@@ -58,39 +58,50 @@ namespace Stepflow {
                 }
             public:
                 property Audio^ First {
-                    Audio^ get(void) override { return track->GetReadable(); }
+                    virtual Audio^ get(void) override { return track->GetReadable(); }
                 }
 
                 property Audio^ Last {
-                    Audio^ get(void) override { return gcnew AudioBuffer(*track->au->getReadableAudio().lastChunk()); }
+                    virtual Audio^ get(void) override { return gcnew AudioBuffer(*track->au->getReadableAudio().lastChunk()); }
                 }
 
                 property Audio^ Current {
-                    Audio^ get(void) override { return gcnew AudioBuffer(*track->au); }
+                    virtual Audio^ get(void) override { return gcnew AudioBuffer(*track->au); }
                 }
 
                 virtual Audio^ Next() override {
                     return Last;
                 }
 
+                virtual void Reset() override {
+                    track->Seek( Stepflow::Audio::StreamDirection::INOUT, 0 );
+                }
+                
+                virtual bool MoveNext() override {
+                    track->Seek( Stepflow::Audio::StreamDirection::READ, track->GetPosition(Stepflow::Audio::StreamDirection::READ) + track->AvailableFrames() );
+                    return true;
+                }
+
                 property int Count {
-                    int get(void) override { return cnt; }
+                    virtual int get(void) override { return cnt; }
                 }
 
                 property int Index {
-                    int get(void) override { return 0; }
+                    virtual int get(void) override { return 0; }
                 }
 
                 property Audio^ default[int]{
-                    Audio^ get(int idx) override { return gcnew AudioBuffer(*track->au->chunkAtIndex(idx)); }
-                void set(int idx, Audio^ audio) override {
-                    stepflow::Audio* merk1 = track->au->chunkAtIndex(idx - 1);
-                    stepflow::Audio* index = merk1->nxt;
-                    stepflow::Audio* merk2 = index->nxt;
-                    merk1->nxt = ((AudioBuffer^)audio)->au;
-                    merk1->nxt->nxt = merk2;
-                    index->drop();
-                }
+                    virtual Audio^ get(int idx) override {
+                        return gcnew AudioBuffer(*track->au->chunkAtIndex(idx));
+                    }
+                    virtual void   set(int idx, Audio^ audio) override {
+                        stepflow::Audio* merk1 = track->au->chunkAtIndex(idx - 1);
+                        stepflow::Audio* index = merk1->nxt;
+                        stepflow::Audio* merk2 = index->nxt;
+                        merk1->nxt = ((AudioBuffer^)audio)->au;
+                        merk1->nxt->nxt = merk2;
+                        index->drop();
+                    }
                 }
             };
 

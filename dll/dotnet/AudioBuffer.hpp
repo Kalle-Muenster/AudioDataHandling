@@ -27,40 +27,56 @@ namespace Stepflow {
 
             ref class BufferChunk : public IChunkable {
             private: 
-                AudioBuffer^     track;
+                int index;
+                stepflow::Audio* track;
             internal:
-                BufferChunk(AudioBuffer^ audio)
-                    : track(audio) {
+                BufferChunk( AudioBuffer^ audio )
+                    : track( audio->au->firstChunk() ), index(-1) {
                 }
             public:
-                property Audio^ First {
-                     Audio^ get(void) override { return gcnew AudioBuffer(*track->au->firstChunk()); }
+                virtual property Audio^ First {
+                     Audio^ get(void) override { return gcnew AudioBuffer( *track->firstChunk() ); }
                 }
 
-                property Audio^ Last {
-                     Audio^ get(void) override { return gcnew AudioBuffer(*track->au->lastChunk()); }
+                virtual property Audio^ Last {
+                     Audio^ get(void) override { return gcnew AudioBuffer( *track->lastChunk() ); }
                 }
 
-                property Audio^ Current {
-                    Audio^ get(void) override { return track; }
+                virtual property Audio^ Current {
+                     Audio^ get(void) override { return gcnew AudioBuffer( *track ); }
+                }
+
+                virtual bool MoveNext( void ) override {
+                    if( ++index == track->chunkCount() )
+                        return false;
+                    else if( index > 0 )
+                        track = track->nextChunk();
+                    return true;
+                }
+
+                virtual void Reset( void ) override {
+                    track = track->firstChunk();
+                    index = -1;
                 }
 
                 virtual Audio^ Next() override {
-                     return gcnew AudioBuffer(*track->au->nextChunk());
+                     return gcnew AudioBuffer( *(track = track->nextChunk()) );
                 }
 
-                property int Count {
-                     int get(void) override { return track->au->chunkCount(); }
+                virtual property int Count {
+                     int get(void) override { return track->chunkCount(); }
                 }
                                       
-                property int Index {
-                     int get(void) override { return track->au->chunkIndex(); }
+                virtual property int Index {
+                     int get(void) override { return track->chunkIndex(); }
                 }
 
-                property Audio^ default[int] {
-                    Audio^ get(int idx) override { return gcnew AudioBuffer(*track->au->chunkAtIndex(idx)); }
-                        void set(int idx, Audio^ audio) override {
-                        stepflow::Audio* merk1 = track->au->chunkAtIndex(idx-1);
+                virtual property Audio^ default[int] {
+                    Audio^ get( int idx ) override {
+                        return gcnew AudioBuffer( *track->chunkAtIndex( idx ) );
+                    }
+                    void set(int idx, Audio^ audio) override {
+                        stepflow::Audio* merk1 = track->chunkAtIndex( idx-1 );
                         stepflow::Audio* index = merk1->nxt;
                         stepflow::Audio* merk2 = index->nxt;
                         merk1->nxt = ((AudioBuffer^)audio)->au;
@@ -144,7 +160,7 @@ namespace Stepflow {
 			}
 
             property IChunkable^ Chunk {
-                IChunkable^ get(void) override { return gcnew BufferChunk( this ); }
+                virtual IChunkable^ get(void) override { return gcnew BufferChunk( this ); }
             }
 
 			generic<typename FrameType> where FrameType : IAudioFrame, gcnew()

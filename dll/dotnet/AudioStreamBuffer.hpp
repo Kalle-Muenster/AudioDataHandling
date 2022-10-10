@@ -26,46 +26,69 @@ namespace Stepflow { namespace Audio {
 
         ref class BufferChunk : public IChunkable {
         private:
-            AudioStreamBuffer^     track;
+            int     index;
+            NATIVE* track;
+
         internal:
-            BufferChunk(AudioStreamBuffer^ audio)
-                : track(audio) {
+            BufferChunk( AudioStreamBuffer^ audio )
+                : track( (NATIVE*)audio->au->firstChunk() ), index( -1 ) {
             }
         public:
             property Audio^ First {
-                Audio^ get(void) override { return gcnew AudioStreamBuffer(*track->au->firstChunk()); }
+                virtual Audio^ get(void) override { index = 0; return gcnew AudioStreamBuffer(*(track = (NATIVE*)track->firstChunk())); }
             }
 
             property Audio^ Last {
-                Audio^ get(void) override { return gcnew AudioStreamBuffer(*track->au->lastChunk()); }
+                virtual Audio^ get(void) override { index = track->chunkCount()-1; return gcnew AudioStreamBuffer(*(track=(NATIVE*)track->lastChunk())); }
             }
 
             property Audio^ Current {
-                Audio^ get(void) override { return gcnew AudioStreamBuffer(*track->au->getChunk(track->GetReadPosition())); }
+                virtual Audio^ get( void ) override {
+                    track = (NATIVE*)track->getChunk( track->GetReadPosition() );
+                    index = track->chunkIndex();
+                    return gcnew AudioStreamBuffer( *track );
+                }
+            }
+
+            virtual bool MoveNext() override {
+                if (++index >= track->chunkCount())
+                    return false;
+                else if (index > 0)
+                    track = (NATIVE*)track->nextChunk();
+                return true;
+            }
+
+            virtual void Reset() override {
+                track = (NATIVE*)track->firstChunk();
+                index = -1;
             }
 
             virtual Audio^ Next() override {
-                return gcnew AudioStreamBuffer(*track->au->nextChunk());
+                if (++index < track->chunkCount())
+                    return gcnew AudioStreamBuffer( *(track = (NATIVE*)track->nextChunk()) );
+                else return nullptr;
             }
 
-            property int Count {
-                int get(void) override { return track->au->chunkCount(); }
+            virtual property int Count {
+                int get(void) override { return track->chunkCount(); }
             }
 
-            property int Index {
-                int get(void) override { return track->au->chunkIndex(); }
+            virtual property int Index {
+                int get(void) override { return index = track->chunkIndex(); }
             }
 
-            property Audio^ default[int]{
-                Audio^ get(int idx) override { return gcnew AudioStreamBuffer(*track->au->chunkAtIndex(idx)); }
-            void set(int idx, Audio^ audio) override {
-                stepflow::Audio* merk1 = track->au->chunkAtIndex(idx - 1);
-                stepflow::Audio* index = merk1->nxt;
-                stepflow::Audio* merk2 = index->nxt;
-                merk1->nxt = ((AudioStreamBuffer^)audio)->au;
-                merk1->nxt->nxt = merk2;
-                index->drop();
-            }
+            virtual property Audio^ default[int] {
+                Audio^ get(int idx) override {
+                    return gcnew AudioStreamBuffer(*track->chunkAtIndex(idx));
+                }
+                void   set(int idx, Audio^ audio) override {
+                    stepflow::Audio* merk1 = track->chunkAtIndex(idx - 1);
+                    stepflow::Audio* index = merk1->nxt;
+                    stepflow::Audio* merk2 = index->nxt;
+                    merk1->nxt = ((AudioStreamBuffer^)audio)->au;
+                    merk1->nxt->nxt = merk2;
+                    index->drop();
+                }
             }
         };
 

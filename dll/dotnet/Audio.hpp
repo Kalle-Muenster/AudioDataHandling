@@ -726,17 +726,22 @@ namespace Stepflow {
 
         ref struct Audio;
 
-        public interface class IChunkable {
+        public ref class IChunkable
+            : public System::Collections::Generic::IEnumerator<Audio^> {
         public:
-            property Audio^ First { Audio^ get(); }
-            property Audio^ Last { Audio^ get(); }
-            Audio^          Next();
-            property Audio^ Current { Audio^get(); }
-            property int    Count { int get(); }
-            property int    Index { int get(); }
-            property Audio^ default[int]{
-                Audio^ get(int idx);
-            void set(int idx, Audio^ audio);
+            property Audio^ First { virtual Audio^ get() abstract; }
+            property Audio^ Last { virtual Audio^ get() abstract; }
+            virtual Audio^  Next() abstract;
+            virtual bool    MoveNext() abstract;
+            virtual Object^ GetCurrent() = System::Collections::IEnumerator::Current::get{ return Current; };
+            virtual void    Reset() abstract;
+            virtual ~IChunkable() {};
+            property Audio^ Current { virtual Audio^ get() abstract; }
+            property int    Count { virtual int get() abstract; }
+            property int    Index { virtual int get() abstract; }
+            virtual property Audio^ default[int] {
+                Audio^ get(int idx) abstract;
+                void   set(int idx, Audio^ audio) abstract;
             }
         };
 
