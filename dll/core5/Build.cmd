@@ -10,8 +10,8 @@ cd..
 set _root_=%CD%
 
 :: Set VersionNumber
-set WaveLibVersionNumber=00000001
-set WaveLibVersionString=0.0.0.1
+set WaveLibVersionNumber=00000002
+set WaveLibVersionString=0.0.0.2
 set DotNetVersionString=core5
 
 :: Set Dependencies
