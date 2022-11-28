@@ -31,7 +31,7 @@ namespace Core3WaveLibTests
         public static AudioFrameType audioFrameType( Type fromType )
         {
             Consola.StdStream.Out.WriteLine("\nReflecting Constructor: " + fromType.FullName);
-            return ( fromType.GetConstructor(new Type[] { typeof(double) }).Invoke(new object[] { 0.0 }) as IAudioFrame ).FrameType;
+            return ( fromType.GetConstructor( new Type[] { typeof(double) } ).Invoke( new object[] { 0.0 } ) as IAudioFrame ).FrameType;
         }
 
         private bool PerFrameType( AudioFrameType frameType )
@@ -66,7 +66,7 @@ namespace Core3WaveLibTests
             }
         }
 
-        protected override void TestSuite()
+        protected override void OnStartUp()
         {
             loader = new WaveFileReader("testdata\\" + testdata);
             loaded = loader.ReadAll();

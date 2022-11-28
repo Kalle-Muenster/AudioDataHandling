@@ -126,7 +126,7 @@ namespace Core3WaveLibTests
                 } return true;
             }
 
-        protected override void TestSuite()
+        protected override void OnStartUp()
         {
             Std.Out.WriteLine("Test: FrameTypesTests");
             Std.Out.WriteLine("TestData is assigned to each channel of frames of each FrameType supported:\n\nTestData array: 1,2,3,10,20,30,40,50\n");

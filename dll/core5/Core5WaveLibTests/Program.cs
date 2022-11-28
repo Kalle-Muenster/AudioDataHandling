@@ -26,9 +26,9 @@ namespace Core3WaveLibTests
             Consola.Test.Test panorama = new PanoramaTests(true,false).Run();
             failures += panorama.getFailures();
 
-            StdStream.Out.WriteLine("Done!");
+            StdStream.Out.WriteLine( "Done!" );
             if (failures > 0) {
-                StdStream.Err.WriteLine("{0} FAILURES", failures);
+                StdStream.Err.WriteLine( "{0} FAILURES", failures );
             }
 
             return failures;            
