@@ -52,7 +52,7 @@ uint Stepflow::Audio::AudioStreamBuffer::Read( Audio^ buffer )
 
 Stepflow::Audio::IAudioFrame^ Stepflow::Audio::AudioStreamBuffer::ReadFrame(void)
 {
-    MANAGEDTYPE_SWITCH( au->frameTypeCode(),
+    MANAGEDTYPE_SWITCH( au->frameTypeCode().Code(),
         CASE_TYPE::NATIVE fr = reinterpret_cast<NATIVE*>(au)->ReadFrame<CASE_TYPE::NATIVE>();
     return *(CASE_TYPE*)&fr; )
 }

@@ -110,6 +110,9 @@
     <ClInclude Include="..\..\..\etc\enumoperators.h">
       <Filter>inc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\etc\numbersendian.h">
+      <Filter>inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="TargetHeaders.bat">

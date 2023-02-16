@@ -11,6 +11,8 @@
 
 #include "WaveSpacer.h"
 
+#include <WaveLib.inl/half.hpp>
+#include <WaveLib.inl/numbersendian.h>
 #include <WaveLib.inl/enumoperators.h>
 #include <WaveLib.inl/indiaccessfuncs.h>
 #include <WaveLib.inl/int24bittypes.hpp>

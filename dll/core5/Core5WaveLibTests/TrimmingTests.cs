@@ -12,7 +12,7 @@ namespace Core3WaveLibTests
 
     public class TrimmingTests : Test
     {
-        public static WaveFileReader loader;
+        public WaveFileReader        loader;
         public WaveFileWriter        writer;
         public Audio                 loaded;
         public List<Type>            typlst;
@@ -40,9 +40,10 @@ namespace Core3WaveLibTests
                                frameType.BitDepth, frameType.ChannelCount );
             loader.Seek(0);
             Audio buffer = loader.Read();
+            PcmTag pcm = frameType.PcmTypeTag;
             int bit = frameType.BitDepth;
             int chn = frameType.ChannelCount;
-            buffer.convert(bit,chn);
+            buffer.convert( frameType );
             Std.Out.WriteLine(string.Format("buffer loaded: {0} frames",buffer.FrameCount));
             if ( buffer is AudioBuffer && buffer != null ) {
                 (buffer as AudioBuffer).Trim(0.01); }
@@ -68,11 +69,12 @@ namespace Core3WaveLibTests
 
         protected override void OnStartUp()
         {
-            loader = new WaveFileReader("testdata\\" + testdata);
+            loader = new WaveFileReader( "testdata\\" + testdata );
             loaded = loader.ReadAll();
             Std.Out.Stream.Put("TrimmingTests: loaded '").Put(testdata)
-                   .Put("' ").Put(loader.Format).Put("of duration: ").Put(loaded.Duration).Put("ms").End();
-            writer = new WaveFileWriter(loaded, testdata);
+                   .Put("' ").Put(loader.Format).Put("of duration: ")
+                   .Put(loaded.Duration).Put("ms").End();
+            writer = new WaveFileWriter( loaded, testdata );
             writer.Flush();
             writer.Close();
         }

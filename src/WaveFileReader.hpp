@@ -15,18 +15,18 @@ BEGIN_WAVESPACE
             , public IReadLockable
         {
         private:
-            unsigned*     pDataSize;
+            unsigned         dataSize;
             ReadOrWriteHead* readhead;
-            Audio         attachedBuffer;
+            Audio            attachedBuffer;
 
         public:
-                       WaveFileReader(void);
+                       WaveFileReader( void );
                        WaveFileReader( const Format& targetFormat );
                        WaveFileReader( AudioFrameType frametype );
                        WaveFileReader( Audio::Data buffer );
                        WaveFileReader( const char* fileName );
-                       WaveFileReader( const char* fileName, Audio::Data buffer,uint cbsize );
-            virtual   ~WaveFileReader(void);
+                       WaveFileReader( const char* fileName, Audio::Data buffer, uint cbsize );
+            virtual   ~WaveFileReader( void );
 
             virtual uint        GetLength(void) const override;
             virtual uint        GetDuration(void) const override;
@@ -47,11 +47,13 @@ BEGIN_WAVESPACE
             i8               ReadByte(void);
             s16              ReadInt16(void);
             s24              ReadInt24(void);
+            f16              ReadHalf(void);
             f32              ReadFloat(void);
             i32              ReadUInt32(void);
             f64              ReadDouble(void);
             s8               ReadSampleS8(void);
             s16              ReadSampleS16(void);
+            f16              ReadSampleF16(void);
             s24              ReadSampleS24(void);
             f32              ReadSampleF32(void);
             i32              ReadSampleI32(void);
@@ -65,7 +67,7 @@ BEGIN_WAVESPACE
                                  buffer.removeOffset();
                                  attachedBuffer = buffer;
                                  if (!converse) {
-                                     whdr.GetFormat( &attachedBuffer.format );
+                                     hdr.GetFormat( &attachedBuffer.format );
                                      attachedBuffer.frameCount = attachedBuffer.cbSize
                                                    / attachedBuffer.format.BlockAlign;
                                  }
@@ -77,8 +79,8 @@ BEGIN_WAVESPACE
             #define ReturnConvertedTypeFrame return ( ((CASE_TYPE::FRAME*)readhead)->converted<readAsTy,readAsCc>() );
             template<typename readAsTy,const unsigned readAsCc>
             WaveSpace(Frame)<readAsTy,readAsCc > ReadFrame(void) {
-                if( getnext( whdr.GetBlockAlign() ) ) {
-                    FREAD_FUNC( readhead, 1, whdr.GetBlockAlign(), f );
+                if( getnext( fmt.BlockAlign ) ) {
+                    FREAD_FUNC( readhead, 1, fmt.BlockAlign, f );
                     FRAMETYPE_SWITCH( GetTypeCode(), ReturnConvertedTypeFrame )
                 } else {
                     return *(WaveSpace(Frame)<readAsTy,readAsCc>*)(Audio::Silence);
@@ -87,8 +89,8 @@ BEGIN_WAVESPACE
             #undef ReturnConvertedTypeFrame
 
             Audio::Data ReadFrame() {
-                if( getnext( whdr.GetBlockAlign() ) ) {
-                    return FREAD_FUNC( readhead, 1, whdr.GetBlockAlign(), f ) ? (Audio::Data)readhead : Audio::Silence;
+                if( getnext( fmt.BlockAlign ) ) {
+                    return FREAD_FUNC( readhead, 1, fmt.BlockAlign, f ) ? (Audio::Data)readhead : Audio::Silence;
                 } else {
                     return Audio::Silence;
                 }

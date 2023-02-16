@@ -20,7 +20,7 @@ namespace Wave {
         
         protected:
             // Geerbt über PerTypeTests
-            virtual int runTestCase(const AudioFrameType* frametype) override;
+            virtual int runTestCase( const AudioFrameType* frametype ) override;
         };
     }
 } //end of Wave

@@ -23,6 +23,7 @@
 #include "Panorama.hpp"
 #endif
 
+#include <WaveLib.inl/half.hpp>
 #include <WaveLib.inl/int24bittypes.hpp>
 
 BEGIN_WAVESPACE
@@ -60,7 +61,7 @@ struct WAVELIB_API Audio;
 template <typename tT, const unsigned cC>
 struct Audiom;
 struct WAVELIB_API WavFileHeader;
-
+struct WAVELIB_API IAudioFrame;
 
 template <typename SampleDataType>
 SampleDataType WAVELIB_API
@@ -116,7 +117,7 @@ frameSpliter( const FT& frame, Panorama::Axis axis )
 
 WAVELIB_API IAudioFrame*  CreateAudioFrame( uint typecode );
 
-struct WAVELIB_API IAudioFrame;
+
 struct WAVELIB_API AudioFrameType {
 public:
     union Info {
@@ -128,13 +129,14 @@ public:
         const uint data;
         Info( uint argum ) : data(argum) {}
     }   info;
-
+    static AudioFrameType NoType() { uint nix = EMPTY; return reinterpret_cast<AudioFrameType &>( nix ); };
     double  Time() const { return info.time[1] ? ((1.0 / (double)info.time[1]) / 1000.0) : std::numeric_limits<double>::quiet_NaN(); }
     FrameTypeCode Code() const { return info.type.code; }
     word Rate() const { return info.time[1]; }
 
     WAV_PCM_TYPE_ID FormatTag() const { return WAV_PCM_TYPE_ID( info.type.data[1] >> 6 ); }
     short IsSigned() const { return (AUDIO_SIGN_FROM_TYPECODE( info.type.code ) * 2) - 1; }
+    bool IsFloat() const { return FormatTag() == WAV_PCM_TYPE_ID::PCMf; }
     word BitDepth() const { return info.type.data[0] & 0xFFu; }
     word Channels() const { return info.type.data[1] & 0x3Fu; }
     word ByteSize() const { return ((info.type.data[0] & 0xFFu) >> 3)
@@ -143,7 +145,7 @@ public:
     AudioFrameType( WAV_PCM_TYPE_ID tag, uint bit, uint chn, uint srt = 0 )
         : info((const uint)(bit|((chn|(tag<<6))<<8)|(srt<<16))) {
     }
-    AudioFrameType( uint bit, uint chn )
+    AudioFrameType( int bit, int chn )
         : info((const uint)(bit|((chn|((bit>=32?PCMf:bit!=24?PCMs:PCMi)<<6))<<8))) {
     }
     AudioFrameType( const Format& fmt )
@@ -160,17 +162,18 @@ public:
     bool operator !=(const AudioFrameType& other) const {
         return this->info.type.code != other.info.type.code;
     }
-    AudioFrameType operator =(AudioFrameType from) {
+    AudioFrameType operator =( const AudioFrameType from ) {
         *reinterpret_cast<uint*>(&info) = from.info.data;
         return *this;
     }
     static const AudioFrameType fromTypeCode( uint typecode ) {
-        return *reinterpret_cast<AudioFrameType*>(&typecode);
+        return reinterpret_cast<AudioFrameType&>( typecode );
+    }
+    operator uint() {
+        return info.data;
     }
     IAudioFrame* CreateFrame( Data fromRawData ) const;
 };
-
-
 
 struct IAudioFrame {
 protected:
@@ -207,6 +210,8 @@ public:
     virtual uint BitDepth() const = 0;
     virtual uint ByteSize() const = 0;
     virtual bool Signedty() const = 0;
+    virtual bool FloatTyp() const = 0;
+    virtual WAV_PCM_TYPE_ID PcmFlags() const = 0;
     virtual Panorama GetPanorama(void) = 0;
     virtual void     SetPanorama(Panorama) = 0;
     virtual void SetChannel( int index, Data sample ) = 0;
@@ -227,7 +232,7 @@ public:
         );
     }
     const AudioFrameType FrameType( void ) const {
-        return AudioFrameType(
+        return AudioFrameType( PcmFlags(),
             BitDepth(), Channels() );
     }
 #ifdef _MSC_VER
@@ -244,11 +249,12 @@ template <typename bT,
     typedef Frame<TY, (C >> 2) + 2> Axt;
     static const byte CH = C;
     static const byte TS = (sizeof(bT) * 8);
-    static const char ST = (char)(std::numeric_limits<TY>().is_signed
-                         - (!std::numeric_limits<TY>().is_integer));
+    static const char ST = (char)(std::numeric_limits<TY>::is_signed
+                         - (!std::numeric_limits<TY>::is_integer));
     static unsigned frameSizeByte() { return (TS >> 3) * CH; };
-    static bool     isFloatType() { return ST > 0; }
+    static bool     isFloatType() { return ST == 0; }
     static bool     isSignedType() { return ST >= 0; }
+    static WAV_PCM_TYPE_ID pcmTypeFlag() { return WAV_PCM_TYPE_ID(( isFloatType() << 1 ) | isSignedType()); }
 
     // static 'Frame' API:
 
@@ -317,17 +323,17 @@ template <typename bT,
     }
 
     // amplify this frame by 'factor'
-    Frame* amp(double factor)
+    Frame* amp( double factor )
     {
-        for (int i = 0; i < CH; i++)
-            channel[i] = TY((double)channel[i] * factor);
-        return this;
+        for( int i = 0; i < CH; i++ ) {
+            channel[i] = TY( factor * (double)channel[i] );
+        } return this;
     }
 
     // silence channel number 'chanNum' from this frame
-    Frame* remove(uint chanNum)
+    Frame* remove( uint chanNum )
     {
-        channel[chanNum] = 0;
+        channel[chanNum] = datatype_limits<bT>::db0();
         return this;
     }
 
@@ -336,7 +342,7 @@ template <typename bT,
     {
         Frame ret(*this);
         for (chanIdx; chanIdx < CH; chanIdx++)
-            ret.channel[chanIdx] = 0;
+            ret.channel[chanIdx] = datatype_limits<bT>::db0();
         return ret;
     }
 
@@ -347,7 +353,9 @@ template <typename bT,
         if (ST == Frame<dT, dC>::ST && TS == Frame<dT, dC>::TS && dC == C)
             return *reinterpret_cast<const Frame<dT,dC>*>( this );
 
-        double conversionfactor = ConversionFactor( TS, Frame<dT,dC>::TS );
+        double conversionfactor = ConversionFactor( this->isFloatType() ? 64 : TS,
+                                            Frame<dT,dC>::isFloatType() ? 64 : Frame<dT,dC>::TS );
+
         slong  centerShiftValue = SignedTypesShift( TS*ST, Frame<dT,dC>::TS
                                                          * Frame<dT,dC>::ST );
         Frame<dT,dC> conv;
@@ -539,10 +547,10 @@ public:
     Audio *nxt;
 
     // type speciffics:
-    unsigned frameTypeCode( void ) const;
-    double   sampleTypeMax( void ) const;
-    double   sampleType0db( void ) const;
-    double   sampleTypeMin( void ) const;
+    AudioFrameType frameTypeCode( void ) const;
+    double         sampleTypeMax( void ) const;
+    double         sampleType0db( void ) const;
+    double         sampleTypeMin( void ) const;
 
     // construction:
     Audio( void );
@@ -565,7 +573,7 @@ public:
            Initiatio initiatio = ALLOCATE_NEW_COPY );
     Audio( Audio::Data rawData, unsigned cbSize = EMPTY,
            Initiatio initiatio = ALLOCATE_NEW_COPY|OWN );
-    Audio( const WavFileHeader& hdr, Initiatio initiatio );
+    Audio( const AbstractAudioFileHeader* hdr, Initiatio initiatio );
     Audio( const AbstractAudioFileHeader* hdr );
 
     virtual bool isValid( void ) const;
@@ -598,14 +606,14 @@ public:
     Audio &trimOut( double threshold, float length = 0.015 );
     Audio &trim( double threshold = 0.001, float trimin = FLOAT_NAN, float trimout = FLOAT_NAN );
     Audio trimed( double threshold = 0.001, float trimin = FLOAT_NAN, float trimout = FLOAT_NAN ) const;
-    Audio converted( int bitDepth, int channelCount, double amplification ) const;
-    Audio converted( Format *targetFormat, double amplification = 1 ) const;
-    Audio converted( unsigned typeCode, double amplification = 1 ) const;
-    Audio &convert( unsigned short bitDepth, unsigned short channelCount, double amplification );
-    Audio &convert( unsigned typeCode, double amplification = 1 );
-    Audio &convert( Format *targetFormat, double amplification = 1 );
-    Audio amplified( float amplificator ) const;
-    Audio &amplify( float amplificator );
+    Audio converted( WAV_PCM_TYPE_ID tag, int bitDepth, int channelCount, double amplification ) const;
+    Audio converted( Format* targetFormat, double amplification = 1.0 ) const;
+    Audio converted( AudioFrameType typeCode, double amplification = 1.0 ) const;
+    Audio &convert( WAV_PCM_TYPE_ID tag, unsigned short bitDepth, unsigned short channelCount, double amplification = 1.0 );
+    Audio &convert( AudioFrameType typeCode, double amplification = 1.0 );
+    Audio &convert( Format* targetFormat, double amplification = 1.0 );
+    Audio amplified( double amplificator ) const;
+    Audio &amplify( double amplificator );
     Audio paned( Panorama, Panorama::Axis = Panorama::Axis( 3 ) );
     Audio &pan( Panorama, Panorama::Axis = Panorama::Axis( 3 ) );
     Audio compacted( void ) const;
@@ -687,26 +695,29 @@ public:
         return (T *)( buffer<byte>( getLength()-1 ) + format.BlockAlign );
     }
 
-    template < typename frameType = Frame<s16,2> >
+    template < typename frameType >
     Audio converted( double ampl = 1.0 ) const
     {
-        Audio convertedBuffer( this->format.SampleRate,
-                               frameType::TS, frameType::CH,
-                               this->getLength(),
-                               ALLOCATE_NEW_COPY|OWN );
+        Audio That( this->format.SampleRate,
+                    frameType::TS, frameType::CH,
+                    this->getLength(),
+                    ALLOCATE_NEW_COPY|OWN );
+        
+        That.format.PCMFormatTag = frameType::pcmTypeFlag();
+
+        const double confactor = ConversionFactor(
+            this->format.PCMFormatTag == PCMf ? 64 : this->format.BitsPerSample,
+            That.format.PCMFormatTag == PCMf ? 64 : frameType::TS ) * ampl;
 
 #define PerTypeAction( smpltyp ) \
         convertData<smpltyp>( \
-            convertedBuffer.buffer<frameType>(), \
-            ConversionFactor( this->format.BitsPerSample, \
-                              frameType::TS ) * ampl, \
-            frameType::CH, \
-            (Audio*)this \
+            That.buffer<frameType>(), \
+            confactor, frameType::CH, (Audio*)this \
         ); break;
         SAMPLETYPE_SWITCH( format );
 #undef  PerTypeAction
 
-        return convertedBuffer.outscope();
+        return That.outscope();
     }
 
     template <typename T, const unsigned C>
@@ -721,11 +732,17 @@ public:
             Audiom<T,C> copy = conv
                              ? Audiom<T,C>( format.SampleRate, frameCount )
                              : Audiom<T,C>( *this );
-            Frame<T,C>* dst = conv
-                                   ? copy.begin()
-                                   : (Frame<T,C>*)data;
-            const double factor = ConversionFactor( format.BitsPerSample,
-                                                    copy.format.BitsPerSample ) * ampl;
+            copy.format.PcmFormatTag = ( ( std::is_floating_point<T> << 1 )
+                                         | std::numeric_limits<T>::is_signed );
+            Frame<T,C>* dst = conv 
+                            ? copy.begin()
+                            : (Frame<T,C>*)data;
+
+            const double factor = ConversionFactor(
+                format.PCMFormatTag == PCMf ? 64 : format.BitsPerSample,
+                copy.format.PCMFormatTag == PCMf ? 64 : copy.format.BitsPerSample
+            ) * ampl;
+
 #define PerTypeAction( smpltyp ) \
             convertData<smpltyp>( \
                 dst, factor, copy.format.NumChannels, (Audio*)this \
@@ -750,7 +767,7 @@ public:
 #define TemplateForFrameStruct template <const unsigned cC>
 #define AudioFrameTypeDefinition(sign,size) TemplateForFrameStruct \
 struct WAVELIB_API AuPCM ## sign ## size \
-    : public IAudioFrame, public Frame< sign ## size , cC> { \
+    : public Frame< sign ## size , cC>, IAudioFrame { \
 public: \
     typedef Frame< sign ## size , cC> FRAME; \
     typedef AuPCM ## sign ## size TYPE; \
@@ -780,6 +797,12 @@ public: \
     } \
     virtual bool Signedty() const override { \
         return FRAME::ST >= 0; \
+    } \
+    virtual bool FloatTyp() const override { \
+        return FRAME::ST == 0; \
+    } \
+    virtual WAV_PCM_TYPE_ID PcmFlags() const override { \
+        return WAV_PCM_TYPE_ID( int( Signedty() ) | (int( FloatTyp() ) << 1) ); \
     } \
     virtual Panorama GetPanorama(void) override { \
         return panorama(); \
@@ -811,10 +834,13 @@ public: \
 AudioFrameTypeDefinition(s, 8)
 AudioFrameTypeDefinition(i, 8)
 AudioFrameTypeDefinition(s,16)
+AudioFrameTypeDefinition(f,16)
 AudioFrameTypeDefinition(s,24)
 AudioFrameTypeDefinition(i,24)
+AudioFrameTypeDefinition(s,32)
 AudioFrameTypeDefinition(f,32)
 AudioFrameTypeDefinition(f,64)
+AudioFrameTypeDefinition(i,64)
 
 #undef TemplateForFrameStruct
 #undef AudioFrameTypeDefinition
@@ -839,7 +865,7 @@ public:
     template<typename ST = s16>
     ST doChannel(int number, ST in) { return ST(NULL); }
     template<typename ST = s16>
-    ST doSample(ST in) { return NULL; }
+    ST doSample(ST in) { return ST(NULL); }
 
     virtual void   stateReset() = 0;
     virtual bool   getBypass(void) const = 0;
@@ -985,38 +1011,96 @@ public:
     ST doChannel(int channel, ST in) { return in; };
 };
 
-#define fileheaderfunc(returntype,functionname) returntype functionname(void) const { \
+#define fileheadergetfunc(returntype,functionname) returntype functionname(void) const { \
         return isWavFile() ? wav()->functionname() \
              : isSndFile() ? snd()->functionname() \
                            : pam()->functionname(); }
 
+#define fileheadersetfunc(paramater,functionname) void functionname(paramater valuo) { \
+               isWavFile() ? wav_set()->functionname(valuo) \
+             : isSndFile() ? snd_set()->functionname(valuo) \
+                           : pam_set()->functionname(valuo); }
+
 struct WAVELIB_API AbstractAudioFileHeader {
-private: uint headercaster[27];
+private: uint headercaster[sizeof(PamFileHeader)];
     const WavFileHeader* wav() const { return (const WavFileHeader*)&headercaster[0]; }
     const SndFileHeader* snd() const { return (const SndFileHeader*)&headercaster[0]; }
     const PamFileHeader* pam() const { return (const PamFileHeader*)&headercaster[0]; }
+    WavFileHeader* wav_set() { return (WavFileHeader*)&headercaster[0]; }
+    SndFileHeader* snd_set() { return (SndFileHeader*)&headercaster[0]; }
+    PamFileHeader* pam_set() { return (PamFileHeader*)&headercaster[0]; }
 public:
     bool isWavFile() const { return headercaster[2] == HEADER_CHUNK_TYPE::WavFormat; }
     bool isSndFile() const { return headercaster[0] == HEADER_CHUNK_TYPE::SndFormat; }
     bool isPamFile() const { return headercaster[0] == HEADER_CHUNK_TYPE::P7mFormat
                                  || headercaster[0] == HEADER_CHUNK_TYPE::P8mFormat; }
 
-    fileheaderfunc(word, GetHeaderSize)
-    fileheaderfunc(uint, GetDataSize)
-    fileheaderfunc(Data, GetAudioData)
-    fileheaderfunc(bool, isValid)
-    fileheaderfunc(word, GetBitDepth)
-    fileheaderfunc(word, GetBlockAlign)
-    fileheaderfunc(word, GetChannelCount)
-    fileheaderfunc(AudioFrameType, GetTypeCode)
-    fileheaderfunc(uint, GetSampleRate)
-    fileheaderfunc(bool, isFloatType)
+    fileheadergetfunc(word, GetHeaderSize)
+    fileheadergetfunc(uint, GetDataSize)
+    fileheadergetfunc(Data, GetAudioData)
+    fileheadergetfunc(bool, isValid)
+    fileheadergetfunc(word, GetBitDepth)
+    fileheadergetfunc(word, GetBlockAlign)
+    fileheadergetfunc(word, GetChannelCount)
+    fileheadergetfunc(FrameTypeCode, GetTypeCode)
+    fileheadergetfunc(const AudioFrameType, GetFormatCode)
+    fileheadergetfunc(uint, GetSampleRate)
+    fileheadergetfunc(bool, isFloatType)
+    fileheadergetfunc(bool, isSignedType)
 
+    void GetFormat( Format * getter ) const {
+        switch( GetFileFormat() ) {
+            case WavFormat: wav()->GetFormat( getter ); break;
+            case SndFormat: snd()->GetFormat( getter ); break;
+                   default: pam()->GetFormat( getter ); break; }
+    }
+    void SetFormat( Format* setter ) {
+        if( GetFileFormat() != HEADER_CHUNK_TYPE::P7mFormat ) 
+            if( setter->BitsPerSample == 16 && setter->PCMFormatTag == PCMf ) {
+                *(PamFileHeader *)&headercaster[0] = CreatePamFileHdr(
+                    *setter, 0, ChannelMode::Interleaved
+                );
+            }
+        switch( GetFileFormat() ) {
+            case WavFormat: wav_set()->SetFormat( setter ); break;
+            case SndFormat: snd_set()->SetFormat( setter ); break;
+                   default: pam_set()->SetFormat( setter ); break; }
+    }
     HEADER_CHUNK_TYPE GetFileFormat() const {
         if (!isWavFile()) {
             return *(const HEADER_CHUNK_TYPE*)&headercaster[0];
         } else {
             return HEADER_CHUNK_TYPE::WavFormat;
+        }
+    }
+
+    fileheadersetfunc( uint, SetDataSize )
+
+    PROPDECL( uint, DataSize );
+    Data makeWritable( void ) {
+        switch( GetFileFormat() ) {
+        case WavFormat: return wav_set()->makeWritable();
+        case SndFormat: {
+                SndFileHeader* hdr = snd_set();
+                hdr->reverseSndHeader();
+                return &hdr->SndTag; }
+        case P7mFormat:
+        case P8mFormat:
+            return (Data)pam_set()->makeStringBased();
+        }
+    }
+    uint makeReadable( void ) {
+        switch( GetFileFormat() ) {
+            case WavFormat: {
+                 wav_set()->makeReadable();
+            } return wav()->GetHeaderSize();
+            case SndFormat: {
+                 snd_set()->reverseSndHeader();
+            } return snd()->HeaderSize;
+            case P7mFormat:
+            case P8mFormat: {
+                 pam_set()->makeValueBased();
+            } return pam()->HeaderSize;
         }
     }
 };
@@ -1027,7 +1111,7 @@ template<typename AuDaTy> class datatype_limits
 {
 public:
     static constexpr AuDaTy(db0)() _THROW0()
-    { /* return maximum value */ return 0;
+    { /* return center value */ return AuDaTy(0);
     }
 };
 
@@ -1035,21 +1119,21 @@ template<> class datatype_limits<s24> : public std::numeric_limits<s24>
 {
 public:
     static constexpr s24::AritmeticType(db0)() _THROW0()
-    { /* return maximum value */ return INT24_0DB; }
+    { /* return center value */ return INT24_0DB; }
 };
 
 template<> class datatype_limits<i24> : public std::numeric_limits<i24>
 {
 public:
     static constexpr i24::AritmeticType(db0)() _THROW0()
-    { /* return maximum value */ return UINT24_0DB; }
+    { /* return center value */ return UINT24_0DB; }
 };
 
 template<> class datatype_limits<i8> : public std::numeric_limits<i8>
 {
 public:
     static constexpr i8(db0)() _THROW0()
-    { /* return maximum value */ return UINT8_0DB;
+    { /* return center value */ return UINT8_0DB;
     }
 };
 
@@ -1057,7 +1141,7 @@ template<> class datatype_limits<i16> : public std::numeric_limits<i16>
 {
 public:
     static constexpr i16(db0)() _THROW0()
-    { /* return maximum value */ return UINT16_0DB;
+    { /* return center value */ return UINT16_0DB;
     }
 };
 
@@ -1065,7 +1149,7 @@ template<> class datatype_limits<i32> : public std::numeric_limits<i32>
 {
 public:
     static constexpr i32(db0)() _THROW0()
-    { /* return maximum value */ return UINT32_0DB;
+    { /* return center value */ return UINT32_0DB;
     }
 };
 
@@ -1073,7 +1157,7 @@ template<> class datatype_limits<s8> : public std::numeric_limits<s8>
 {
 public:
     static constexpr s8(db0)() _THROW0()
-    { /* return maximum value */ return INT8_0DB;
+    { /* return center value */ return INT8_0DB;
     }
 };
 
@@ -1081,7 +1165,7 @@ template<> class datatype_limits<s16> : public std::numeric_limits<s16>
 {
 public:
     static constexpr s16(db0)() _THROW0()
-    { /* return maximum value */ return INT16_0DB;
+    { /* return center value */ return INT16_0DB;
     }
 };
 
@@ -1089,7 +1173,7 @@ template<> class datatype_limits<s32> : public std::numeric_limits<s32>
 {
 public:
     static constexpr s32(db0)() _THROW0()
-    { /* return maximum value */ return INT32_0DB;
+    { /* return center value */ return INT32_0DB;
     }
 };
 ENDOF_WAVESPACE

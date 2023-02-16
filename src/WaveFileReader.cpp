@@ -53,8 +53,8 @@ WaveSpace(WaveFileReader)::WaveFileReader( const Format& targetFormat ) : WaveFi
 
 WaveSpace(WaveFileReader)::WaveFileReader( AudioFrameType aT ) : WaveFileReader()
 {
-    attachedBuffer.format = CreateWaveFormat( aT.Rate(),
-                               aT.BitDepth(), aT.Channels() );
+    attachedBuffer.format = CreateWaveFormat( aT.Rate() == 0 ? 44100 : aT.Rate(),
+           aT.BitDepth(), aT.Channels(), aT.FormatTag() );
 }
 
 WaveSpace(WaveFileReader)::~WaveFileReader(void)
@@ -71,7 +71,7 @@ WaveSpace(WaveFileReader)::~WaveFileReader(void)
 bool
 WaveSpace(WaveFileReader)::HasTargetFormat(void) const
 {
-    return (attachedBuffer.format == whdr.AudioFormat) == FormatMatch::DIRECTCOPY;
+    return (attachedBuffer.format == fmt) == FormatMatch::DIRECTCOPY;
 }
 
 WaveSpace(Format)
@@ -93,18 +93,18 @@ uint
 WaveSpace(WaveFileReader)::Read( Audio::Data buffer, int frames )
 {
     unsigned currentPosition = read;
-    if ( !getnext( frames * whdr.AudioFormat.BlockAlign ) )
+    if ( !getnext( frames * fmt.BlockAlign ) )
         return FREAD_FUNC( buffer, 1, read - currentPosition, f );
     else
-        return FREAD_FUNC( buffer, whdr.AudioFormat.BlockAlign, frames, f );
+        return FREAD_FUNC( buffer, fmt.BlockAlign, frames, f );
 }
 
 unsigned
 WaveSpace(WaveFileReader)::Read( Audio::Data buffer, unsigned samplesOffset, unsigned samplesCount )
 {
     byte* b = (byte*)buffer;
-    b += ( samplesOffset * whdr.AudioFormat.BitsPerSample >> 3 );
-    return Read( b, samplesCount * whdr.AudioFormat.NumChannels );
+    b += ( samplesOffset * fmt.BitsPerSample >> 3 );
+    return Read( b, samplesCount * fmt.NumChannels );
 }
 
 unsigned
@@ -112,17 +112,17 @@ WaveSpace(WaveFileReader)::Read( Audio& buffer, unsigned frames )
 {
     frames = frames ? frames : buffer.getLength();
     int frameCount = (int)frames;
-    frames = *pDataSize / whdr.AudioFormat.BlockAlign;
+    frames = dataSize / fmt.BlockAlign;
     frameCount = frameCount > 0 && frameCount < frames
                ? frameCount : frames;
     frames = frameCount;
     frameCount = buffer.frameCount < frameCount
                ? buffer.frameCount : frameCount;
 #define CASETYPE_COMBO CASE_TYPE::FRAME::TY,CASE_TYPE::FRAME::CH
-    if( (buffer.format.NumChannels == whdr.AudioFormat.NumChannels)
-    &&  (buffer.format.BitsPerSample == whdr.AudioFormat.BitsPerSample)
-    &&  (buffer.format.PCMFormatTag == whdr.AudioFormat.PCMFormatTag))
-        getnext( FREAD_FUNC( buffer.data, whdr.AudioFormat.BlockAlign, frameCount, f ) );
+    if( (buffer.format.NumChannels == fmt.NumChannels)
+    &&  (buffer.format.BitsPerSample == fmt.BitsPerSample)
+    &&  (buffer.format.PCMFormatTag == fmt.PCMFormatTag))
+        getnext( FREAD_FUNC( buffer.data, fmt.BlockAlign, frameCount, f ) );
     else { FRAMETYPE_SWITCH( buffer.frameTypeCode(),
             for (int i = 0; i < frameCount; ++i) {
                 *buffer.buffer<CASE_TYPE::FRAME>(i) = ReadFrame<CASETYPE_COMBO>();
@@ -138,28 +138,27 @@ WaveSpace(Audio)
 WaveSpace(WaveFileReader)::Read( uint frmCnt )
 {
     int frameCount = (int)frmCnt;
-    bool reUseBuffer = attachedBuffer.isValid() && (attachedBuffer.data != whdr.GetAudioData());
-    frmCnt = *pDataSize / whdr.AudioFormat.BlockAlign;
+    bool reUseBuffer = attachedBuffer.isValid() && (attachedBuffer.data != hdr.GetAudioData());
+    frmCnt = dataSize / fmt.BlockAlign;
     frameCount = frameCount > 0 && frameCount < frmCnt
                ? frameCount : frmCnt;
     if (!reUseBuffer) {
-        *pDataSize = frameCount * whdr.AudioFormat.BlockAlign;
-        Audio readbuffer( whdr, OWN );
+        dataSize = frameCount * fmt.BlockAlign;
+        Audio readbuffer( &hdr, OWN );
         ownBuffer = false;
-        *pDataSize = frmCnt * whdr.AudioFormat.BlockAlign;
-        getnext( FREAD_FUNC( readbuffer.data, whdr.AudioFormat.BlockAlign, frameCount, f) );
-        if (headerFormat == SND)
-            readbuffer.reverseByteOrder();
+        dataSize = frmCnt * fmt.BlockAlign;
+        getnext( FREAD_FUNC( readbuffer.data, fmt.BlockAlign, frameCount, f) );
+        if( headerFormat == SND ) readbuffer.reverseByteOrder();
         return readbuffer.outscope();
     } else {
             frmCnt = frameCount;
         frameCount = attachedBuffer.frameCount < frameCount
                    ? attachedBuffer.frameCount : frameCount;
 #define CASETYPE_COMBO CASE_TYPE::FRAME::TY,CASE_TYPE::FRAME::CH
-        if( (attachedBuffer.format.NumChannels == whdr.AudioFormat.NumChannels)
-        &&  (attachedBuffer.format.BitsPerSample == whdr.AudioFormat.BitsPerSample)
-        &&  (attachedBuffer.format.PCMFormatTag == whdr.AudioFormat.PCMFormatTag) )
-            getnext( FREAD_FUNC( attachedBuffer.data, whdr.AudioFormat.BlockAlign, frameCount, f ) );
+        if( (attachedBuffer.format.NumChannels == fmt.NumChannels)
+        &&  (attachedBuffer.format.BitsPerSample == fmt.BitsPerSample)
+        &&  (attachedBuffer.format.PCMFormatTag == fmt.PCMFormatTag) )
+            getnext( FREAD_FUNC( attachedBuffer.data, fmt.BlockAlign, frameCount, f ) );
         else { FRAMETYPE_SWITCH( attachedBuffer.frameTypeCode(),
             for( int i = 0; i < frameCount; ++i ) {
                 CASE_TYPE::FRAME fr = ReadFrame<CASETYPE_COMBO>();
@@ -170,8 +169,7 @@ WaveSpace(WaveFileReader)::Read( uint frmCnt )
             } );
         }
 #undef  CASETYPE_COMBO
-        if (headerFormat == SND)
-            attachedBuffer.reverseByteOrder();
+        if( headerFormat == SND ) attachedBuffer.reverseByteOrder();
         return attachedBuffer;
     }
 }
@@ -211,6 +209,13 @@ WaveSpace(WaveFileReader)::ReadUInt32(void)
     } return readhead->I32[0];
 }
 
+WaveSpace(f16)
+WaveSpace(WaveFileReader)::ReadHalf(void)
+{
+    short s = getnext(2) ? fgetwc(f) : 0;
+    return reinterpret_cast<f16&>(s);
+}
+
 WaveSpace(f32)
 WaveSpace(WaveFileReader)::ReadFloat(void)
 {
@@ -231,9 +236,9 @@ WaveSpace(WaveFileReader)::ReadDouble(void)
 bool
 WaveSpace(WaveFileReader)::getnext( unsigned pos )
 {
-    if ( !(canRead = ((read += pos) <= *pDataSize)) ) {
+    if ( !(canRead = ((read += pos) <= dataSize)) ) {
         readhead->I32[0] = readhead->I32[1] = 0;
-        read = *pDataSize;
+        read = dataSize;
     } return canRead;
 }
 
@@ -242,12 +247,12 @@ WaveSpace(WaveFileReader)::ReadSampleS8(void)
 {
     if( HasTargetFormat() ) {
         return (s8)ReadByte();
-    } else if ( whdr.isFloatType() ) {
-    switch (whdr.AudioFormat.BitsPerSample) {
+    } else if ( hdr.isFloatType() ) {
+    switch (fmt.BitsPerSample) {
         case 32: return (s8)(ReadFloat() * s8_MAX);
         case 64: return (s8)(ReadDouble() * s8_MAX);
     }} else
-    switch(whdr.AudioFormat.BitsPerSample) {
+    switch(fmt.BitsPerSample) {
         case 16: return (s8)(ReadInt16() / 256);
         case 24: return (s8)(ReadInt24() / 65536);
         case 32: return (s8)((s32)(ReadUInt32() - i32_0DB) / 16777216);
@@ -259,16 +264,34 @@ WaveSpace(WaveFileReader)::ReadSampleS16(void)
 {
     if( HasTargetFormat() ) {
         return ReadInt16();
-    } else if ( whdr.isFloatType() ) {
-    switch (whdr.AudioFormat.BitsPerSample) {
+    } else if ( hdr.isFloatType() ) {
+    switch (fmt.BitsPerSample) {
         case 32: return (s16)(ReadFloat() * s16_MAX);
         case 64: return (s16)(ReadDouble() * s16_MAX);
     }} else
-    switch (whdr.AudioFormat.BitsPerSample) {
+    switch (fmt.BitsPerSample) {
         case 8: return (s16)( (s8)ReadByte() * 256 );
         case 24: return (s16) (ReadInt24() / 256);
         case 32: return (s16)((s32)(ReadUInt32() - i32_0DB) / 65536);
     } return 0;
+}
+
+WaveSpace(f16)
+WaveSpace(WaveFileReader)::ReadSampleF16(void)
+{
+    if( HasTargetFormat() ) {
+        return ReadHalf();
+    } else if ( hdr.isFloatType() ) {
+    switch (fmt.BitsPerSample) {
+        case 32: return f16( ReadFloat() );
+        case 64: return f16( ReadDouble() );
+    }} else
+    switch (fmt.BitsPerSample) {
+        case 8: return f16( (s8)ReadByte() ) / 127.0_h;
+        case 16: return (f16)ReadInt16() / (f16)s16_MAX;
+        case 24: return (f16)ReadInt24() / (f16)s24_MAX;
+        case 32: return f16( (int)(ReadUInt32() - i32_0DB) ) / (f16)s32_MAX;
+    } return 0.0_h;
 }
 
 WaveSpace(s24)
@@ -276,12 +299,13 @@ WaveSpace(WaveFileReader)::ReadSampleS24(void)
 {
     if( HasTargetFormat() ) {
         return ReadInt24();
-    } else if (whdr.isFloatType()) {
-    switch (whdr.AudioFormat.BitsPerSample) {
+    } else if (hdr.isFloatType()) {
+    switch (fmt.BitsPerSample) {
+        case 16: return s24( ReadHalf() * s24_MAX );
         case 32: return s24( ReadFloat() * s24_MAX );
         case 64: return s24( ReadDouble() * s24_MAX );
     }} else
-    switch (whdr.AudioFormat.BitsPerSample) {
+    switch (fmt.BitsPerSample) {
         case 8:  return s24( (s16)ReadByte() * 65536 );
         case 16: return s24( ReadInt16() * 256 );
         case 32: return s24( (s32)(ReadUInt32() - i32_0DB) / 256 );
@@ -293,12 +317,13 @@ WaveSpace(WaveFileReader)::ReadSampleI32(void)
 {
     if( HasTargetFormat() ) {
         return ReadUInt32();
-    } else if (whdr.isFloatType()) {
-    switch (whdr.AudioFormat.BitsPerSample) {
+    } else if (hdr.isFloatType()) {
+    switch (fmt.BitsPerSample) {
+        case 16: return (i32)(i32_0DB+(s32)(ReadHalf() * i32_0DB));
         case 32: return (i32)(i32_0DB+(s32)(ReadFloat() * i32_0DB));
         case 64: return (i32)(i32_0DB+(s32)(ReadDouble() * i32_0DB));
     }} else
-    switch (whdr.AudioFormat.BitsPerSample) {
+    switch (fmt.BitsPerSample) {
         case 8:  return (i32)(i32_0DB+((s8)ReadByte() * 16777216));
         case 16: return (i32)(i32_0DB+(ReadInt16() * 65536));
         case 24: return (i32)(i32_0DB+(ReadInt24() * 256));
@@ -311,10 +336,13 @@ WaveSpace(WaveFileReader)::ReadSampleF32(void)
 {
     if( HasTargetFormat() ) {
         return ReadFloat();
-    } else if (whdr.isFloatType()) {
-        return (f32)ReadDouble();
+    } else if (hdr.isFloatType()) {
+        switch( fmt.BitsPerSample ) {
+        case 16: return ReadHalf().operator float();
+        case 64: return (f32)ReadDouble();
+        }
     } else
-    switch ( whdr.AudioFormat.BitsPerSample ) {
+    switch ( fmt.BitsPerSample ) {
         case 8:  return ( (f32)(s8)ReadByte())/127.0f;
         case 16: return ( (f32)ReadInt16() / s16_MAX );
         case 24: return ( (f32)ReadInt24().arithmetic_cast() / s24_MAX );
@@ -327,10 +355,13 @@ WaveSpace(WaveFileReader)::ReadSampleF64(void)
 {
     if (HasTargetFormat()) {
         return ReadDouble();
-    } else if (whdr.isFloatType()) {
-        return (f64)ReadFloat();
+    } else if (hdr.isFloatType()) {
+                switch( fmt.BitsPerSample ) {
+        case 16: return (f64)ReadHalf();
+        case 32: return (f64)ReadFloat();
+        }
     } else
-    switch ( whdr.AudioFormat.BitsPerSample ) {
+    switch ( fmt.BitsPerSample ) {
         case 8:  return ((f64)(s8)ReadByte()) / 127.0f;
         case 16: return ((f64)ReadInt16() / s16_MAX);
         case 24: return ((f64)ReadInt24().arithmetic_cast() / s24_MAX);
@@ -341,27 +372,28 @@ WaveSpace(WaveFileReader)::ReadSampleF64(void)
 uint
 WaveSpace(WaveFileReader)::GetLength(void) const
 {
-    return *pDataSize / whdr.AudioFormat.BlockAlign;
+    return dataSize / fmt.BlockAlign;
 }
 
 uint
 WaveSpace(WaveFileReader)::GetDuration(void) const
 {
-    return (uint)(((double)*pDataSize / whdr.AudioFormat.ByteRate) * 1000);
+    return (uint)(((double)dataSize / fmt.ByteRate) * 1000);
 }
 
 uint
-WaveSpace(WaveFileReader)::GetPosition(StreamDirection direction) const
+WaveSpace(WaveFileReader)::GetPosition( StreamDirection direction ) const
 {
-    return (read / whdr.AudioFormat.BlockAlign);
+    return (read / fmt.BlockAlign);
 }
 
 void
 WaveSpace(WaveFileReader)::Seek(uint frame,StreamDirection)
 {
-    unsigned seekPos = frame * whdr.AudioFormat.BlockAlign;
-    if( seekPos < *pDataSize )
-        FSEEK_FUNC(f, (read = seekPos) + (headerFormat == WAV ? whdr.GetHeaderSize() : headerFormat == PAM ? PamFileHeaderSize : SndFileHeaderSize ), SEEK_SET );
+    unsigned seekPos = frame * hdr.GetBlockAlign();
+    
+    if( seekPos < dataSize )
+        FSEEK_FUNC(f, (read = seekPos) + hdr.GetHeaderSize(), SEEK_SET );
 }
 
 uint
@@ -370,83 +402,59 @@ WaveSpace(WaveFileReader)::Open( const char* filename )
     if (f) Close();
 
     headerFormat = copyFileNameAndCheckExtension(
-                          &fileName[0], filename, NULL );
+                    &fileName[0], filename, NULL );
+
     if( FOPEN_FUNC( f, filename, "rb" ) ) {
         return false;
     }
-    ulong offsetToWaveData=-1;
+    ulong offsetToWaveData = -1;
 
     if( headerFormat == SND ) {
-        SndFileHeader sndhdr;
-        FREAD_FUNC( &sndhdr, 1, SndFileHeaderSize+ReadHeadSize, f );
-        reverseSndHeader( &sndhdr );
-        word bits = 0;
-        uint size = sndhdr.DataSize;
-        WAV_PCM_TYPE_ID tag = WAV_PCM_TYPE_ID(0);
-        switch (sndhdr.FormatCode) {
-        case MULAW_8:
-        case LINEAR_8:
-            bits = 8; tag = WAV_PCM_TYPE_ID::PCMs;
-            break;
-        case LINEAR_16:
-            bits = 16; tag = WAV_PCM_TYPE_ID::PCMs;
-            break;
-        case LINEAR_24:
-            bits = 24; tag = WAV_PCM_TYPE_ID::PCMs;
-            break;
-        case LINEAR_32:
-            bits = 32; tag = WAV_PCM_TYPE_ID::PCMs;
-            break;
-        case FLOAT:
-            bits = 32; tag = WAV_PCM_TYPE_ID::PCMf;
-            break;
-        case DOUBLE:
-            bits = 64; tag = WAV_PCM_TYPE_ID::PCMf;
-            break;
-        case ALAW_8:
-            bits = 8; tag = WAV_PCM_TYPE_ID::PCMi;
-            break;
-        }
-        whdr = CreateWaveHeader( sndhdr.SampleRate, bits, sndhdr.NumChannels, size );
-        offsetToWaveData = sndhdr.HeaderSize;
+        SndFileHeader* sndhdr = (SndFileHeader*)&hdr;
+        FREAD_FUNC( sndhdr, 1, SndFileHeaderSize+ReadHeadSize, f );
+        sndhdr->reverseSndHeader();
+        fmt = CreateWaveFormat( sndhdr->GetTypeCode(), sndhdr->SampleRate );
+        offsetToWaveData = sndhdr->HeaderSize;
     } else if (headerFormat == WAV) {
-        FREAD_FUNC( &whdr, 1, ExtendedHeaderSize + ReadHeadSize, f );
+        WavFileHeader* whdr = (WavFileHeader*)&hdr;
+        FREAD_FUNC( whdr, 1, ExtendedHeaderSize + ReadHeadSize, f );
+        offsetToWaveData = whdr->GetHeaderSize();
+        fmt = whdr->AudioFormat;
     } else if (headerFormat == PAM) {
-        PamFileHeader pamhdr;
-        initializePamFileHeader( &pamhdr );
-        FREAD_FUNC( &pamhdr.hdr.dat[0], 1, 256, f );
-        if( !pamhdr.isValid() ) pamhdr = wirdPassendGemacht( &pamhdr.hdr.dat[0] );
-        pamhdr.makeValueBased();
+        PamFileHeader* pamhdr = (PamFileHeader*)&hdr;
+        initializePamFileHeader( pamhdr );
+        FREAD_FUNC( &pamhdr->hdr.dat[0], 1, 256, f );
+        if( !pamhdr->isValid() ) *pamhdr = wirdPassendGemacht( &pamhdr->hdr.dat[0] );
+        pamhdr->makeValueBased();
         offsetToWaveData = PamFileHeaderSize;
-        whdr = CreateWaveHeader( pamhdr.SampleRate, pamhdr.BitDepth,
-                                 pamhdr.ChannelCount, pamhdr.DataSize );
-
+        fmt = CreateWaveFormat( pamhdr->GetTypeCode(), pamhdr->GetSampleRate() );
     }
 
-    pDataSize = &whdr.ChunkHeader.size;
+    dataSize =  hdr.GetDataSize();
     if (offsetToWaveData == -1)
-        offsetToWaveData = whdr.GetHeaderSize();
+        offsetToWaveData = hdr.GetHeaderSize();
+
+    hdr.GetFormat( &fmt );
 
     FSEEK_FUNC( f, offsetToWaveData, SEEK_SET );
     if ( (!attachedBuffer.isValid()) || (!ownBuffer) ) {
         attachedBuffer = Audio(
-            whdr.AudioFormat,
-            whdr.GetAudioData(),
-            whdr.AudioFormat.BlockAlign,
+            fmt, hdr.GetAudioData(),
+            fmt.BlockAlign,
             DONT_ALLOCATE_NEW
-        );
-        attachedBuffer.mode.remFlag(OWN);
+        ).outscope(); //////
+        attachedBuffer.mode.remFlag( OWN );
         ownBuffer = false;
         framesAvailable = EMPTY;
     } else {
         attachedBuffer.frameCount =
-            attachedBuffer.cbSize / whdr.AudioFormat.BlockAlign;
+            attachedBuffer.cbSize / hdr.GetBlockAlign();
     }
-    attachedBuffer.format = whdr.AudioFormat;
-    readhead = (ReadOrWriteHead*)whdr.GetAudioData();
+    attachedBuffer.format = fmt;
+    readhead = (ReadOrWriteHead*)hdr.GetAudioData();
     read = 0;
     canRead = true;
-    return *pDataSize;
+    return dataSize;
 }
 
 unsigned
@@ -455,7 +463,7 @@ WaveSpace(WaveFileReader)::Close(void)
     if(f) {
         fflush(f);
         fclose(f);
-        *pDataSize = canRead = f = NULL;
+        dataSize = canRead = f = NULL;
         framesAvailable = EMPTY;
         readhead = NULL;
     } return read;
@@ -464,12 +472,12 @@ WaveSpace(WaveFileReader)::Close(void)
 uint
 WaveSpace(WaveFileReader)::ReadChannel(int chn, Audio::Data dst, int samplecount)
 {
-    const int end = samplecount * whdr.AudioFormat.BlockAlign;
-    const int typesize = (whdr.AudioFormat.BitsPerSample >> 3);
-    for (int i = 0; i < end; i+=whdr.AudioFormat.BlockAlign) {
-        if( getnext( FREAD_FUNC( readhead, whdr.AudioFormat.BlockAlign, 1, f ) ) )
+    const int end = samplecount * fmt.BlockAlign;
+    const int typesize = (fmt.BitsPerSample >> 3);
+    for (int i = 0; i < end; i+=fmt.BlockAlign) {
+        if( getnext( FREAD_FUNC( readhead, fmt.BlockAlign, 1, f ) ) )
             memcpy( dst, &readhead->_i8[0] + (chn*typesize), typesize );
-        else return i / whdr.AudioFormat.NumChannels;
+        else return i / fmt.NumChannels;
     } return EMPTY;
 }
 

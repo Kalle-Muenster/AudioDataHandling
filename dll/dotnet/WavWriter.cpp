@@ -41,7 +41,7 @@ Stepflow::Audio::FileIO::WaveFileWriter::WaveFileWriter( System::String^ fileNam
 Stepflow::Audio::FileIO::WaveFileWriter::WaveFileWriter( System::String^ fileName,
 	                                      int rate, int depth, int chan ) {
     char fnam[255];
-	try { native = new stepflow::WaveFileWriter( Stepflow::Audio::Audio::convertFromSystemString( &fnam[0],fileName),
+	try { native = new stepflow::WaveFileWriter( Stepflow::Audio::Audio::convertFromSystemString( &fnam[0],fileName ),
 			                                     rate, depth, chan );
 	} catch (const std::exception& ex) {
 		throw gcnew System::Exception( gcnew System::String(ex.what()) );
@@ -133,6 +133,26 @@ WriterCustomCall(FlushFrame,WriteFrame)
 WriterCallWrap(WrittenBytes)
 WriterCallWrap(WrittenFrames)
 
+uint
+Stepflow::Audio::FileIO::WaveFileWriter::WriteSample( f16 sample )
+{
+    return native->WriteSample( reinterpret_cast<stepflow::f16&>( sample ) );
+}
+
+uint
+Stepflow::Audio::FileIO::WaveFileWriter::WriteFrame( f16 sample )
+{
+    return native->MixFrame<stepflow::f16>( reinterpret_cast<stepflow::f16&>( sample ) );
+}
+
+uint
+Stepflow::Audio::FileIO::WaveFileWriter::WriteFrame( f16 sample, Panorama pan )
+{
+    return native->MixFrame<stepflow::f16>(
+        reinterpret_cast<stepflow::f16&>( sample ),
+        reinterpret_cast<stepflow::Panorama&>( pan )
+    );
+}
 
 TimeSpan
 Stepflow::Audio::FileIO::WaveFileWriter::WrittenTime(void)

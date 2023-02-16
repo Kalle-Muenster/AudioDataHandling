@@ -86,6 +86,9 @@
     <Reference Include="Int24Types">
       <HintPath>$(Int24TypesBinRoot)\$(PlatformTarget)\$(Configuration)\Int24Types.dll</HintPath>
     </Reference>
+    <Reference Include="Float16Type">
+      <HintPath>$(Float16TypeBinRoot)\$(PlatformTarget)\$(Configuration)\Float16Type.dll</HintPath>
+    </Reference>
     <Reference Include="WaveFileHandling">
       <HintPath>..\..\..\bin\dot48\$(PlatformTarget)\$(Configuration)\WaveFileHandling.dll</HintPath>
     </Reference>
@@ -109,6 +112,7 @@
     <Compile Include="ToneGenerator.cs" />
     <Compile Include="TrimmingTest.cs" />
     <Compile Include="WaveReaderTests.cs" />
+    <Compile Include="WowbaggerStreamTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="testtonescript.ton">

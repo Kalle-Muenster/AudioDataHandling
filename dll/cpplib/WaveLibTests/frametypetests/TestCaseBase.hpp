@@ -22,6 +22,7 @@ namespace Wave {
             const char*  pool_setFl(float value);
             const char*  pool_setFl(const char* fmt,float val);
             const char*  pool_setDl(const char* fmt,double val);
+            const char*  pool_setHl(const char* fmt,Float16 val);
             char*        GetFileNameForFrameType( const char* filePrefix,
                             const AudioFrameType* typeSufix,
                             const char* extension = NULL
@@ -44,7 +45,7 @@ namespace Wave {
         protected:
             TypeCases         cases;
             virtual int       runTestCase(T frametype) = 0; 
-            virtual void      AddTestCasesPerTypeCase(TypeCases* testcases) = 0;
+            virtual void      AddTestCasesPerTypeCase( TypeCases* testcases ) = 0;
 
         public:
 
@@ -61,7 +62,7 @@ namespace Wave {
         public:
             PerFrameType();
         protected:
-            virtual void AddTestCasesPerTypeCase(TypeCases* testcases) override;
+            virtual void AddTestCasesPerTypeCase( TypeCases* testcases ) override;
         };
     }
 }

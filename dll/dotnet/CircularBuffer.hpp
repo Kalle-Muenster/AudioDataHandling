@@ -218,41 +218,41 @@ namespace Stepflow {
 			virtual IntPtr GetRaw(int position) override {
 				return IntPtr((*au)[au->getReadPosition()+position]);
 			}
-			virtual Audio ^ converted(int frq, int bit, int chn) override {
-				return gcnew Circular(stepflow::Circular(au->converted(bit, chn)));
+			virtual Audio ^ converted(int frq, PcmTag tag, int bit, int chn) override {
+				return gcnew Circular( stepflow::Circular( au->converted( WAV_PCM_TYPE_ID(tag), bit, chn, 1.0 ) ) );
 			}
 			virtual Audio ^ converted(PcmFormat fmt) override {
-				return converted(fmt.SampleRate, fmt.BitsPerSample, fmt.NumChannels);
+				return converted( (int)fmt.SampleRate, fmt.Tag, (int)fmt.BitsPerSample, (int)fmt.NumChannels );
 			}
 			virtual Audio ^ converted(AudioFrameType frty) override {
-				return converted(Format.SampleRate, frty.BitDepth, frty.ChannelCount);
+				return converted( Format.SampleRate, frty.PcmTypeTag, frty.BitDepth, frty.ChannelCount );
 			}
 			virtual Audio ^ converted(AudioFrameType frty,double amp) override {
-				return gcnew Circular(stepflow::Circular(au->converted(frty.BitDepth, frty.ChannelCount)));
+				return gcnew Circular( stepflow::Circular( au->converted(FrameTypeCode(frty.Code), 1.0 ) ) );
 			}
-			virtual Audio ^ convert(int bit, int chn) override {
-				au->convert(bit, chn);
+			virtual Audio ^ convert(int frq, PcmTag pcm, int bit, int chn) override {
+				au->convert( WAV_PCM_TYPE_ID(pcm), bit, chn );
 				return this;
 			}
 			virtual Audio ^ convert(PcmFormat fmt) override {
-				au->convert(fmt.BitsPerSample,fmt.NumChannels);
+				au->convert( reinterpret_cast<stepflow::Format&>(fmt) );
 				return this;
 			}
 			virtual Audio ^ convert(AudioFrameType frty) override {
-				au->convert(frty.BitDepth,frty.ChannelCount);
+				au->convert( frty.native(), 1.0 );
 				return this;
 			}
 			virtual Audio ^ convert(AudioFrameType frty,double amp) override {
-				au->convert(frty.BitDepth, frty.ChannelCount,amp);
+				au->convert( frty.native(), amp );
 				return this;
 			}
-			virtual Audio ^ convert(unsigned typecode) override {
-				au->convert(typecode);
+			virtual Audio ^ convert( unsigned typecode ) override {
+				au->convert( reinterpret_cast<stepflow::AudioFrameType&>(typecode), 1.0 );
 				return this;
 			}
 
 			virtual Audio ^ amplified(double factor) override {
-				return gcnew Circular(au->amplified(factor));
+				return gcnew Circular( au->amplified(factor) );
 			}
 			virtual Audio ^ amplify(double factor) override {
 				au->amplify(factor);
@@ -408,27 +408,27 @@ namespace Stepflow {
             }
             virtual uint WriteFrame(short sample)
             { 
-                writeNextFrame((T)AudioFrameType(16,au->format.NumChannels).CreateEmptyFrame()->Mix(sample,Panorama::Neutral)->Convert( GetFrameType() ));
+                writeNextFrame((T)AudioFrameType(PcmTag::PCMs,16,au->format.NumChannels,au->format.SampleRate).CreateEmptyFrame()->Mix(sample,Panorama::Neutral)->Convert( GetFrameType() ));
                 return 1;
             }
             virtual uint WriteFrame(float sample)
             {
-                writeNextFrame((T)AudioFrameType(32,au->format.NumChannels).CreateEmptyFrame()->Mix(sample,Panorama::Neutral)->Convert( GetFrameType() ));
+                writeNextFrame((T)AudioFrameType(PcmTag::PCMf,32,au->format.NumChannels,au->format.SampleRate).CreateEmptyFrame()->Mix(sample,Panorama::Neutral)->Convert( GetFrameType() ));
                 return 1;
             }
             virtual uint WriteFrame(short sample, Panorama mixer)
             {
-                writeNextFrame((T)AudioFrameType(16,au->format.NumChannels).CreateEmptyFrame()->Mix(sample,mixer)->Convert( GetFrameType() ));
+                writeNextFrame((T)AudioFrameType(PcmTag::PCMs,16,au->format.NumChannels,au->format.SampleRate).CreateEmptyFrame()->Mix(sample,mixer)->Convert( GetFrameType() ));
                 return 1;
             }
             virtual uint WriteFrame(float sample, Panorama mixer)
             {
-                writeNextFrame((T)AudioFrameType(32,au->format.NumChannels).CreateEmptyFrame()->Mix(sample,mixer)->Convert( GetFrameType() ));
+                writeNextFrame((T)AudioFrameType(PcmTag::PCMf,32,au->format.NumChannels,au->format.SampleRate).CreateEmptyFrame()->Mix(sample,mixer)->Convert( GetFrameType() ));
                 return 1;
             }
             virtual uint WriteFrame(stepflow::f64 sample, Panorama mixer)
             {
-                writeNextFrame((T)AudioFrameType(64,au->format.NumChannels).CreateEmptyFrame()->Mix(sample,mixer)->Convert( GetFrameType() ));
+                writeNextFrame((T)AudioFrameType(PcmTag::PCMf,64,au->format.NumChannels,au->format.SampleRate).CreateEmptyFrame()->Mix(sample,mixer)->Convert( GetFrameType() ));
                 return 1;
             }
             virtual uint WrittenBytes(void)

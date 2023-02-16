@@ -79,7 +79,11 @@ int Wave::Test::FrameTypes::runTestCase( const AudioFrameType* frametype )
             pool_setfi("    channel %i:\nbefore assigning data: ", i);
             switch (bitnes) {
             case 8:  { pool_setfi("%i\n", *(s8*)testling->GetChannel(i)); s8 val = (s8)datas[i]; testling->SetChannel(i,&val); pool_setfi("after assigning data: %i\n",*(s8*)testling->GetChannel(i)); break; }
-            case 16: { pool_setfi("%i\n", *(s16*)testling->GetChannel(i)); s16 val = (s16)datas[i]; testling->SetChannel(i,&val); pool_setfi("after assigning data: %i\n", *(s16*)testling->GetChannel(i)); break; }
+            case 16: if( frametype->FormatTag() == Wave::PCMs ) {
+                pool_setfi( "%i\n", *(s16*)testling->GetChannel( i ) ); s16 val = (s16)datas[i]; testling->SetChannel( i, &val ); pool_setfi( "after assigning data: %i\n", *(s16*)testling->GetChannel( i ) );
+            } else {
+                pool_setHl( "%f\n", *(f16*)testling->GetChannel( i ) ); f16 val = (f16)datas[i]/127.0_h; testling->SetChannel( i, &val ); pool_setHl( "after assigning data: %f\n", *(f16*)testling->GetChannel( i ) );
+            } break;
             case 24: { pool_setfi("%i\n", (*(s24*)testling->GetChannel(i)).arithmetic_cast()); s24 val = datas[i]; testling->SetChannel(i,&val); pool_setfi("after assigning data: %i\n", (*(s24*)testling->GetChannel(i)).arithmetic_cast()); break; }
             case 32: { pool_setFl("%f\n", *(f32*)testling->GetChannel(i)); f32 val = (f32)datas[i] / 127.0f; testling->SetChannel(i,&val); pool_setFl("after assigning data: %f\n", *(f32*)testling->GetChannel(i)); break; }
             case 64: { pool_setDl("%f\n", *(f64*)testling->GetChannel(i)); f64 val = (f64)datas[i] / 127.0f; testling->SetChannel(i,&val); pool_setDl("after assigning data: %f\n", *(f64*)testling->GetChannel(i)); break; }
@@ -96,7 +100,11 @@ int Wave::Test::FrameTypes::runTestCase( const AudioFrameType* frametype )
         pool_set(") into the frame...\nsample: ");
         switch (bitnes) {
         case 8:  {  s8 val = 33;      pool_setfi("%i",val); testling->Mix(&val, pan); break; }
-        case 16: { s16 val = 10000;   pool_setfi("%i",val); testling->Mix(&val, pan); break; }
+        case 16: if( frametype->Code() == Wave::PCMs ) {
+            s16 val = 10000; pool_setfi( "%i", val ); testling->Mix( &val, pan );
+        } else {
+            f16 val = 0.333_h; pool_setHl( "%f", val ); testling->Mix( &val, pan );
+        } break;
         case 24: { s24 val = 2796000; pool_setfi("%i",val.arithmetic_cast()); testling->Mix(&val, pan); break; }
         case 32: { f32 val = 0.333f;  pool_setFl("%f",val); testling->Mix(&val, pan); break; }
         case 64: { f64 val = 0.333;   pool_setDl("%f",val); testling->Mix(&val, pan); break; }

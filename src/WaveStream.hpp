@@ -15,7 +15,7 @@ BEGIN_WAVESPACE
 /* Abstract Audio Stream interfaces ----                              */
 
 enum WAVELIB_API StreamDirection : char {
-    SET = 0, CUR = 1, END = 2, READ = 4, WRITE = 8, INOUT = READ|WRITE
+    SET = 0, CUR = 1, END = 2, READ = 4, WRITE = 8,  INPUT = READ, OUTPUT = WRITE, INOUT = READ|WRITE
 };
 
 // base for Audio streaming buffers for providing
@@ -45,6 +45,9 @@ public:
     virtual StreamDirection GetDirection(void) const = 0;
     virtual word            GetTypeCode(void) const = 0;
     virtual uint            GetLength(void) const = 0;
+    // das is pralle dumm! ->      StreamDirection can be given SET or END or CUR
+    //                             ...also mit bem unsigned position whert geht CUR nur vorwerts
+    //                                (relative zum aktueller position verschieben)
     virtual void            Seek(unsigned position, StreamDirection) = 0;
     void fxAdd( AbstractAudioFx* audioFx ) {
         if(!fx) fx = audioFx;
@@ -124,12 +127,13 @@ private:
     static bool validCheck(const AbstractWaveFileStream*);
 
 protected:
+    Format         fmt;
     unsigned       framesAvailable;
     FileFormat     headerFormat;
     FILE*          f;
-    WavFileHeader  whdr;
     bool           ownBuffer;
     char           fileName[255];
+    AbstractAudioFileHeader hdr;
 
     FileFormat     copyFileNameAndCheckExtension( char*, const char*, Format*, FileFormat = Def );
 
@@ -142,26 +146,26 @@ public:
     FileFormat       GetFileFormat(void) const;
     FILE*            GetFile(void);
     FileName         GetFileName(void) const;
-    WavFileHeader*   GetHeader(void);
+    AbstractAudioFileHeader* GetHeader(void);
     virtual Format*  GetFormat(void) const;
     virtual word     GetTypeCode(void) const;
     virtual unsigned GetPosition(StreamDirection) const = 0;
 
     unsigned         getFramesAvailable(void) const {
         if (framesAvailable == EMPTY)
-            return (whdr.GetDataSize() - GetPosition(GetDirection())) / whdr.AudioFormat.BlockAlign;
+            return (hdr.GetDataSize() - GetPosition(GetDirection())) / fmt.BlockAlign;
         return framesAvailable;
     }
     unsigned         getBytesAvailable(void) const {
         if (framesAvailable == EMPTY)
-            return whdr.GetDataSize() - GetPosition(GetDirection());
-        return framesAvailable * whdr.AudioFormat.BlockAlign;
+            return hdr.GetDataSize() - GetPosition(GetDirection());
+        return framesAvailable * fmt.BlockAlign;
     }
     AbstractWaveFileStream(void)
         : headerFormat(WAV)
-        , whdr(initializeNewWaveheader())
         , framesAvailable(EMPTY)
         , f(NULL) {
+        *(WavFileHeader*)&hdr = initializeNewWaveheader();
     }
 };
 

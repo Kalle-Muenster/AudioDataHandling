@@ -55,6 +55,9 @@
     <Reference Include="Int24Types">
       <HintPath>$(Int24TypesBinRoot)\$(PlatformTarget)\$(Configuration)\Int24Types.dll</HintPath>
     </Reference>
+	<Reference Include="Float16Type">
+	  <HintPath>$(Float16TypeBinRoot)\$(PlatformTarget)\$(Configuration)\Float16Type.dll</HintPath>
+	</Reference>
     <Reference Include="WaveFileHandling">
       <HintPath>..\..\..\bin\core5\$(PlatformTarget)\$(Configuration)\WaveFileHandling.dll</HintPath>
     </Reference>

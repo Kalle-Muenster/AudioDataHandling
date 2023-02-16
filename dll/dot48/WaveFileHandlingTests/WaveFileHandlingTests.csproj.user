@@ -2,8 +2,8 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <StartArguments>onesecond441pulse.wav</StartArguments>
-    <StartWorkingDirectory>C:\WORKSPACE\PROJECTS\WaveFileHandling\bin\tests\dotnet\x64\Debug\</StartWorkingDirectory>
     <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
+    <StartWorkingDirectory>C:\WORKSPACE\PROJECTS\AudioDataHandling\bin\dot48\x64\Debug\</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup>
     <ReferencePath>
@@ -21,7 +21,6 @@
     <StartArguments>
     </StartArguments>
     <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
-    <StartWorkingDirectory>C:\WORKSPACE\PROJECTS\WaveFileHandling\bin\tests\dotnet\x86\Debug\</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <StartArguments>onesecond441pulse.wav</StartArguments>

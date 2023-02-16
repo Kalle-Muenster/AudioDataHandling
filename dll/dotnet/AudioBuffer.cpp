@@ -39,11 +39,11 @@ Stepflow::Audio::AudioBuffer::AudioBuffer(AudioFrameType frameType, uint sampleR
 	: AudioBuffer( sampleRate, frameType.BitDepth, frameType.ChannelCount, frameCount )
 {}
 
-Stepflow::Audio::AudioBuffer::AudioBuffer(int frq, int bit, int chn, System::IntPtr data, uint size, Flags flags)
+Stepflow::Audio::AudioBuffer::AudioBuffer(int frq, PcmTag pcm, int bit, int chn, System::IntPtr data, uint size, Flags flags)
 {
     pin_ptr<byte> rawBufferData = (byte*)data.ToPointer();
 	au = new stepflow::Audio(rawBufferData, size, (Initiatio)(uint)flags);
-	au->format.PCMFormatTag = (WAV_PCM_TYPE_ID)( bit > 16 ? 3 : 1 );
+	au->format.PCMFormatTag = WAV_PCM_TYPE_ID( pcm );
 	au->format.ByteRate = (au->format.BlockAlign = (bit >> 3)*chn)*frq;
 	au->format.BitsPerSample = bit;
 	au->format.SampleRate = frq;
@@ -108,79 +108,84 @@ Stepflow::Audio::AudioBuffer::getRange( uint startcut, uint endpoint )
 
 
 Stepflow::Audio::Audio^
-Stepflow::Audio::AudioBuffer::convert(int bitDepth, int channelCount)
+Stepflow::Audio::AudioBuffer::convert( int sampleRate, PcmTag pcmFlags, int bitDepth, int channelCount )
 {
-    int pcm = bitDepth > 24 ? 3 : 1;
-	au->convert(AUDIOFRAME_CODE(bitDepth,channelCount,pcm));
+    uint pcm = (uint)pcmFlags;
+	au->convert( FrameTypeCode( AUDIOFRAME_CODE(bitDepth,channelCount,pcm) ), 1.0 );
 	return this;
 }
 Stepflow::Audio::Audio^
 Stepflow::Audio::AudioBuffer::convert(PcmFormat fmt)
 {
-	au->convert((stepflow::Format*)&fmt);
+	au->convert( (stepflow::Format*)&fmt, 1.0 );
 	return this;
 }
 Stepflow::Audio::Audio^
 Stepflow::Audio::AudioBuffer::convert(AudioFrameType frty)
 {
-	au->convert(frty.Code);
+	au->convert( FrameTypeCode(frty.Code), 1.0 );
 	return this;
 }
 Stepflow::Audio::Audio^
-Stepflow::Audio::AudioBuffer::convert(AudioFrameType frty, double amp)
+Stepflow::Audio::AudioBuffer::convert( AudioFrameType frty, double amp )
 {
-	au->convert(frty.BitDepth, frty.ChannelCount, amp);
+	au->convert( frty.native(), amp );
 	return this;
 }
 Stepflow::Audio::Audio^
-Stepflow::Audio::AudioBuffer::convert(unsigned typecode)
+Stepflow::Audio::AudioBuffer::convert( unsigned typecode )
 {
-	au->convert(typecode);
+	au->convert( reinterpret_cast<stepflow::AudioFrameType&>( typecode ), 1.0 );
 	return this;
 }
 
 Stepflow::Audio::Audio^ Stepflow::Audio::AudioBuffer::amplified(double factor)
 {
-	return gcnew AudioBuffer(au->amplified(factor));
+	return gcnew AudioBuffer( au->amplified(factor) );
 }
 
-Stepflow::Audio::Audio^ Stepflow::Audio::AudioBuffer::amplify(double factor)
+Stepflow::Audio::Audio^ Stepflow::Audio::AudioBuffer::amplify( double factor )
 {
-	au->amplify(factor);
+	au->amplify( factor );
 	return this;
 }
 
 Stepflow::Audio::Audio^
-Stepflow::Audio::AudioBuffer::converted(int frq, int bit, int chn)
+Stepflow::Audio::AudioBuffer::converted( int frq, PcmTag pcm, int bit, int chn )
 {
-	return gcnew AudioBuffer( frq, bit, chn,
-        IntPtr( au->converted(bit,chn).detachBuffer() ),
+	return gcnew AudioBuffer( frq, pcm, bit, chn,
+        IntPtr( au->converted( stepflow::WAV_PCM_TYPE_ID(pcm), bit, chn, 1.0 ).detachBuffer() ),
         FrameCount*( (bit>>3)*chn ),
         Flags( DONT_ALLOCATE_NEW|OWN ) );
 }
 
 Stepflow::Audio::Audio^
-Stepflow::Audio::AudioBuffer::converted(PcmFormat format)
+Stepflow::Audio::AudioBuffer::converted( PcmFormat format )
 {
 	return converted(
         format.SampleRate,
+        format.Tag,
         format.BitsPerSample,
         format.NumChannels );
 }
 Stepflow::Audio::Audio^
-Stepflow::Audio::AudioBuffer::converted(AudioFrameType frty)
+Stepflow::Audio::AudioBuffer::converted( AudioFrameType frty )
 {
-	return converted(
-        Format.SampleRate,
+    uint rate = frty.native().Rate();
+    rate = rate ? rate : Format.SampleRate;
+	return converted( rate,
+        frty.PcmTypeTag,
         frty.BitDepth,
         frty.ChannelCount );
 }
 Stepflow::Audio::Audio^
-Stepflow::Audio::AudioBuffer::converted(AudioFrameType frty, double amp)
+Stepflow::Audio::AudioBuffer::converted( AudioFrameType frty, double amp )
 {
-	return gcnew AudioBuffer( 
-        Format.SampleRate, frty.BitDepth, frty.ChannelCount,
-        IntPtr( au->converted(frty.BitDepth,frty.ChannelCount,amp).detachBuffer() ),
+    uint rate = frty.native().Rate();
+    rate = rate ? rate : Format.SampleRate;
+	return gcnew AudioBuffer( rate,
+        frty.PcmTypeTag, frty.BitDepth, frty.ChannelCount,
+        IntPtr( au->converted(frty.native(), amp).detachBuffer()),
         FrameCount*((frty.BitDepth >> 3)*frty.ChannelCount),
         Flags( DONT_ALLOCATE_NEW|OWN ) );
 }
@@ -220,7 +225,7 @@ Stepflow::Audio::AudioBuffer::trimmed(void)
 Stepflow::Audio::IAudioFrame^ 
 Stepflow::Audio::AudioBuffer::GetFrame(unsigned idx)
 {
-    MANAGEDTYPE_SWITCH( au->frameTypeCode(),
+    MANAGEDTYPE_SWITCH( au->frameTypeCode().Code(),
         return (IAudioFrame^)getFrame<CASE_TYPE>(idx);
     );
 }

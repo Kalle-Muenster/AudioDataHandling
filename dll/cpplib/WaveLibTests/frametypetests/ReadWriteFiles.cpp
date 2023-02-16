@@ -28,7 +28,9 @@ byte compareFrameToSampleValues( const Wave::AudioFrameType* frameType, Wave::IA
     const int CC = CHt;
     for ( int ch = 0; ch < CH; ++ch ) {
         CHt = ch < CC ? ch : (CC-1);
-        switch ( frameType->BitDepth() ) {
+        if( frameType->FormatTag() == Wave::PCMf && frameType->BitDepth() == 16 ) {
+            if (*(Wave::f16*)frameData->GetChannel(ch) != Wave::f16(testData[CHt])) return ch + 1;
+        } else switch ( frameType->BitDepth() ) {
         case 8:  if (*(Wave::s8*) frameData->GetChannel(ch) != Wave::s8( testData[CHt])) return ch + 1; else break;
         case 16: if (*(Wave::s16*)frameData->GetChannel(ch) != Wave::s16(testData[CHt])) return ch + 1; else break;
         case 24: if (*(Wave::s24*)frameData->GetChannel(ch) != Wave::s24(testData[CHt])) return ch + 1; else break;
@@ -45,6 +47,9 @@ byte compareAudioFrames( const Wave::AudioFrameType* frameType, Wave::IAudioFram
     if (testData->BitDepth() != frameType->BitDepth()) return 'B';
     if (testData->Signedty() != frameData->Signedty()) return 'T';
     for (int ch = 0; ch < CH; ++ch) {
+        if( frameType->FormatTag() == Wave::PCMf && frameType->BitDepth() == 16 ) {
+            if (*(Wave::f16*)frameData->GetChannel(ch) != *(Wave::s16*)testData->Channel[ch] ) return ch + 1;
+        } else 
         switch (frameType->BitDepth()) {
         case 8:  if ( *(Wave::s8*) frameData->GetChannel(ch) !=  *(Wave::s8*)testData->Channel[ch] ) return ch + 1; else break;
         case 16: if (*(Wave::s16*) frameData->GetChannel(ch) != *(Wave::s16*)testData->Channel[ch] ) return ch + 1; else break;

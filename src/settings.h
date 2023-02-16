@@ -25,6 +25,6 @@
 #define INT24_LITERAL_OPERATORS (1)
 
 // std::typetrait and std::numeric_limits extensions for Int24 types 
-#define INT24_TYPETRAIT_SUPPORT (1)
+// #define INT24_TYPETRAIT_SUPPORT (1)
 
 #define PAM_WAVEFILE_HEADERS (1)

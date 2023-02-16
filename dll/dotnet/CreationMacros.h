@@ -7,7 +7,7 @@ public: \
 	typedef AuPCM##sigT##tySi##bit##chCn##ch TYPE; \
     typedef stepflow::##sigT##tySi NTYP; \
     typedef Stepflow::##sigT##tySi STYP; \
-	const static Stepflow::Audio::AudioFrameType type = Stepflow::Audio::AudioFrameType(NATIVE::TS,chCn); \
+	const static Stepflow::Audio::AudioFrameType type = Stepflow::Audio::AudioFrameType( Stepflow::Audio::PcmTag::PCM##sigT, NATIVE::TS, chCn, 0); \
     [FieldOffsetAttribute(0)] STYP sampledata; \
     property Stepflow::Audio::AudioFrameType FrameType { \
         virtual Stepflow::Audio::AudioFrameType get(void) { \
@@ -55,7 +55,7 @@ public: \
 		return safe_cast<Stepflow::Audio::IAudioFrame^>(*this); \
 	} \
     TYPE( double initValue ) { \
-        sampledata = (STYP)initValue; \
+        sampledata = STYP(initValue); \
         for(int i=1;i<chCn;i++) \
             *((&sampledata)+i) = sampledata; \
     } \
@@ -165,7 +165,7 @@ public: \
     virtual void Clear(void) { \
         sampledata = 0; \
         for(int i=1;i<chCn;i++) \
-            *((&sampledata)+i) = stepflow::datatype_limits<NTYP>::db0(); \
+            *((&sampledata)+i) = STYP(stepflow::datatype_limits<NTYP>::db0()); \
     } \
     virtual Stepflow::Audio::IAudioFrame^ Clone( void ) override { \
         TYPE clone = safe_cast<TYPE>( FrameType.CreateEmptyFrame() ); \
@@ -185,12 +185,13 @@ internal: \
 	} \
 	Stepflow::Audio::IAudioFrame^ setNative( NATIVE* val ) { \
 		for( int i=0; i<chCn; i++ ) \
-			(&sampledata)[i] = STYP( NTYP( val->channel[i] ) ); \
+			(&sampledata)[i] = STYP( val->channel[i] ); \
         return safe_cast<Stepflow::Audio::IAudioFrame^>(*this); \
 	} \
 }
 
-#define MANAGEDFRAME_TYPECODE( typi ) ( typi ## ::NATIVE::TS + (( typi ## ::NATIVE::CH | (typi ## ::NATIVE::ST==1?3:typi##::NATIVE::ST+1)<<6)<<8)  )
+
+#define MANAGEDFRAME_TYPECODE( typi ) ( typi ## ::NATIVE::TS + (( typi ## ::NATIVE::CH | (typi ## ::NATIVE::pcmTypeFlag()<<6) )<<8)  )
 #define MANAGEDFRAME_TYPE( eenz, zwee, dree ) Stepflow::Audio::FrameTypes::Au ## eenz ## zwee ## bit ## dree ## ch
 #define ManagedFrameCase( NumberOne, NumberTwo, NumberTri, actionOne ) case \
         AUDIOFRAME_CODE( NumberOne, NumberTwo, NumberTri ): { \
@@ -200,32 +201,37 @@ internal: \
 
 
 #define MANAGEDTYPE_SWITCH( tyco, actionToDo ) \
-    switch (tyco) { \
-        ManagedFrameCase(8,1, PCMs,actionToDo ) \
-        ManagedFrameCase(8,2, PCMs,actionToDo ) \
-        ManagedFrameCase(8,4, PCMs,actionToDo ) \
-        ManagedFrameCase(8,6, PCMs,actionToDo ) \
-        ManagedFrameCase(8,8, PCMs,actionToDo ) \
-        ManagedFrameCase(16,1,PCMs,actionToDo ) \
-        ManagedFrameCase(16,2,PCMs,actionToDo ) \
-        ManagedFrameCase(16,4,PCMs,actionToDo ) \
-        ManagedFrameCase(16,6,PCMs,actionToDo ) \
-        ManagedFrameCase(16,8,PCMs,actionToDo ) \
-        ManagedFrameCase(24,1,PCMs,actionToDo ) \
-        ManagedFrameCase(24,2,PCMs,actionToDo ) \
-        ManagedFrameCase(24,4,PCMs,actionToDo ) \
-        ManagedFrameCase(24,6,PCMs,actionToDo ) \
-        ManagedFrameCase(24,8,PCMs,actionToDo ) \
-        ManagedFrameCase(32,1,PCMf,actionToDo ) \
-        ManagedFrameCase(32,2,PCMf,actionToDo ) \
-        ManagedFrameCase(32,4,PCMf,actionToDo ) \
-        ManagedFrameCase(32,6,PCMf,actionToDo ) \
-        ManagedFrameCase(32,8,PCMf,actionToDo ) \
-        ManagedFrameCase(64,1,PCMf,actionToDo ) \
-        ManagedFrameCase(64,2,PCMf,actionToDo ) \
-        ManagedFrameCase(64,4,PCMf,actionToDo ) \
-        ManagedFrameCase(64,6,PCMf,actionToDo ) \
-        ManagedFrameCase(64,8,PCMf,actionToDo ) \
+    switch ( tyco ) { \
+        ManagedFrameCase( 8, 1, PCMs, actionToDo ) \
+        ManagedFrameCase( 8, 2, PCMs, actionToDo ) \
+        ManagedFrameCase( 8, 4, PCMs, actionToDo ) \
+        ManagedFrameCase( 8, 6, PCMs, actionToDo ) \
+        ManagedFrameCase( 8, 8, PCMs, actionToDo ) \
+        ManagedFrameCase( 16,1, PCMs, actionToDo ) \
+        ManagedFrameCase( 16,2, PCMs, actionToDo ) \
+        ManagedFrameCase( 16,4, PCMs, actionToDo ) \
+        ManagedFrameCase( 16,6, PCMs, actionToDo ) \
+        ManagedFrameCase( 16,8, PCMs, actionToDo ) \
+        ManagedFrameCase( 24,1, PCMs, actionToDo ) \
+        ManagedFrameCase( 24,2, PCMs, actionToDo ) \
+        ManagedFrameCase( 24,4, PCMs, actionToDo ) \
+        ManagedFrameCase( 24,6, PCMs, actionToDo ) \
+        ManagedFrameCase( 24,8, PCMs, actionToDo ) \
+        ManagedFrameCase( 16,1, PCMf, actionToDo ) \
+        ManagedFrameCase( 16,2, PCMf, actionToDo ) \
+        ManagedFrameCase( 16,4, PCMf, actionToDo ) \
+        ManagedFrameCase( 16,6, PCMf, actionToDo ) \
+        ManagedFrameCase( 16,8, PCMf, actionToDo ) \
+        ManagedFrameCase( 32,1, PCMf, actionToDo ) \
+        ManagedFrameCase( 32,2, PCMf, actionToDo ) \
+        ManagedFrameCase( 32,4, PCMf, actionToDo ) \
+        ManagedFrameCase( 32,6, PCMf, actionToDo ) \
+        ManagedFrameCase( 32,8, PCMf, actionToDo ) \
+        ManagedFrameCase( 64,1, PCMf, actionToDo ) \
+        ManagedFrameCase( 64,2, PCMf, actionToDo ) \
+        ManagedFrameCase( 64,4, PCMf, actionToDo ) \
+        ManagedFrameCase( 64,6, PCMf, actionToDo ) \
+        ManagedFrameCase( 64,8, PCMf, actionToDo ) \
         default: { \
     throw gcnew System::Exception(UNKNOWN_TYPECODE); \
                      } break; \

@@ -36,9 +36,10 @@ namespace WaveFileHandlingTests
                                              frameType.BitDepth, frameType.ChannelCount ) );
                     reader.Seek(0);
                     Audio buffer = reader.Read();
+                    PcmTag tag = frameType.PcmTypeTag;
                     int bit = frameType.BitDepth;
                     int chn = frameType.ChannelCount;
-                    buffer.convert(bit,chn);
+                    buffer.convert((int)buffer.Format.SampleRate,tag,bit,chn);
                     StdStream.Out.WriteLine(string.Format("buffer loaded: {0} frames",buffer.FrameCount));
                     Audio[] splitparts = (buffer as AudioBuffer).split(1000,true);
                     int zaehler = 1;

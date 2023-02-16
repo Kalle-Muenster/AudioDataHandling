@@ -29,14 +29,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <CLRSupport>true</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
     <CLRSupport>true</CLRSupport>
@@ -44,14 +44,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <CLRSupport>true</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
     <CLRSupport>true</CLRSupport>
@@ -75,22 +75,22 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>./;../../../inc;C:\CMD\CCommands;../../../../ControlledValues/inc;../../../../Int24Types/src;..\..\..\etc;$(IncludePath)</IncludePath>
+    <IncludePath>./;../../../inc;C:\CMD\CCommands;../../../../ControlledValues/inc;../../../../Int24Types/src;../../../../Float16Type/Float16Type/src;..\..\..\etc;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)..\..\..\bin\dot48\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LinkKeyFile>$(ProjectDir)..\..\..\WaveLib.snk</LinkKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>./;../../../inc;C:\CMD\CCommands;../../../../Int24Types/src;../../../../ControlledValues/inc;..\..\..\etc;$(IncludePath)</IncludePath>
+    <IncludePath>./;../../../inc;C:\CMD\CCommands;../../../../Int24Types/src;../../../../ControlledValues/inc;../../../../Float16Type/Float16Type/src;..\..\..\etc;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)..\..\..\bin\dot48\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LinkKeyFile>$(ProjectDir)..\..\..\WaveLib.snk</LinkKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>./;../../../inc;C:\CMD\CCommands;../../../../Int24Types/src;../../../../ControlledValues/inc;..\..\..\etc;$(IncludePath)</IncludePath>
+    <IncludePath>./;../../../inc;C:\CMD\CCommands;../../../../Int24Types/src;../../../../ControlledValues/inc;../../../../Float16Type/Float16Type/src;..\..\..\etc;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)..\..\..\bin\dot48\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LinkKeyFile>$(ProjectDir)..\..\..\WaveLib.snk</LinkKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>./;../../../inc;C:\CMD\CCommands;../../../../Int24Types/src;../../../../ControlledValues/inc;..\..\..\etc;$(IncludePath)</IncludePath>
+    <IncludePath>./;../../../inc;C:\CMD\CCommands;../../../../Int24Types/src;../../../../ControlledValues/inc;../../../../Float16Type/Float16Type/src;..\..\..\etc;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)..\..\..\bin\dot48\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LinkKeyFile>$(ProjectDir)..\..\..\WaveLib.snk</LinkKeyFile>
   </PropertyGroup>
@@ -104,6 +104,8 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <FunctionLevelLinking>true</FunctionLevelLinking>
+      <AdditionalOptions>/std:c++11 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard_C>stdc11</LanguageStandard_C>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -130,6 +132,8 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <FunctionLevelLinking>true</FunctionLevelLinking>
+      <AdditionalOptions>/std:c++11 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard_C>stdc11</LanguageStandard_C>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -160,6 +164,8 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/std:c++11 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard_C>stdc11</LanguageStandard_C>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -194,6 +200,8 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/std:c++11 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard_C>stdc11</LanguageStandard_C>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -246,6 +254,7 @@
     <ClInclude Include="..\..\dotnet\CreationMacros.h" />
     <ClInclude Include="..\..\dotnet\WavReader.hpp" />
     <ClInclude Include="..\..\dotnet\WavWriter.hpp" />
+    <ClInclude Include="..\..\dotnet\WowbaggerStream.hpp" />
     <ClInclude Include="..\compilation.h" />
   </ItemGroup>
   <ItemGroup>
@@ -261,6 +270,7 @@
     <ClCompile Include="..\..\dotnet\CircularBuffer.cpp" />
     <ClCompile Include="..\..\dotnet\WavReader.cpp" />
     <ClCompile Include="..\..\dotnet\WavWriter.cpp" />
+    <ClCompile Include="..\..\dotnet\WowbaggerStream.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="settings.h" />
@@ -268,6 +278,9 @@
   <ItemGroup>
     <Reference Include="Int24Types">
       <HintPath>$(Int24TypesBinRoot)\$(PlatformTarget)\$(Configuration)\Int24Types.dll</HintPath>
+    </Reference>
+    <Reference Include="Float16Type">
+      <HintPath>$(Float16TypeBinRoot)\$(PlatformTarget)\$(Configuration)\Float16Type.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

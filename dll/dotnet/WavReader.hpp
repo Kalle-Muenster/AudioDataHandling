@@ -60,14 +60,20 @@ namespace Stepflow
                 {
                     IAudioFrame^ frame = GetFormat().CreateEmptyFrame();
                     int c = frame->FrameType.ChannelCount;
+                    PcmTag pcm = frame->FrameType.PcmTypeTag;
                     switch (frame->FrameType.BitDepth) {
                     case 8: {
                         for (int i = 0; i < c; ++i)
                             frame->Channel[i] = native->ReadByte();
                     } break;
                     case 16: {
-                        for (int i = 0; i < c; ++i)
-                            frame->Channel[i] = native->ReadInt16();
+                        if( pcm == PcmTag::PCMf ) {
+                            for( int i = 0; i < c; ++i )
+                                frame->Channel[i] = reinterpret_cast<Float16&>(native->ReadHalf());
+                        } else {
+                            for( int i = 0; i < c; ++i )
+                                frame->Channel[i] = native->ReadInt16();
+                        }
                     } break;
                     case 24: {
                         for (int i = 0; i < c; ++i)
@@ -100,7 +106,7 @@ namespace Stepflow
                     } else {
                         stepflow::Audio rd = native->Read(dst->Length);
                         rd.mode.addFlag(stepflow::OWN);
-                        rd.convert( dst[0]->FrameType.Code );
+                        rd.convert( FrameTypeCode( dst[0]->FrameType.Code ) );
                         for (int i = 0; i < dst->Length; ++i) {
                             _memccpy( dst[i]->GetRaw().ToPointer(), rd[i], rd.format.BlockAlign, 1);
                         } rd.mode.addFlag( stepflow::OWN );
@@ -139,7 +145,9 @@ namespace Stepflow
 					T read(void) {
 					System::Type^ t = T::typeid; 
                     if (t == Int24::typeid) {
-                        return (T)static_cast<System::Object^>(Int24(native->ReadInt24()));
+                        return (T)static_cast<System::Object^>(reinterpret_cast<Int24&>(native->ReadInt24()));
+                    } else if( t == Float16::typeid ) {
+                        return (T)static_cast<System::Object^>(reinterpret_cast<Float16&>(native->ReadHalf()));
                     } else {
                         switch (System::Type::GetTypeCode(t)) {
                         case System::TypeCode::Byte:

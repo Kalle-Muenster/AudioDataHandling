@@ -28,7 +28,6 @@ const char* Stepflow::Audio::Audio::convertFromSystemString( char* dst, System::
     } return dst;
 }
 
-// threadsafe function implementations used by buffers, readers and writers:
 
 System::String^
 Stepflow::Audio::FileIO::WaveHeader::ToString(void)
@@ -60,18 +59,17 @@ Stepflow::Audio::PcmFormat::FrameType::get(void)
 Stepflow::Audio::IAudioFrame^ 
 Stepflow::Audio::PcmFormat::CreateEmptyFrame( void )
 {
-    //AudioFrameType t = AudioFrameType((uint)Tag,BitsPerSample,NumChannels,SampleRate);
-    MANAGEDTYPE_SWITCH( AUDIOFRAME_CODE(BitsPerSample, NumChannels, (uint)Tag), return gcnew CASE_TYPE(); );
+    MANAGEDTYPE_SWITCH( AUDIOFRAME_CODE( BitsPerSample, NumChannels, WAV_PCM_TYPE_ID(Tag) ), return gcnew CASE_TYPE(); );
 }
 
 Stepflow::Audio::PcmFormat
-Stepflow::Audio::PcmFormat::Create( int srt, int bit, int chn ) {
-    return *reinterpret_cast<const PcmFormat*>( &stepflow::CreateWaveFormat(srt, bit, chn) );
+Stepflow::Audio::PcmFormat::Create( int srt, PcmTag tag, int bit, int chn ) {
+    return *reinterpret_cast<const PcmFormat*>( &stepflow::CreateWaveFormat( srt, bit, chn, WAV_PCM_TYPE_ID(tag) ) );
 }
 
 Stepflow::Audio::PcmFormat
 Stepflow::Audio::PcmFormat::Create( AudioFrameType type, word rate ) {
-    return *reinterpret_cast<const PcmFormat*>( &stepflow::CreateWaveFormat(type.code, rate) );
+    return *reinterpret_cast<const PcmFormat*>( &stepflow::CreateWaveFormat( type.code, rate ) );
 }
 
 Stepflow::Audio::IAudioFrame^ 
@@ -94,9 +92,11 @@ Stepflow::Audio::AudioFrameType::CreateFormatStruct( int sampleRate )
 
 Stepflow::Audio::FileIO::SndHeader
 Stepflow::Audio::FileIO::SndHeader::FromRawData( IntPtr data ) {
-    stepflow::SndFileHeader* raw = (stepflow::SndFileHeader*)data.ToPointer();
-    stepflow::reverseSndHeader( raw );
-    return *reinterpret_cast<SndHeader*>( raw );
+    stepflow::AbstractAudioFileHeader* raw = (stepflow::AbstractAudioFileHeader*)data.ToPointer();
+    if( raw->isSndFile() && raw->isValid() ) {
+        raw->makeReadable();
+        return *reinterpret_cast<SndHeader *>( raw );
+    } else throw gcnew Exception( "Pointed data not is an SndHeader" );
 }
 
 word
@@ -114,7 +114,7 @@ Stepflow::Audio::FileIO::SndHeader::BitDepth::get(void) {
 }
 
 Stepflow::Audio::AudioFrameType
-Stepflow::Audio::FileIO::SndHeader::FrameType::get(void) {
+Stepflow::Audio::FileIO::SndHeader::GetFrameType(void) {
     stepflow::WAV_PCM_TYPE_ID tag = (FormatCode >= SndTypeTag::FLOAT)
                                   ? stepflow::WAV_PCM_TYPE_ID::PCMf
                                   : stepflow::WAV_PCM_TYPE_ID::PCMs;

@@ -70,7 +70,7 @@ namespace Core3WaveLibTests
                 Consola.StdStream.Out.WriteLine("Testing FrameType: " + frametype.ToString());
                 Consola.StdStream.Out.WriteLine("layout: " + testling.GetType().StructLayoutAttribute.Value.ToString() );
                 ++Steps;
-
+                PcmTag pcmtag = testling.FrameType.PcmTypeTag;
                 int bitnes = testling.FrameType.BitDepth;
                 int channels = testling.FrameType.ChannelCount;
                 Consola.StdStream.Out.WriteLine(string.Format("bitnes: {0}, channels: {1}", frametype.BitDepth, frametype.ChannelCount));
@@ -81,7 +81,15 @@ namespace Core3WaveLibTests
                             switch (bitnes)
                             {
                                 case 8: {  sbyte val = (sbyte)data[i]; testling.set_Channel(i,val); break; }
-                                case 16: { short val = (short)data[i]; testling.set_Channel(i,val); break; }
+                                case 16: {
+                                    if( pcmtag == PcmTag.PCMf ) {
+                                        Float16 val = (Float16)data[i];
+                                        testling.set_Channel( i, val );
+                                    } else {
+                                        short val = (short)data[i];
+                                        testling.set_Channel( i, val );
+                                    } break;
+                                }
                                 case 24: { Int24 val = (Int24)data[i]; testling.set_Channel(i,val); break; }
                                 case 32: { float val = (float)data[i]/127.0f; testling.SetChannel(i, new IntPtr(&val)); break; }
                                 case 64: { double val = (double)data[i]/127.0; testling.set_Channel(i,val); break; }
@@ -94,7 +102,14 @@ namespace Core3WaveLibTests
                     Std.Out.Write("will mix mono sample: ");
                     switch (bitnes) {
                         case 8:  { sbyte val  = 33;     Std.Out.Write(val.ToString()); testling.Mix(val, pan); break; }
-                        case 16: { short val  = 10000;  Std.Out.Write(val.ToString()); testling.Mix(val, pan); break; }
+                        case 16: {
+                            if( pcmtag == PcmTag.PCMf ) {
+                                Float16 val = Float16.One / (Float16)3.0f;
+                                Std.Out.Write(val.ToString()); testling.Mix(val, pan);
+                            } else {
+                                short val  = 10000; Std.Out.Write(val.ToString()); testling.Mix(val, pan);
+                            } break;
+                        }
                         case 24: { Int24 val  = Int24.MaxValue/3;  Std.Out.Write(val.ToString()); testling.Mix(val, pan); break; }
                         case 32: { float val  = 0.333f; Std.Out.Write(val.ToString()); testling.Mix(val, pan); break; }
                         case 64: { double val = 0.333;  Std.Out.Write(val.ToString()); testling.Mix(val, pan); break; }

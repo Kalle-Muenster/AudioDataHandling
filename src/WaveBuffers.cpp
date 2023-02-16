@@ -11,6 +11,8 @@
 #include <limits.h>
 #include <memory.h>
 
+#include <WaveLib.inl/half.hpp>
+#include <WaveLib.inl/numbersendian.h>
 #include <WaveLib.inl/enumoperators.h>
 #include <WaveLib.inl/indiaccessfuncs.h>
 #include <WaveLib.inl/int24bittypes.hpp>
@@ -38,7 +40,7 @@
 #define enter_locked_scope( dirpos ) do if( lock( dirpos ) ) { 
 #define write_scope_return( value ) unlock( write ); return value
 #define read_locked_return( value ) unlock( read ); return value
-#define close_locked_scope( timout ) } else do_wait_cycles( timout ) while( true );
+#define close_locked_scope( timout ) } else do_wait_cycles( --timout ) while( true );
 #define  read_locked_scope  enter_locked_scope( read ) log_lock_state("read")
 #define write_locked_scope  enter_locked_scope( write ) log_lock_state("write")
 
@@ -83,9 +85,9 @@ WaveSpace(AudioStream)::GetDirection(void) const
 }
 
 uint
-WaveSpace(AudioStream)::GetPosition(StreamDirection dir) const
+WaveSpace(AudioStream)::GetPosition( StreamDirection dir ) const
 {
-    if (dir == StreamDirection::READ) {
+    if( dir == StreamDirection::READ ) {
         return this->read; // / format.BlockAlign;
     } else {
         return this->write; // / format.BlockAlign;
@@ -95,7 +97,7 @@ WaveSpace(AudioStream)::GetPosition(StreamDirection dir) const
 uint
 WaveSpace(AudioStream)::GetDuration(void) const
 {
-    return uint( ((float)format.SampleRate/GetPosition(WRITE))*1000 );
+    return uint( ( (float)format.SampleRate / GetPosition(WRITE) ) * 1000 );
 }
 
 uint
@@ -247,7 +249,7 @@ WaveSpace(AudioStream)::Read(Audio& receive, uint framecount)
         if ((framecount > (nextBarrier() / this->format.BlockAlign))
             || dstNeedsExtension) {
             if (dstNeedsExtension)
-                receive += Audio(receive.format, framecount - receive.frameCount);
+                receive.append( Audio( receive.format, framecount - receive.frameCount ).outscope() );
             for (int i = 0; i < framecount; i++)
                 MEMCPYFUNC(receive[i], (*this)[i], 1, this->format.BlockAlign);
         } else {
@@ -259,7 +261,7 @@ close_locked_scope(2) }
 
 
 WaveSpace(Audio)
-WaveSpace(AudioStream)::Read(uint framecount)
+WaveSpace(AudioStream)::Read( uint framecount )
 { read_locked_scope
 
     uint available = GetLength() - GetReadPosition();

@@ -36,11 +36,11 @@ namespace Stepflow
                     StdStream.Out.WriteLine( string.Format( "\nTest: Trimming a {0}bit {1}channel buffer",
                                              frameType.BitDepth, frameType.ChannelCount ) );
                     reader.Seek(0);
-                    Audio buffer = reader.Read();
+                    AudioBuffer buffer = reader.Read() as AudioBuffer;
                     int bit = frameType.BitDepth;
                     int chn = frameType.ChannelCount;
-                    StdStream.Out.WriteLine(string.Format("buffer loaded: {0}",buffer.convert(bit,chn).Duration));
-                    (buffer as AudioBuffer).Trim( threshold );
+                    StdStream.Out.WriteLine(string.Format("buffer loaded: {0}",buffer.convert(frameType).Duration));
+                    buffer.Trim( threshold );
                     TimeSpan result = buffer.Duration;
                     TimeSpan difference = result - expected;
                     writer.Save( buffer, string.Format( "trimmed_{0}.wav", frameType ) );

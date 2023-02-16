@@ -19,7 +19,7 @@ Wave::Test::TrimmingTests::TrimmingTests( const char* resourcename, uint expecte
     pool_set("Preparing for trimming tests,... Loading ");
     const AbstractAudioFileHeader* fileData = (const AbstractAudioFileHeader*)TestData_resourceByName(resourcename)->data();
     HEADER_CHUNK_TYPE fileType = fileData->GetFileFormat();
-    switch (fileType) {
+    switch( fileType ) {
         case HEADER_CHUNK_TYPE::WavFormat: pool_set("Wav-File"); break;
         case HEADER_CHUNK_TYPE::SndFormat: pool_set("Snd-File"); break;
         case HEADER_CHUNK_TYPE::P7mFormat: pool_set("Pam-File"); break;
@@ -42,8 +42,7 @@ Wave::Test::TrimmingTests::runTestCase( const AudioFrameType* frametype )
     PrintLog("\n<------------------------------------------------->\n");
     char tag = frametype->FormatTag();
     tag = tag == PCMs ? 's' : PCMf ? 'f' : 'i';
-    uint tc = frametype->Code();
-    tc = tc|(48000<<16);
+    FrameTypeCode tc = frametype->Code(); //| ( 48000 << 16 );
 
     Audio casebuffer = buffer.converted( tc ).outscope();
     PrintLog( TypeCodeToString(tc) );

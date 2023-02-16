@@ -2,6 +2,7 @@
 
 set ConsolaProject=%~dp0..\..\..\Consola\ConsolaDot48
 set Int24TypesProject=%~dp0..\..\..\Int24Types\dot48
+set Float16TypeProject=%~dp0..\..\..\Float16Type
 
 set ARCH=%~1
 set CONF=%~2
@@ -13,6 +14,10 @@ call Build.cmd "%ARCH%" "%CONF%" Test %CLEAN%
 popd
 
 pushd "%Int24TypesProject%"
+call Build.cmd "%ARCH%" "%CONF%" %CLEAN%
+popd
+
+pushd "%Float16TypeProject%"
 call Build.cmd "%ARCH%" "%CONF%" %CLEAN%
 popd
 

@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Quelldateien">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Ressourcendateien">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="native">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="native\src">
+      <UniqueIdentifier>{5f899a81-e93f-4c36-9ec0-c950a6e1bcd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="native\inc">
+      <UniqueIdentifier>{9b5a150f-e39c-45ae-8e44-3b25fffa5c6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="linkage">
+      <UniqueIdentifier>{d49a0d42-acd7-4027-b782-07a37f4615ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="includes">
+      <UniqueIdentifier>{7931408d-c761-4eaf-94ba-868967b46b82}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Resource.h">
+      <Filter>Ressourcendateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\WaveFileIO.h">
+      <Filter>native\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveStream.hpp">
+      <Filter>native\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveMacros.hpp">
+      <Filter>native\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveHandling.hpp">
+      <Filter>native\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveFormat.hpp">
+      <Filter>native\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveFileWriter.hpp">
+      <Filter>native\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveFileReader.hpp">
+      <Filter>native\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveBuffers.hpp">
+      <Filter>native\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveAudio.hpp">
+      <Filter>native\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Panorama.hpp">
+      <Filter>native\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveSpacer.h">
+      <Filter>native\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\settings.h">
+      <Filter>native\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\CleanupMacros.h">
+      <Filter>native\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\settings.h">
+      <Filter>native\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\importsettings.h">
+      <Filter>native\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dotnet\Audio.hpp">
+      <Filter>Quelldateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dotnet\AudioBuffer.hpp">
+      <Filter>Quelldateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dotnet\AudioStreamBuffer.hpp">
+      <Filter>Quelldateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dotnet\CircularBuffer.hpp">
+      <Filter>Quelldateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dotnet\CreationMacros.h">
+      <Filter>Quelldateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dotnet\WavReader.hpp">
+      <Filter>Quelldateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dotnet\WavWriter.hpp">
+      <Filter>Quelldateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\exportsettings.h">
+      <Filter>Quelldateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\etc\enumoperators.h">
+      <Filter>native</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\etc\indiaccessfuncs.h">
+      <Filter>native</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\etc\namespacer.h">
+      <Filter>native</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dotnet\WowbaggerStream.hpp">
+      <Filter>Quelldateien</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AssemblyInfo.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\WaveStream.cpp">
+      <Filter>native\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\WaveFormat.cpp">
+      <Filter>native\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\WaveFileWriter.cpp">
+      <Filter>native\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\WaveFileReader.cpp">
+      <Filter>native\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\WaveBuffers.cpp">
+      <Filter>native\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\WaveAudio.cpp">
+      <Filter>native\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dotnet\Audio.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dotnet\AudioBuffer.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dotnet\AudioStreamBuffer.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dotnet\CircularBuffer.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dotnet\WavReader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dotnet\WavWriter.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dotnet\WowbaggerStream.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="app.rc">
+      <Filter>Ressourcendateien</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="app.ico">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

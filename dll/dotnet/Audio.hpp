@@ -16,7 +16,7 @@
 #endif
 #endif
 
-#include <eszentielle/.CommandlinerEndian.h>
+#include "..\..\etc\numbersendian.h"
 
 // include native wavelib c++ sources being wrapped:
 #include "../../src/WaveHandling.hpp"
@@ -37,6 +37,9 @@ typedef unsigned uint;
 // macros for creating AudioFrame structures:
 #include "CreationMacros.h"
 
+namespace stepflow {
+    typedef half_float::half f16;
+}
 
 namespace Stepflow {
     
@@ -44,6 +47,7 @@ namespace Stepflow {
     using  s8  = stepflow::s8;
     using  i16 = stepflow::i16;
     using  s16 = stepflow::s16;
+    using  f16 = Stepflow::Float16;
     using  i24 = Stepflow::UInt24;
     using  s24 = Stepflow::Int24;
     using  i32 = stepflow::i32;
@@ -55,13 +59,19 @@ namespace Stepflow {
 
 	namespace Audio {
 
-        template<typename NAT,typename TYP>
+        template< typename NAT, typename TYP>
         TYP SampleTypeConversion( Object^ sample ) {
             Type^ sT = sample->GetType();
-            if ( sT == TYP::typeid ) return safe_cast<TYP>(sample);
-            if ( sT == Int24::typeid )
-                return TYP( stepflow::ConversionFactor(24,NAT::TS) * safe_cast<Int24>(sample) );
-            else switch ( Type::GetTypeCode(sT) ) {
+            if ( sT == TYP::typeid ) return safe_cast<TYP>( sample );
+            if( sT == Int24::typeid ) {
+                double val = (double)safe_cast<Int24>( sample );
+                return TYP( stepflow::ConversionFactor( 24, NAT::TS ) * val );
+            }
+            if( sT == Float16::typeid ) {
+                double val = safe_cast<Float16>( sample );
+                return TYP( stepflow::ConversionFactor( 64, NAT::TS ) * val );
+            }
+            switch ( Type::GetTypeCode( sT ) ) {
             case System::TypeCode::SByte: 
                 return TYP(stepflow::ConversionFactor(8,NAT::TS) * safe_cast<System::SByte>(sample));
             case System::TypeCode::Int16:
@@ -75,12 +85,12 @@ namespace Stepflow {
             }
         }
 
-        public enum class AudioFileHeader : uint {
+        public enum class AudioFileTypeTag : uint {
             Wav = stepflow::HEADER_CHUNK_TYPE::WavFormat,
             Snd = stepflow::HEADER_CHUNK_TYPE::SndFormat,
             PB7 = stepflow::HEADER_CHUNK_TYPE::P7mFormat,
             PB8 = stepflow::HEADER_CHUNK_TYPE::P8mFormat,
-
+            Pam = stepflow::AbstractWaveFileStream::PAM,
             WavHeaderSize = stepflow::SimpleHeaderSize,
             SndHeaderSize = stepflow::SndFileHeaderSize,
             PamHeaderSize = stepflow::PamFileHeaderSize
@@ -94,7 +104,7 @@ namespace Stepflow {
 		[StructLayoutAttribute(LayoutKind::Sequential, Size = 16)]
 		public value struct PcmFormat {
 		public:
-            PcmTag Tag;
+            PcmTag         Tag;
             System::UInt16 NumChannels;
             System::UInt32 SampleRate;
             System::UInt32 ByteRate;
@@ -102,7 +112,7 @@ namespace Stepflow {
             System::UInt16 BitsPerSample;
 			IAudioFrame^   CreateEmptyFrame(void); 
             property AudioFrameType FrameType { AudioFrameType get(void); }
-            static PcmFormat Create(int srt, int bit, int chn);
+            static PcmFormat Create(int srt, PcmTag pcm, int bit, int chn);
             static PcmFormat Create(AudioFrameType type, word rate);
 		};
 
@@ -393,15 +403,15 @@ namespace Stepflow {
             AudioFrameType( const stepflow::AudioFrameType& cpy ) 
                 : code( cpy.info.data ) {
             }
-            AudioFrameType( uint pcmTag, int bitdepth, int channelCount, word srt )
-                : AudioFrameType( stepflow::AudioFrameType(WAV_PCM_TYPE_ID(pcmTag),
+            AudioFrameType( PcmTag pcmTag, int bitdepth, int channelCount, int srt )
+                : AudioFrameType( stepflow::AudioFrameType( WAV_PCM_TYPE_ID(pcmTag),
                                   uint(bitdepth), uint(channelCount), uint(srt) ) ) {
             }
-			AudioFrameType( int bitdepth, int channelCount ) 
-                : AudioFrameType( bitdepth>24?3:1, bitdepth, channelCount, 0 ) {
-			}
+			//AudioFrameType( int bitdepth, int channelCount ) 
+   //             : AudioFrameType( bitdepth>24?PcmTag::PCMf:PcmTag::PCMs, bitdepth, channelCount, 0 ) {
+			//}
             AudioFrameType( word typecode )
-                : AudioFrameType(stepflow::AudioFrameType(typecode, 0)) {
+                : AudioFrameType( stepflow::AudioFrameType( typecode, 0 ) ) {
             }
 		};
 
@@ -550,8 +560,16 @@ namespace Stepflow {
 				[FieldOffsetAttribute(80)] SubChunk        DataChunk;  
 			};
 
+            public interface class IAudioFileHeader {
+            public:
+                uint GetDataSize();
+                uint GetSampleRate();
+                AudioFrameType GetFrameType();
+                AudioFileTypeTag GetFileType();
+            };
+
 			[StructLayoutAttribute(LayoutKind::Explicit, Size = 88)]
-			public value struct WaveHeader
+            public value struct WaveHeader : public IAudioFileHeader
             {
 			public:
 				[FieldOffsetAttribute(0)]
@@ -584,6 +602,17 @@ namespace Stepflow {
 					extend.DataChunk.size            = extend.RiffChunk.size - 84;
 				}
 				virtual System::String^ ToString(void) override;
+
+                uint GetDataSize() override { return simple.DataChunk.type == HeaderChunkType::data 
+                                                   ? simple.DataChunk.size : extend.DataChunk.size; }
+                uint GetSampleRate() override { return simple.AudioFormat.SampleRate; }
+                AudioFileTypeTag GetFileType() override { return AudioFileTypeTag::Wav; } 
+                AudioFrameType GetFrameType() override {
+                    return AudioFrameType(
+                        simple.AudioFormat.Tag, simple.AudioFormat.BitsPerSample,
+                        simple.AudioFormat.NumChannels, simple.AudioFormat.SampleRate 
+                    );
+                }
 			};
 
             public enum class SndTypeTag : uint {
@@ -597,21 +626,59 @@ namespace Stepflow {
                 ALAW_8 = 8
             };
 
-            [StructLayoutAttribute( LayoutKind::Sequential, Size = (int)AudioFileHeader::SndHeaderSize)]
-            public value struct SndHeader {
+
+
+            [StructLayoutAttribute( LayoutKind::Sequential, Size = 28)]
+            public value struct SndHeader : public IAudioFileHeader {
             public:
-                AudioFileHeader   SndTag;          //    0      4    fourCC    ".snd"
+                AudioFileTypeTag  SndTag;          //    0      4    fourCC    ".snd"
                 uint              HeaderSize;      //    4      4    uint      Offset to start of data (should be 28 byte)
                 uint              DataSize;        //    8      4    uint      Number of bytes of data
                 SndTypeTag        FormatCode;      //    12     4    uint      Data format code
                 uint              SampleRate;      //    16     4    uint      Sampling rate
                 uint              NumChannels;     //    20     4    uint      Number of channels
                 property word     BitDepth { word get(void); }
-                property AudioFrameType FrameType { AudioFrameType get(void); }
+                AudioFrameType GetFrameType() override;
+                AudioFileTypeTag GetFileType() override { return AudioFileTypeTag::Snd; }
                 static SndHeader FromRawData( IntPtr data );
+                uint GetDataSize() override { return DataSize; }
+                uint GetSampleRate() override { return SampleRate; }
             };
 
-            public ref class PamHeader {
+
+            ref class WaveFileReader;
+
+            public ref class AudioFileHeader : public IAudioFileHeader {
+            private:
+                stepflow::AbstractAudioFileHeader* native;
+            public:
+                AudioFileHeader() {
+                    native = new stepflow::AbstractAudioFileHeader();
+                }
+                ~AudioFileHeader() {
+                    delete native;
+                }
+
+                AudioFileTypeTag GetFileType() override { return AudioFileTypeTag( native->GetFileFormat() ); }
+                AudioFrameType GetFrameType() override { return AudioFrameType( native->GetTypeCode() ); }
+               
+                property int SampleRate {
+                    int get() { return native->GetSampleRate(); }
+                }
+                property int DataSize {
+                    int get() { return native->GetDataSize(); }
+                }
+                property int FrameCount {
+                    int get() { return native->GetDataSize() / native->GetBlockAlign(); }
+                }
+                property double Duration {
+                    double get() { return (double)FrameCount / ( native->GetBlockAlign() * native->GetSampleRate() ); }
+                }
+                uint GetDataSize() override { return DataSize; }
+                uint GetSampleRate() override { return SampleRate; }
+            };
+
+            public ref class PamHeader : public IAudioFileHeader {
             protected:
                 stepflow::PamFileHeader* native;
                 PamHeader( stepflow::PamFileHeader* hdr ) {
@@ -679,11 +746,11 @@ namespace Stepflow {
                     int get(void) { return native->SampleRate; }
                     void set(int value) { native->SampleRate = value; }
                 }
-                property AudioFrameType FrameType {
-                    AudioFrameType get(void) {
-                        return AudioFrameType( native->GetTypeCode() );
-                    }
-                }
+
+                AudioFrameType GetFrameType() override { return AudioFrameType( native->GetTypeCode() ); }
+                AudioFileTypeTag GetFileType() override { return AudioFileTypeTag::Pam; }
+                uint GetDataSize() override { return DataSize; }
+                uint GetSampleRate() override { return SampleRate; }
             };
 		}//end of FileIO
 
@@ -691,7 +758,7 @@ namespace Stepflow {
         // 'DataType at ChannelConfiguration' variants, done the CreationMacro:
 		namespace FrameTypes {
 
-			DefineAudioFrameTypeStructure(s,8, 1);
+			DefineAudioFrameTypeStructure( s, 8, 1 );
 			DefineAudioFrameTypeStructure(s,8, 2);
 			DefineAudioFrameTypeStructure(s,8, 4);
 			DefineAudioFrameTypeStructure(s,8, 6);
@@ -708,6 +775,12 @@ namespace Stepflow {
             DefineAudioFrameTypeStructure(s,24, 4);
             DefineAudioFrameTypeStructure(s,24, 6);
             DefineAudioFrameTypeStructure(s,24, 8);
+
+            DefineAudioFrameTypeStructure(f,16, 1);
+			DefineAudioFrameTypeStructure(f,16, 2);
+			DefineAudioFrameTypeStructure(f,16, 4);
+			DefineAudioFrameTypeStructure(f,16, 6);
+			DefineAudioFrameTypeStructure(f,16, 8);
 
 			DefineAudioFrameTypeStructure(f,32, 1);
 			DefineAudioFrameTypeStructure(f,32, 2);
@@ -766,8 +839,7 @@ namespace Stepflow {
             virtual property IChunkable^   Chunk;
 
             AudioFrameType GetFrameType() { 
-                return AudioFrameType( WAV_PCM_TYPE_ID((word)Format.Tag),
-                    Format.BitsPerSample, Format.NumChannels, Format.SampleRate );
+                return AudioFrameType( Format.Tag, Format.BitsPerSample, Format.NumChannels, Format.SampleRate );
             };
 
 			// these functions retreiving IntPtr to the audio's 'raw' buffer memory
@@ -776,11 +848,11 @@ namespace Stepflow {
 
 			// manipulating and conversion functions (the 'ed' ended versions
 			// will leave instances as are, returning new allocated copies)
-			virtual Audio^ converted(int frq, int bit, int chn) abstract;
+			virtual Audio^ converted(int frq, PcmTag tag, int bit, int chn) abstract;
 			virtual Audio^ converted(PcmFormat format) abstract;
 			virtual Audio^ converted(AudioFrameType frameType) abstract;
 			virtual Audio^ converted(AudioFrameType, double amp) abstract;
-			virtual Audio^ convert(int bit, int chn) abstract;
+			virtual Audio^ convert(int frq, PcmTag tag, int bit, int chn) abstract;
 			virtual Audio^ convert(PcmFormat format) abstract;
 			virtual Audio^ convert(AudioFrameType frameType) abstract;
 			virtual Audio^ convert(AudioFrameType, double amp) abstract;
@@ -857,7 +929,7 @@ namespace Stepflow {
             char data;
         };
 
-        public interface class IAudioStream
+        public interface class IAudioStream 
         {
         public:
             property StreamDirection Direction {
@@ -918,10 +990,10 @@ namespace Stepflow {
 		
         namespace FileIO
         {
-            public enum class FileFormat : uint {
-                WAV = stepflow::AbstractWaveFileStream::WAV,
-                SND = stepflow::AbstractWaveFileStream::SND,
-                PAM = stepflow::AbstractWaveFileStream::PAM,
+            public enum class FileFormat : word {
+                WAV = (word)AudioFileTypeTag::Wav,
+                SND = (word)AudioFileTypeTag::Snd,
+                PAM = (word)AudioFileTypeTag::Pam
             };
 
             // base class for the WaveFileReader and WaveFileWriter 

@@ -34,9 +34,11 @@ Wave::Test::PamHeaderTests::testSaveToPamFormat(const AudioFrameType* frametype)
     int fail = 0;
     if (frametype->BitDepth() == 8) {
         PrintLog("SKIPED test: storing 8bit audio to pam file\n");
+    } else if( frametype->BitDepth() == 16 && frametype->FormatTag() == PCMf ) {
+        PrintLog("SKIPED test: storing 16bit float audio to pam file\n");
     } else try {
         char* trimmingtestleftover = GetFileNameForFrameType( "trimmed", frametype );
-        buffer = WaveFileReader(trimmingtestleftover).Read().outscope();
+        buffer = WaveFileReader( trimmingtestleftover ).Read().outscope();
         char* pamheadertestoutput = GetFileNameForFrameType( "pamheader", frametype );
         writer.Save(buffer, pamheadertestoutput, Wave::WaveFileWriter::PAM);
         PrintLog(pool_setf("below filename: '%s'\n", writer.GetFileName()));
@@ -56,8 +58,14 @@ Wave::Test::PamHeaderTests::testLoadingPamFiles( const AudioFrameType* frametype
     if (frametype->BitDepth() == 8) {
         PrintLog("SKIPED test: loading 8bit audio from pam file\n");
     } else try {
-        char* testcasefile = GetFileNameForFrameType( "pamheader", frametype, "pam" );
+        bool _16bitfloat = frametype->BitDepth() == 16 && frametype->FormatTag() == PCMf;
+        char* testcasefile = GetFileNameForFrameType( _16bitfloat ? "trimmed" : "pamheader", frametype, "pam" );
         buffer = WaveFileReader(testcasefile).Read().outscope();
+        if( _16bitfloat ) {
+            AudioFrameType targetType( PCMs, 24, frametype->Channels(), frametype->Rate() );
+            buffer.convert( targetType );
+            PrintLog( "converting 16bit float pam file to 24bit signed wav file!\n" );
+        }
         char* pamheadertestoutput = GetFileNameForFrameType( "pamheader", frametype, "wav" );
         writer.Save( buffer, pamheadertestoutput, Wave::WaveFileWriter::WAV );
         PrintLog( pool_setf("below filename: '%s'\n", writer.GetFileName()) );

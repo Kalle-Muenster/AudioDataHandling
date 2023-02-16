@@ -26,7 +26,6 @@ BEGIN_WAVESPACE
     {
     private:
         uint nextBarrier(void);
-        int  ensureSize(uint byteCount);
 
     protected:
         virtual bool lock( volatile uint& access ) override {
@@ -58,8 +57,8 @@ BEGIN_WAVESPACE
     public:
         AudioStream(void) : Audio() { fx = 0; };
 
-        AudioStream( uint srt, uint bit, uint chn, int framesPerChunk )
-            : Audio(srt, bit, chn, framesPerChunk) {
+        AudioStream( uint srt, WAV_PCM_TYPE_ID pcm, uint bit, uint chn, int framesPerChunk )
+            : Audio( CreateWaveFormat( AUDIOFRAME_CODE(bit,chn,pcm), srt ), framesPerChunk ) {
             this->mode.addFlag( OWN | FIRST | LAST );
             this->read = this->write = 0;
             this->fx = 0;
@@ -109,6 +108,7 @@ BEGIN_WAVESPACE
         virtual uint WriteChannel(int chandex, Audio::Data send, int samplescount) override;
         virtual uint GetWritePosition(void) const override;
         virtual uint framesWritable(void) const override;
+        int ensureSize( uint bytecount );
 
         // implements IAudioInStream
         virtual uint   Read(Audio::Data receive, uint cbSize, uint offset) override;

@@ -17,9 +17,9 @@ namespace Stepflow { namespace Audio {
     : public AudioBuffer
     , public IAudioInStream
     , public IAudioOutStream
-    { typedef stepflow::AudioStream NATIVE;
-
+    { 
     internal:
+        typedef stepflow::AudioStream NATIVE;
         IntPtr data;
         operator NATIVE&( void ) { return *reinterpret_cast<NATIVE*>(au); }
         AudioStreamBuffer( const NATIVE& );
@@ -103,12 +103,12 @@ namespace Stepflow { namespace Audio {
                 AU->mode.remFlag( stepflow::Initiatio::DONT_ALLOCATE_NEW );
                 AU->mode.addFlag( stepflow::Initiatio::ALLOCATE_NEW_COPY );
             } else {
-                AU = new NATIVE( uint(fmt.SampleRate), uint(fmt.BitsPerSample), uint(fmt.NumChannels), int(framecount) );
+                AU = new NATIVE( uint(fmt.SampleRate), WAV_PCM_TYPE_ID(fmt.Tag), uint(fmt.BitsPerSample), uint(fmt.NumChannels), int(framecount) );
             } au = AU;
         }
 
-        AudioStreamBuffer( int frq, int bit, int chn, uint framecount, bool allocateManagedMemory )
-            : AudioStreamBuffer( *(PcmFormat*)&stepflow::CreateWaveFormat(frq,bit,chn),
+        AudioStreamBuffer( int frq, PcmTag pcm, int bit, int chn, uint framecount, bool allocateManagedMemory )
+            : AudioStreamBuffer( *(PcmFormat*)&stepflow::CreateWaveFormat( frq, bit, chn, WAV_PCM_TYPE_ID(pcm) ),
                                  framecount, allocateManagedMemory ) {
         }
 
@@ -126,7 +126,7 @@ namespace Stepflow { namespace Audio {
         static AudioStreamBuffer^ wrapData( AudioFrameType type, uint sampleRate, array<T>^ rawData ) {
             pin_ptr<T> ptBuffer = &rawData[0];
             stepflow::AudioStream au( stepflow::Audio(ptBuffer, rawData->Length * sizeof(T), stepflow::DONT_ALLOCATE_NEW));
-            au.format.PCMFormatTag = WAV_PCM_TYPE_ID( type.BitDepth > 24 ? 3 : 1 );
+            au.format.PCMFormatTag = WAV_PCM_TYPE_ID( type.PcmTypeTag );
             au.format.ByteRate = (au.format.BlockAlign = (type.BitDepth >> 3)*type.ChannelCount)*sampleRate;
             au.format.BitsPerSample = type.BitDepth;
             au.format.SampleRate = sampleRate;
@@ -169,7 +169,7 @@ namespace Stepflow { namespace Audio {
         }
         virtual AudioFrameType  GetFrameType() {
             PcmFormat fmt = this->Format;
-            return AudioFrameType( (uint)fmt.Tag,fmt.BitsPerSample, fmt.NumChannels, fmt.SampleRate );
+            return AudioFrameType( fmt.Tag, fmt.BitsPerSample, fmt.NumChannels, fmt.SampleRate );
         }
         virtual void Seek( StreamDirection direction, uint position ) {
             ((NATIVE*)au)->Seek( position, stepflow::StreamDirection( (byte)direction ) );

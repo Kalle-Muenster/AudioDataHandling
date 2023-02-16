@@ -52,7 +52,7 @@ namespace Stepflow
                 virtual void           AttachBuffer(Audio^) override;
                 virtual AudioFrameType GetFrameType() {
                     PcmFormat fmt = this->GetFormat();
-                    return AudioFrameType(fmt.BitsPerSample, fmt.NumChannels);
+                    return AudioFrameType(fmt.Tag,fmt.BitsPerSample, fmt.NumChannels,fmt.SampleRate);
                 }
 
 				void             ReStart(bool rewriteHeader);
@@ -63,13 +63,16 @@ namespace Stepflow
 				unsigned         WriteSample(stepflow::s8);
                 virtual	unsigned WriteSample(short);
                 unsigned         WriteSample(s24);
+				unsigned         WriteSample(f16);
 				unsigned         WriteSample(System::UInt32);
                 virtual	unsigned WriteSample(float);
 				virtual	unsigned WriteAudio(Audio^ buffer);
 				virtual	unsigned WriteFrame(IAudioFrame^ frame);
 				        unsigned FlushFrame(void);
 				virtual	unsigned WriteFrame(short);
+				virtual	unsigned WriteFrame(f16);
 				virtual	unsigned WriteFrame(float);
+				virtual	unsigned WriteFrame(f16 sample, Panorama mixer);
 				virtual	unsigned WriteFrame(short sample, Panorama mixer);
 				virtual	unsigned WriteFrame(float sample, Panorama mixer);
 				virtual	unsigned WriteFrame(f64 sample, Panorama mixer);

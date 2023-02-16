@@ -8,9 +8,9 @@ using Stepflow.Audio;
 using Stepflow.Audio.FrameTypes;
 using Stepflow.Audio.FileIO;
 using Stepflow.Audio.Tests;
-using System.Runtime.InteropServices;
 using System.Reflection;
 using Consola;
+using Consola.Test;
 
 namespace WaveFileHandlingTests
 {
@@ -184,6 +184,9 @@ namespace WaveFileHandlingTests
 
             test = new TrimmingTest().Run();
             failures += test.getFailures();
+
+            Test t2 = new WowbaggerStreamTests(TestResults.Verbose|TestResults.TimeStamps|TestResults.XmlOutput).Run();
+            failures += t2.getFailures();
 
       //      if( FAIL = (new SplittingTest()).wasError() )
       //          std.Err.WriteLine("FAILED:  SplittingTest");

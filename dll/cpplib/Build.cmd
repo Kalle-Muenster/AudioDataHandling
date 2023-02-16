@@ -9,7 +9,8 @@ set _root_=%CD%
 :: Set Version
 set ControlledVersionNumber=00000003
 set ControlledVersionString=0.0.0.3
-
+set _here_=%~dp0
+:: set INCLUDE=%_here_%..\..\..\Float16Type\Float16Type\src;%_here_%..\..\..\Int24Types\src;%INCLUDE%
 
 call MsBuild WaveFileHandling.sln /p:Platform=x64;Configuration=Release
 call MsBuild WaveFileHandling.sln /p:Platform=x64;Configuration=Debug

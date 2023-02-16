@@ -6,7 +6,7 @@
 generic<class T>
 Stepflow::Audio::IAudioFrame^ Stepflow::Audio::Circular<T>::ReadFrame(void)
 {
-    MANAGEDTYPE_SWITCH(au->frameTypeCode(),
+    MANAGEDTYPE_SWITCH( au->frameTypeCode().Code(),
         CASE_TYPE::NATIVE fr = au->ReadFrame<CASE_TYPE::NATIVE>();
     return *(CASE_TYPE*)&fr; )
 }

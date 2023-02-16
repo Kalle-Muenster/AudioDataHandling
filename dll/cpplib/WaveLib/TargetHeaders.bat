@@ -35,16 +35,19 @@ cd..
 set _rootdr_=%CD%
 popd
 
+set HALF16_TYPE=%~dp0..\..\..\..\Float16Type\Float16Type\src
 set INT24_TYPES=%~dp0..\..\..\..\Int24Types\src
 
 copy "%_rootdr_%\inc\settings.h" "%_output_%\inc"
 copy "%_rootdr_%\inc\WaveFileIO.h" "%_output_%\inc"
-copy "%_rootdr_%\inc\WaveHardIO.h" "%_output_%\inc"
 copy "%_rootdr_%\inc\importsettings.h" "%_output_%\inc"
 copy "%_rootdr_%\etc\namespacer.h" "%_output_%"
 copy "%_rootdr_%\etc\enumoperators.h" "%_output_%"
 copy "%_rootdr_%\etc\indiaccessfuncs.h" "%_output_%"
+copy "%_rootdr_%\etc\numbersendian.h" "%_output_%"
 copy "%INT24_TYPES%\int24bittypes.hpp" "%_output_%"
+copy "%HALF16_TYPE%\half.hpp" "%_output_%"
+copy "%HALF16_TYPE%\src\half.hpp" "%_output_%\src"
 copy "%_rootdr_%\dll\cpplib\WaveLib\wavelib.hpp" "%_output_%\src"
 copy "%_rootdr_%\dll\cpplib\WaveLib\precomphead.hpp" "%_output_%\src"
 copy "%_rootdr_%\src\AudioChannel.hpp" "%_output_%\src"
@@ -61,15 +64,6 @@ copy "%_rootdr_%\src\WaveHandling.hpp" "%_output_%\src"
 copy "%_rootdr_%\src\WaveMacros.hpp" "%_output_%\src"
 copy "%_rootdr_%\src\WaveSpacer.h" "%_output_%\src"
 copy "%_rootdr_%\src\WaveStream.hpp" "%_output_%\src"
-if "%~3"=="WITH_OUTPUT" (
-    copy "%_rootdr_%\src\output\AbstractInterfaceStream.hpp" "%_output_%\src\output"
-    copy "%_rootdr_%\src\output\ALInterfaceStream.hpp" "%_output_%\src\output"
-    copy "%_rootdr_%\src\output\ASIOInterfaceStream.hpp" "%_output_%\src\output"
-    copy "%_rootdr_%\src\output\Bass24InterfaceStream.hpp" "%_output_%\src\output"
-    copy "%_rootdr_%\src\output\IrrklangInterfaceStream.hpp" "%_output_%\src\output"
-    copy "%_rootdr_%\src\output\WinDXInterfaceStream.hpp" "%_output_%\src\output"
-    copy "%_rootdr_%\src\output\WinMMInterfaceStream.hpp" "%_output_%\src\output"
-)
 echo.
 echo ###############################################################
 echo # Copied all header files which are nessessary for importing  #

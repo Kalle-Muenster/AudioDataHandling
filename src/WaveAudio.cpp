@@ -11,6 +11,8 @@
 #include <limits.h>
 #include <memory.h>
 
+#include <WaveLib.inl/half.hpp>
+#include <WaveLib.inl/numbersendian.h>
 #include <WaveLib.inl/enumoperators.h>
 #include <WaveLib.inl/indiaccessfuncs.h>
 #include <WaveLib.inl/Int24bitTypes.hpp>
@@ -249,7 +251,7 @@ WaveSpace(Audio)::Audio(unsigned allocateSize)
 WaveSpace(Audio)::Audio(const Format& fmt, int framecount)
     : Audio(byte(fmt.NumChannels))
 {
-    format = CreateWaveHeader(fmt.SampleRate, fmt.BitsPerSample, fmt.NumChannels).AudioFormat;
+    format = CreateWaveHeader( AudioFrameType( fmt ), 0 ).AudioFormat;
     createBuffer( framecount * fmt.BlockAlign );
 }
 
@@ -289,7 +291,8 @@ WaveSpace(Audio)::Audio( const AbstractAudioFileHeader* hdr )
     format = CreateWaveFormat(
         hdr->GetSampleRate(),
         hdr->GetBitDepth(),
-        hdr->GetChannelCount()
+        hdr->GetChannelCount(),
+        hdr->GetFormatCode().FormatTag()
     );
     frameCount = ( cbSize = hdr->GetDataSize() )
                / format.BlockAlign;
@@ -298,18 +301,18 @@ WaveSpace(Audio)::Audio( const AbstractAudioFileHeader* hdr )
 }
 
 // takes 'WaveFile' header for determining format
-WaveSpace(Audio)::Audio( const WavFileHeader& hdr, Initiatio initiatio = ALLOCATE_NEW_COPY )
+WaveSpace(Audio)::Audio( const AbstractAudioFileHeader* fileheader, Initiatio initiatio ) // = ALLOCATE_NEW_COPY )
     : Audio(initiatio)
 {
-    format = hdr.AudioFormat;
+    fileheader->GetFormat( &format );
 
-    if (!mode.hasFlag(DONT_ALLOCATE_NEW)) {
-        createBuffer(hdr.GetDataSize());
-    }
-    else {
+    if( !mode.hasFlag(DONT_ALLOCATE_NEW) ) {
+        createBuffer( fileheader->GetDataSize() );
+    } else {
         if (mode.hasFlag(RAW_FILE_DATA) ) {
-            data = hdr.GetAudioData();
-        } frameCount = (cbSize = hdr.GetDataSize()) / hdr.AudioFormat.BlockAlign;
+            data = fileheader->GetAudioData();
+        } frameCount = (cbSize = fileheader->GetDataSize())
+                     / format.BlockAlign;
     }
 }
 
@@ -317,8 +320,8 @@ WaveSpace(Audio)::Audio( Audio::Data ptBuffer,
                          unsigned dataSize,
                          Initiatio initiatio )
     : Audio( (RAW_FILE_DATA&initiatio
-              ? *(WavFileHeader*)ptBuffer
-              : initializeNewWaveheader(dataSize==EMPTY?0:dataSize) ),
+              ? (const AbstractAudioFileHeader*)ptBuffer
+              : (const AbstractAudioFileHeader*)&initializeNewWaveheader( dataSize == EMPTY ? 0 : dataSize ) ),
              (ptBuffer == Audio::Silence)
               ? (DONT_ALLOCATE_NEW | initiatio)
               : initiatio )
@@ -471,21 +474,22 @@ WaveSpace(Audio)::copy( void )
     return cpy.outscope();
 }
 
-unsigned
+WaveSpace(AudioFrameType)
 WaveSpace(Audio)::frameTypeCode( void ) const
 {
-    return AUDIOFRAME_CODE( format.BitsPerSample, format.NumChannels, format.PCMFormatTag );
+    return AudioFrameType::fromTypeCode( AUDIOFRAME_CODE( format.BitsPerSample, format.NumChannels, format.PCMFormatTag ) );
 }
 
 double
 WaveSpace(Audio)::sampleTypeMax( void ) const
 {
+    if( format.PCMFormatTag == PCMf )  return 1.0;
     switch ( format.BitsPerSample ) {
-    case 8:  return format.PCMFormatTag ?  s8_MAX : i8_MAX;
+    case 8:  return format.PCMFormatTag ?  s8_MAX :  i8_MAX;
     case 16: return format.PCMFormatTag ? s16_MAX : i16_MAX;
     case 24: return format.PCMFormatTag ? s24_MAX : i24_MAX;
-    case 32:
-    case 64: return 1;
+    case 32: return format.PCMFormatTag ? s32_MAX : i32_MAX;
+    case 64: return format.PCMFormatTag ? s64_MAX : i64_MAX;
     default: throw std::exception( SAMPLETYPE_MISSMATCH );
     }
 }
@@ -493,12 +497,13 @@ WaveSpace(Audio)::sampleTypeMax( void ) const
 double
 WaveSpace(Audio)::sampleType0db( void ) const
 {
+    if( format.PCMFormatTag == PCMf )  return 0.0;
     switch ( format.BitsPerSample ) {
-    case 8:  return format.PCMFormatTag ?  s8_0DB : i8_0DB;
+    case 8:  return format.PCMFormatTag ?  s8_0DB :  i8_0DB;
     case 16: return format.PCMFormatTag ? s16_0DB : i16_0DB;
     case 24: return format.PCMFormatTag ? s24_0DB : i24_0DB;
-    case 32:
-    case 64: return 0;
+    case 32: return format.PCMFormatTag ? s32_0DB : i32_0DB;
+    case 64: return format.PCMFormatTag ? s64_0DB : i64_0DB;
     default: throw std::exception( SAMPLETYPE_MISSMATCH );
     }
 }
@@ -506,12 +511,13 @@ WaveSpace(Audio)::sampleType0db( void ) const
 double
 WaveSpace(Audio)::sampleTypeMin(void) const
 {
+    if( format.PCMFormatTag == PCMf )  return -1.0;
     switch ( format.BitsPerSample ) {
     case 8:  return format.PCMFormatTag ?  s8_MIN : i8_MIN;
     case 16: return format.PCMFormatTag ? s16_MIN : i16_MIN;
     case 24: return format.PCMFormatTag ? s24_MIN : i24_MIN;
-    case 32:
-    case 64: return 0;
+    case 32: return format.PCMFormatTag ? s32_MIN : i32_MIN;
+    case 64: return format.PCMFormatTag ? s64_MIN : i64_MIN;
     default: throw std::exception( SAMPLETYPE_MISSMATCH );
     }
 }
@@ -519,7 +525,7 @@ WaveSpace(Audio)::sampleTypeMin(void) const
 BEGIN_WAVESPACE
 static void
 audio_fade_function( Audio* audio, unsigned position,
-                     double duration, double targetValue = 0 )
+                     double duration, double targetValue = 0.0 )
 {
     const int numSamples = (int)( duration
                                 * audio->format.ByteRate
@@ -527,8 +533,8 @@ audio_fade_function( Audio* audio, unsigned position,
 
     const double change = (1.0 - targetValue) / numSamples;
     int targetFrame = position + numSamples;
-    double amplification = targetFrame > position
-                         ? targetValue : 1;
+    double ampli = targetFrame > position
+                 ? targetValue : 1.0;
 
     if( position > targetFrame ) {
         targetFrame = position;
@@ -536,11 +542,8 @@ audio_fade_function( Audio* audio, unsigned position,
     }
 
     FRAMETYPE_SWITCH( audio->frameTypeCode(),
-        for ( unsigned f = position; f <= targetFrame; ++f ) {
-            CASE_TYPE::FRAME* fr = audio->template buffer<CASE_TYPE::FRAME>(f);
-            for ( unsigned c = 0; c < audio->format.NumChannels; ++c )
-                fr->channel[c] = CASE_TYPE::TY( fr->channel[c] * amplification );
-            amplification += change;
+        for ( int fade = position; fade <= targetFrame; ++fade, ampli += change ) {
+            audio->buffer<CASE_TYPE::FRAME>( fade )->amp( ampli );
         }
     )
 }
@@ -591,7 +594,7 @@ WaveSpace(Audio)::trimmo( double threshold, float duration )
     duration = duration > 0 ? -duration : 0;
     threshold *= sampleTypeMax();
     const uint end = getLength();
-#define PerTypeAction(T) {\
+#define PerTypeAction(T) { \
     T maximum = T(sampleType0db()+threshold); \
     T minimum = T(sampleType0db()-threshold); \
     for ( int reverse = end - 1; reverse >= 0; --reverse ) { \
@@ -669,39 +672,36 @@ WaveSpace(Audio)::trimed( double threshold, float trimin, float trimout ) const
 // just will be returned 'as is' without any
 // conversion taking place.
 WaveSpace(Audio)
-WaveSpace(Audio)::converted( unsigned typeCode, double ampl ) const
+WaveSpace(Audio)::converted( AudioFrameType frameType, double ampl ) const
 {
-    typeCode = (typeCode & 0x0000ffffu);
+    uint typeCode = frameType.Code();
     FRAMETYPE_SWITCH( typeCode,
-        return converted<CASE_TYPE>(ampl).outscope();
+        return converted<CASE_TYPE>( ampl ).outscope();
     )
 }
 WaveSpace(Audio)
-WaveSpace(Audio)::converted( int bitDepth, int channelCount, double ampl ) const
+WaveSpace(Audio)::converted( WAV_PCM_TYPE_ID tag, int bitDepth, int channelCount, double ampl ) const
 {
-    int sign = PCMs;
-    if (bitDepth < 0) sign = 0;
-    else if (bitDepth >= 32) sign = PCMf;
-    FRAMETYPE_SWITCH( AUDIOFRAME_CODE( bitDepth, channelCount, sign ),
-        return converted<CASE_TYPE>(ampl).outscope();
+    uint typeCode = AUDIOFRAME_CODE( bitDepth, channelCount, tag );
+    FRAMETYPE_SWITCH( typeCode,
+        return converted<CASE_TYPE>( ampl ).outscope();
     )
 }
 WaveSpace(Audio)
-WaveSpace(Audio)::converted(Format* ptFormat, double ampl) const
+WaveSpace(Audio)::converted( Format* ptFormat, double ampl ) const
 {
-    FRAMETYPE_SWITCH(
-        AUDIOFRAME_CODE(ptFormat->BitsPerSample, ptFormat->NumChannels, ptFormat->PCMFormatTag),
-        return converted<CASE_TYPE>(ampl).outscope();
-    );
+    uint typeCode = AUDIOFRAME_CODE( ptFormat->PCMFormatTag, ptFormat->BitsPerSample, ptFormat->NumChannels );
+    FRAMETYPE_SWITCH( typeCode,
+        return converted<CASE_TYPE>( ampl ).outscope();
+    )
 }
 
 WaveSpace(Audio&)
-WaveSpace(Audio)::convert( unsigned typeCode, double ampl )
+WaveSpace(Audio)::convert( AudioFrameType frameType, double ampl )
 {
-    uint ownFrametypecode = frameTypeCode();
-    if ( typeCode != ownFrametypecode || ampl != 1 ) {
-        Audio temp = this->converted( typeCode, ampl );
-        if( isDataValid(this->data) && this->own )
+    if ( frameType.Code() != frameTypeCode().Code() || ampl != 1.0 ) {
+        Audio temp = this->converted( frameType, ampl );
+        if( isDataValid( this->data ) && this->own )
             free( this->data );
         this->data = temp.data;
         this->format = temp.format;
@@ -714,26 +714,23 @@ WaveSpace(Audio)::convert( unsigned typeCode, double ampl )
     } return this[0];
 }
 WaveSpace(Audio&)
-WaveSpace(Audio)::convert(unsigned short bitDepth, unsigned short channelCount, double ampl)
+WaveSpace(Audio)::convert( WAV_PCM_TYPE_ID tag, unsigned short bitDepth, unsigned short channelCount, double ampl )
 {
-    int sign = PCMs;
-    if (bitDepth < 0) sign = 0;
-    else if (bitDepth >= 32) sign = PCMf;
-    return convert(AUDIOFRAME_CODE(bitDepth, channelCount,sign), ampl);
+    return convert( FrameTypeCode( AUDIOFRAME_CODE( bitDepth, channelCount, tag ) ), ampl );
 }
 WaveSpace(Audio&)
-WaveSpace(Audio)::convert(Format* targetFmt, double ampl)
+WaveSpace(Audio)::convert( Format* targetFmt, double ampl )
 {
-    return convert(AUDIOFRAME_CODE(targetFmt->BitsPerSample, targetFmt->NumChannels, targetFmt->PCMFormatTag), ampl);
+    return convert( FrameTypeCode( AUDIOFRAME_CODE( targetFmt->BitsPerSample, targetFmt->NumChannels, targetFmt->PCMFormatTag ) ), ampl );
 }
 
 WaveSpace(Audio)
-WaveSpace(Audio)::amplified(float amplificator) const
+WaveSpace(Audio)::amplified( double amplificator ) const
 {
-    return Audio(*this,amplificator).outscope();
+    return Audio( *this, (float)amplificator ).outscope();
 }
 WaveSpace(Audio&)
-WaveSpace(Audio)::amplify(float amplificator)
+WaveSpace(Audio)::amplify( double amplificator )
 {
     return convert( frameTypeCode(), amplificator );
 }
@@ -1134,8 +1131,7 @@ WaveSpace(IAudioFrame)::SampleType0dbValue(void) const
     word typcode = GetFrameType().Code();
     if (AUDIO_FLOATTYPE_TYPECODE(typcode)) {
         return 0.0;
-    }
-    else {
+    } else {
         FRAMETYPE_SWITCH(typcode, return (std::numeric_limits<CASE_TYPE::TY>::max() - std::numeric_limits<CASE_TYPE::TY>::min()) / 2.0; )
     }
 }

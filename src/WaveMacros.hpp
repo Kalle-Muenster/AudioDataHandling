@@ -41,43 +41,24 @@
             typedef AUDIOFRAME_TYPE( NumberTri, NumberOne, NumberTwo ) CASE_TYPE; \
             actionOne \
         } break;
+#define DataTypeCase( numB, pcmT, actioncode ) \
+        FrametypeCase(numB,1, pcmT, actioncode ) \
+        FrametypeCase(numB,2, pcmT, actioncode ) \
+        FrametypeCase(numB,4, pcmT, actioncode ) \
+        FrametypeCase(numB,6, pcmT, actioncode ) \
+        FrametypeCase(numB,8, pcmT, actioncode )
 #define FRAMETYPE_SWITCH( tyco, actionToDo ) \
     switch (tyco) { \
-        FrametypeCase(8,1, PCMi, actionToDo ) \
-        FrametypeCase(8,2, PCMi, actionToDo ) \
-        FrametypeCase(8,4, PCMi, actionToDo ) \
-        FrametypeCase(8,6, PCMi, actionToDo ) \
-        FrametypeCase(8,8, PCMi, actionToDo ) \
-        FrametypeCase(8,1, PCMs, actionToDo ) \
-        FrametypeCase(8,2, PCMs, actionToDo ) \
-        FrametypeCase(8,4, PCMs, actionToDo ) \
-        FrametypeCase(8,6, PCMs, actionToDo ) \
-        FrametypeCase(8,8, PCMs, actionToDo ) \
-        FrametypeCase(16,1,PCMs, actionToDo ) \
-        FrametypeCase(16,2,PCMs, actionToDo ) \
-        FrametypeCase(16,4,PCMs, actionToDo ) \
-        FrametypeCase(16,6,PCMs, actionToDo ) \
-        FrametypeCase(16,8,PCMs, actionToDo ) \
-        FrametypeCase(24,1,PCMi, actionToDo ) \
-        FrametypeCase(24,2,PCMi, actionToDo ) \
-        FrametypeCase(24,4,PCMi, actionToDo ) \
-        FrametypeCase(24,6,PCMi, actionToDo ) \
-        FrametypeCase(24,8,PCMi, actionToDo ) \
-        FrametypeCase(24,1,PCMs, actionToDo ) \
-        FrametypeCase(24,2,PCMs, actionToDo ) \
-        FrametypeCase(24,4,PCMs, actionToDo ) \
-        FrametypeCase(24,6,PCMs, actionToDo ) \
-        FrametypeCase(24,8,PCMs, actionToDo ) \
-        FrametypeCase(32,1,PCMf, actionToDo ) \
-        FrametypeCase(32,2,PCMf, actionToDo ) \
-        FrametypeCase(32,4,PCMf, actionToDo ) \
-        FrametypeCase(32,6,PCMf, actionToDo ) \
-        FrametypeCase(32,8,PCMf, actionToDo ) \
-        FrametypeCase(64,1,PCMf, actionToDo ) \
-        FrametypeCase(64,2,PCMf, actionToDo ) \
-        FrametypeCase(64,4,PCMf, actionToDo ) \
-        FrametypeCase(64,6,PCMf, actionToDo ) \
-        FrametypeCase(64,8,PCMf, actionToDo ) \
+        DataTypeCase( 8, PCMs, actionToDo ) \
+        DataTypeCase( 8, PCMi, actionToDo ) \
+        DataTypeCase(16, PCMs, actionToDo ) \
+        DataTypeCase(16, PCMf, actionToDo ) \
+        DataTypeCase(24, PCMs, actionToDo ) \
+        DataTypeCase(24, PCMi, actionToDo ) \
+        DataTypeCase(32, PCMs, actionToDo ) \
+        DataTypeCase(32, PCMf, actionToDo ) \
+        DataTypeCase(64, PCMf, actionToDo ) \
+        DataTypeCase(64, PCMi, actionToDo ) \
         default: { \
     throw std::exception(UNKNOWN_TYPECODE); \
                      } break; \
@@ -91,13 +72,16 @@
 // implementations which make usage of it
 #define SAMPLETYPE_SWITCH(fmt) \
 switch ( fmt.BitsPerSample | fmt.PCMFormatTag<<8 ) { \
-    case 8|(WaveSpace(PCMi)<<8):  PerTypeAction(WaveSpace(i8)); \
     case 8|(WaveSpace(PCMs)<<8):  PerTypeAction(WaveSpace(s8)); \
+    case 8|(WaveSpace(PCMi)<<8):  PerTypeAction(WaveSpace(i8)); \
     case 16|(WaveSpace(PCMs)<<8): PerTypeAction(WaveSpace(s16)); \
-    case 24|(WaveSpace(PCMi)<<8): PerTypeAction(WaveSpace(i24)); \
+    case 16|(WaveSpace(PCMf)<<8): PerTypeAction(WaveSpace(f16)); \
     case 24|(WaveSpace(PCMs)<<8): PerTypeAction(WaveSpace(s24)); \
+    case 24|(WaveSpace(PCMi)<<8): PerTypeAction(WaveSpace(i24)); \
+    case 32|(WaveSpace(PCMs)<<8): PerTypeAction(WaveSpace(s32)); \
     case 32|(WaveSpace(PCMf)<<8): PerTypeAction(WaveSpace(f32)); \
     case 64|(WaveSpace(PCMf)<<8): PerTypeAction(WaveSpace(f64)); \
+    case 64|(WaveSpace(PCMi)<<8): PerTypeAction(WaveSpace(i64)); \
 }
 
 #define FOURCC(c1,c2,c3,c4) HEADER_CHUNK_TYPE( c1 + (c2<<8) + (c3<<16) + (c4<<24) )

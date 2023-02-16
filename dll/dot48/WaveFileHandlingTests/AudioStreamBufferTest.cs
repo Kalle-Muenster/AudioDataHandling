@@ -21,7 +21,7 @@ namespace Stepflow.Audio.Tests
 
         private void RunTest(AudioFrameType typ)
         {
-            AudioStreamBuffer bufter = new AudioStreamBuffer( typ.SampleSize, typ.BitDepth, typ.ChannelCount, 1000, true );
+            AudioStreamBuffer bufter = new AudioStreamBuffer( 44100, typ.PcmTypeTag, typ.BitDepth, typ.ChannelCount, 1000, true );
             switch( typ.BitDepth ) {
                 case 8: { Controlled.Int8 plup = new Controlled.Int8();
                         plup.SetUp( sbyte.MinValue, sbyte.MaxValue, 1, 0, ControlMode.Sinus );

@@ -97,7 +97,7 @@ namespace Stepflow {
             
             // wrap constructors
             AudioBuffer(AudioFrameType, System::Array^);
-            AudioBuffer(int frq, int bit, int chn, System::IntPtr rawData, uint rawSize, Audio::Flags flags);
+            AudioBuffer(int frq, PcmTag tag, int bit, int chn, System::IntPtr rawData, uint rawSize, Audio::Flags flags);
             
             ~AudioBuffer(void);
 
@@ -216,7 +216,7 @@ namespace Stepflow {
 			where FrameType : IAudioFrame
 			AudioBuffer^ convert(void) {
 				FrameType t = FrameType();
-				au->convert( t->type.code );
+				au->convert( FrameTypeCode(t->type.code), 1.0 );
 				return this;
 			}
 
@@ -233,16 +233,16 @@ namespace Stepflow {
 				return IntPtr((*au)[position]);
 			}
 
-			virtual Audio^ converted(int, int, int) override;
-			virtual Audio^ converted(PcmFormat) override;
-			virtual Audio^ converted(AudioFrameType) override;
-			virtual Audio^ converted(AudioFrameType, double amp) override;
-			virtual Audio^ convert(int, int) override;
-			virtual Audio^ convert(PcmFormat) override;
-			virtual Audio^ convert(AudioFrameType) override;
-			virtual Audio^ convert(AudioFrameType, double amp) override;
+			virtual Audio^ converted( int, PcmTag, int, int ) override;
+			virtual Audio^ converted( PcmFormat ) override;
+			virtual Audio^ converted( AudioFrameType ) override;
+			virtual Audio^ converted( AudioFrameType, double amp ) override;
+			virtual Audio^ convert( int, PcmTag, int, int ) override;
+			virtual Audio^ convert( PcmFormat ) override;
+			virtual Audio^ convert( AudioFrameType ) override;
+			virtual Audio^ convert( AudioFrameType, double amp ) override;
 			virtual Audio^ convert(unsigned) override;
-			virtual Audio^ amplified(double factor) override;
+			virtual Audio^ amplified( double factor ) override;
 			virtual Audio^ amplify(double factor) override;
             virtual Audio^ paned(Panorama,Panorama::Axis) override;
             virtual Audio^ pan(Panorama,Panorama::Axis) override;

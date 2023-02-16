@@ -13,6 +13,8 @@
 #endif
 
 #ifndef _MSVC
+#include <WaveLib.inl/half.hpp>
+#include <WaveLib.inl/numbersendian.h>
 #include <WaveLib.inl/enumoperators.h>
 #include <WaveLib.inl/int24bittypes.hpp>
 #endif
@@ -102,20 +104,24 @@ BEGIN_WAVESPACE
 
 
 #define OneLine(b,c,t) Au_##t##_##b##_##c = AUDIOFRAME_CODE(b,c,t)
-#define OneType(bit,typ) OneLine(bit,1,typ),OneLine(bit,2,typ),\
+#define OneCode(bit,typ) OneLine(bit,1,typ),OneLine(bit,2,typ),\
         OneLine(bit,4,typ),OneLine(bit,6,typ),OneLine(bit,8,typ)
 
+
     enum WAVELIB_API FrameTypeCode : unsigned short {
-        OneType(8, PCMi),
-        OneType(8, PCMs),
-        OneType(16,PCMs),
-        OneType(24,PCMi),
-        OneType(24,PCMs),
-        OneType(32,PCMf),
-        OneType(64,PCMf)
+        OneCode(8, PCMs),
+        OneCode(8, PCMi),
+        OneCode(16,PCMs),
+        OneCode(16,PCMf),
+        OneCode(24,PCMs),
+        OneCode(24,PCMi),
+        OneCode(32,PCMs),
+        OneCode(32,PCMf),
+        OneCode(64,PCMf),
+        OneCode(64,PCMi)
     };
 
-#undef OneType
+#undef OneCode
 #undef OneLine
 
     enum WAVELIB_API Constants : unsigned int
@@ -240,7 +246,7 @@ BEGIN_WAVESPACE
         uint                 FileFormat;     // 8       4     FourCC     'WAVE'
         RiffChunkHeader      FormatChunk;    // 12      8     Header     'fmt ' + size of Format structure (16)
         Format               AudioFormat;    /* 20      16    Format     Structure consisting from these values:
-                             PcmFlags        // 20      2     Word       (1 Signed / 2 Float) - Float: signed AND float
+                             PcmFlags        // 20      2     Word       (bit 1 Signed / bit 2 Float) - Float: signed|float
                              Channels        // 22      2     Word       (samples per frame)
                              SampleRate      // 24      4     DWord      (frames per second)
                              ByteRate        // 28      4     DWord      (bytes per second)
@@ -269,11 +275,17 @@ BEGIN_WAVESPACE
         word  GetBitDepth(void) const;
         word  GetBlockAlign(void) const;
         word  GetChannelCount(void) const;
-        const AudioFrameType GetTypeCode(void) const;
+        FrameTypeCode GetTypeCode(void) const;
+        const AudioFrameType GetFormatCode(void) const;
         uint  GetSampleRate(void) const;
         bool  isFloatType(void) const;
         bool  isSignedType(void) const;
         HEADER_CHUNK_TYPE GetFileFormat(void) const;
+
+        void  SetFormat(Format* setter);
+        void  SetDataSize(uint size);
+        Data  makeWritable(void);
+        uint  makeReadable(void);
     };
 
     // WavFileHeader internal used functions:
@@ -297,7 +309,7 @@ BEGIN_WAVESPACE
     //  ----------------------------------------------------------------------------------------------------------------
         ReadOrWriteHead   ReadHead;        //    24     x    sample    first sample of data -> for read/write head usage
 
-        SndFileHeader operator=(SndFileHeader);
+        SndFileHeader& operator = ( const SndFileHeader& );
         word  GetHeaderSize(void) const;
         uint  GetDataSize(void) const;
         Data  GetAudioData(void) const;
@@ -306,15 +318,20 @@ BEGIN_WAVESPACE
         word  GetBitDepth(void) const;
         word  GetBlockAlign(void) const;
         word  GetChannelCount(void) const;
-        const AudioFrameType GetTypeCode(void) const;
+        FrameTypeCode GetTypeCode(void) const;
+        const AudioFrameType GetFormatCode(void) const;
         uint  GetSampleRate(void) const;
         bool  isFloatType(void) const;
         bool  isSignedType(void) const;
         HEADER_CHUNK_TYPE GetFileFormat(void) const;
+        
+        void  SetDataSize( uint size );
+        void  SetFormat( Format* getter );
+        void  reverseSndHeader( void );
     };
 
     // SndFileHeader internal used functions
-    void reverseSndHeader( SndFileHeader* sndhdr );
+    
 
 
 #ifdef PAM_WAVEFILE_HEADERS
@@ -361,7 +378,8 @@ BEGIN_WAVESPACE
         word  GetBitDepth(void) const;
         word  GetBlockAlign(void) const;
         word  GetChannelCount(void) const;
-        const AudioFrameType GetTypeCode(void) const;
+        FrameTypeCode GetTypeCode(void) const;
+        const AudioFrameType GetFormatCode(void) const;
         uint  GetSampleRate(void) const;
         bool  isFloatType(void) const;
         bool  isSignedType(void) const;
@@ -386,6 +404,7 @@ BEGIN_WAVESPACE
         void  SetChannelCount(word set);
         void  SetPcmFlags(WAV_PCM_TYPE_ID pcmflags);
         void  SetDataSize(uint set);
+        void  SetFormat(Format* setter);
         void  updateTypeCode(void);
 
         PROPDECL( word, BitDepth );
@@ -394,7 +413,6 @@ BEGIN_WAVESPACE
         PROPDECL( word, ChannelCount );
         PROPDECL( ChannelMode, ChannelMode );
         LISTPROP( uint, Value, 6 );
-
     };
 
     PamFileHeader wirdPassendGemacht( const char* nichtPassend );
@@ -402,13 +420,14 @@ BEGIN_WAVESPACE
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    // exported helper functions:
-    WAVELIB_API PamFileHeader CreatePamFileHdr( const Format& fmt, int cBs = 0, ChannelMode mod = ChannelMode::Interleaved );
+    WAVELIB_API PamFileHeader CreatePamFileHdr( const Format& fmt, int cBsize, ChannelMode mod );
 #endif
     WAVELIB_API WavFileHeader CreateWaveHeader( uint samplingFrequency, word bitsPerSample,
                                                 word numberOfChannels, WavFileHeader* whdr,
-                                                uint sizeOfWaveData = 0 );
+                                                uint sizeOfWaveData );
     WAVELIB_API WavFileHeader CreateWaveHeader( uint samplingFrequency, word bitsPerSample,
-                                                word numberOfChannels, uint sizeOfWaveData = 0 );
+                                                word numberOfChannels, uint sizeOfWaveData );
+    WAVELIB_API WavFileHeader CreateWaveHeader( AudioFrameType frameType, uint sizeOfWaveData );
     WAVELIB_API SndFileHeader CreateSndFileHdr( const Format& fmt, int cbs );
     WAVELIB_API Format        CreateWaveFormat( int frq, int bit, int chn );
     WAVELIB_API Format        CreateWaveFormat( int frq, int bit, int chn, WAV_PCM_TYPE_ID tag );

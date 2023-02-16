@@ -92,7 +92,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>../../../inc;$(ProjectDir)..\;./;../../../../Int24Types/src;../../../../ControlledValues/inc;../../../etc;C:\CMD\CCommands;$(IncludePath)</IncludePath>
+    <IncludePath>../../../inc;$(ProjectDir)..\;./;../../../../Int24Types/src;../../../../Float16Type/Float16Type/src;../../../../ControlledValues/inc;../../../etc;C:\CMD\CCommands;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)..\..\..\bin\core5\$(PlatformTarget)\$(Configuration)\</OutDir>
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
     <CopyLocalProjectReference>true</CopyLocalProjectReference>
@@ -101,7 +101,7 @@
     <LinkKeyFile>$(ProjectDir)..\..\..\WaveLib.snk</LinkKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>../../../inc;$(ProjectDir)..\;./;../../../../Int24Types/src;../../../../ControlledValues/inc;../../../etc;C:\CMD\CCommands;$(IncludePath)</IncludePath>
+    <IncludePath>../../../inc;$(ProjectDir)..\;./;../../../../Int24Types/src;../../../../Float16Type/Float16Type/src;../../../../ControlledValues/inc;../../../etc;C:\CMD\CCommands;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)..\..\..\bin\core5\$(PlatformTarget)\$(Configuration)\</OutDir>
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
     <CopyLocalProjectReference>true</CopyLocalProjectReference>
@@ -110,7 +110,7 @@
     <LinkKeyFile>$(ProjectDir)..\..\..\WaveLib.snk</LinkKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>../../../inc;$(ProjectDir)..\;./;../../../../Int24Types/src;../../../../ControlledValues/inc;../../../etc;C:\CMD\CCommands;$(IncludePath)</IncludePath>
+    <IncludePath>../../../inc;$(ProjectDir)..\;./;../../../../Int24Types/src;../../../../Float16Type/Float16Type/src;../../../../ControlledValues/inc;../../../etc;C:\CMD\CCommands;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)..\..\..\bin\core5\$(PlatformTarget)\$(Configuration)</OutDir>
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
     <CopyLocalProjectReference>true</CopyLocalProjectReference>
@@ -118,7 +118,7 @@
     <LinkKeyFile>$(ProjectDir)..\..\..\WaveLib.snk</LinkKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>../../../inc;$(ProjectDir)..\;./;../../../../Int24Types/src;../../../../ControlledValues/inc;../../../etc;C:\CMD\CCommands;$(IncludePath)</IncludePath>
+    <IncludePath>../../../inc;$(ProjectDir)..\;./;../../../../Int24Types/src;../../../../Float16Type/Float16Type/src;../../../../ControlledValues/inc;../../../etc;C:\CMD\CCommands;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)..\..\..\bin\core5\$(PlatformTarget)\$(Configuration)\</OutDir>
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
     <CopyLocalProjectReference>true</CopyLocalProjectReference>
@@ -282,6 +282,7 @@
     <ClInclude Include="..\..\dotnet\CreationMacros.h" />
     <ClInclude Include="..\..\dotnet\WavReader.hpp" />
     <ClInclude Include="..\..\dotnet\WavWriter.hpp" />
+    <ClInclude Include="..\..\dotnet\WowbaggerStream.hpp" />
     <ClInclude Include="..\exportsettings.h" />
     <ClInclude Include="..\..\..\etc\enumoperators.h" />
     <ClInclude Include="..\..\..\etc\indiaccessfuncs.h" />
@@ -301,11 +302,15 @@
     <ClCompile Include="..\..\dotnet\CircularBuffer.cpp" />
     <ClCompile Include="..\..\dotnet\WavReader.cpp" />
     <ClCompile Include="..\..\dotnet\WavWriter.cpp" />
+    <ClCompile Include="..\..\dotnet\WowbaggerStream.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Int24Types">
       <HintPath>$(Int24TypesBinRoot)\$(PlatformTarget)\$(Configuration)\Int24Types.dll</HintPath>
+    </Reference>
+    <Reference Include="Float16Type">
+      <HintPath>$(Float16TypeBinRoot)\$(PlatformTarget)\$(Configuration)\Float16Type.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

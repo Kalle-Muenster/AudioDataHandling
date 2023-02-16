@@ -40,5 +40,5 @@ Wave::Test::AudioStreamTests::AddTestCasesPerTypeCase( DynamicStrait<AbstractAud
 {
     testcases->Add(new WaveFileReader());
     testcases->Add(new WaveFileWriter());
-    testcases->Add(new AudioStream(44100, 24, 2, 1024));
+    testcases->Add(new AudioStream(44100, WAV_PCM_TYPE_ID::PCMs, 24, 2, 1024));
 }

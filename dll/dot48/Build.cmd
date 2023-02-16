@@ -21,6 +21,9 @@ set ConsolaBinRoot=%_root_%\..\Consola\bin\%DotNetVersionString%
 if "%Int24TypesBinRoot%"=="" (
 set Int24TypesBinRoot=%_root_%\..\Int24Types\bin\%DotNetVersionString%
 )
+if "%Float16TypeBinRoot%"=="" (
+set Float16TypeBinRoot=%_root_%\..\Float16Type\bin\%DotNetVersionString%
+)
 if "%ControlledValuesBinRoot%"=="" (
 set ControlledValuesBinRoot=%_root_%\..\ControlledValues\bin\%DotNetVersionString%
 )

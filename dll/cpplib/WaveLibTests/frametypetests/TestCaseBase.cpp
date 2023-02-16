@@ -17,12 +17,11 @@ Wave::Test::PerFrameType::PerFrameType()
     AddTestCasesPerTypeCase( &cases );
 }
 
-char*
+char *
 Wave::Test::AbstractTestCase::GetFileNameForFrameType(
-    const char* fileName, const Wave::AudioFrameType* typeName,
-    const char* extension
+    const char * fileName, const Wave::AudioFrameType* typeName,
+    const char * extension
 ) { pool_scope
-    
     char tag = typeName->FormatTag();
     tag = tag == PCMs ? 's' : PCMf ? 'f' : 'i';
     pool_setf("%s_", fileName);
@@ -31,24 +30,43 @@ Wave::Test::AbstractTestCase::GetFileNameForFrameType(
     pool_setfi("%ibit", typeName->BitDepth());
     pool_setfi("%ichn.", typeName->Channels());
     if ( extension ) pool_set( extension );
-    else pool_set( typeName->BitDepth() > 8 ? "wav" : "au" );
-    return pool_merge(6);
+    else {
+        switch( typeName->BitDepth() ) {
+        case 8: pool_set( "au" ); break;
+        case 16: pool_set( tag == 'f' ? "pam" : "wav" ); break;
+        case 24:
+        case 32:
+        case 64: pool_set( "wav" ); break;
+        }
+    } return pool_merge(6);
+}
+
+void addFrameTypeCase( Wave::Test::PerFrameType::TypeCases * caselist, Wave::WAV_PCM_TYPE_ID pcmtag, uint bitdepth )
+{
+    caselist->Add( new Wave::AudioFrameType( pcmtag, bitdepth, 1 ) ); //, 48000 ) );
+    caselist->Add( new Wave::AudioFrameType( pcmtag, bitdepth, 2 ) ); //, 48000 ) );
+    caselist->Add( new Wave::AudioFrameType( pcmtag, bitdepth, 4 ) ); //, 48000 ) );
+    caselist->Add( new Wave::AudioFrameType( pcmtag, bitdepth, 6 ) ); //, 48000 ) );
+    caselist->Add( new Wave::AudioFrameType( pcmtag, bitdepth, 8 ) ); //, 48000 ) );
 }
 
 void
-Wave::Test::PerFrameType::AddTestCasesPerTypeCase(TypeCases* testcases)
+Wave::Test::PerFrameType::AddTestCasesPerTypeCase( TypeCases* testcases )
 {
     Wave::WAV_PCM_TYPE_ID typ = Wave::PCMs;
-    for (uint bit = 8; bit <= 64; bit += 8) {
-        if (bit == 40)
+    for ( uint bit = 8; bit <= 64; bit += 8 ) {
+        if( bit == 40 )
             bit = 64;
-        if (bit == 32)
+        if( bit == 32 ) {
             typ = Wave::PCMf;
-        testcases->Add(new Wave::AudioFrameType(typ, bit, 1, 48000));
-        testcases->Add(new Wave::AudioFrameType(typ, bit, 2, 48000));
-        testcases->Add(new Wave::AudioFrameType(typ, bit, 4, 48000));
-        testcases->Add(new Wave::AudioFrameType(typ, bit, 6, 48000));
-        testcases->Add(new Wave::AudioFrameType(typ, bit, 8, 48000));
+            addFrameTypeCase( testcases, typ, 16 );
+        } addFrameTypeCase( testcases, typ, bit );
+
+        //testcases->Add(new Wave::AudioFrameType(typ, bit, 1, 48000));
+        //testcases->Add(new Wave::AudioFrameType(typ, bit, 2, 48000));
+        //testcases->Add(new Wave::AudioFrameType(typ, bit, 4, 48000));
+        //testcases->Add(new Wave::AudioFrameType(typ, bit, 6, 48000));
+        //testcases->Add(new Wave::AudioFrameType(typ, bit, 8, 48000));
     }
 }
 
@@ -56,7 +74,7 @@ ulong
 Wave::Test::AbstractTestCase::F2CC( float val )
 {
     ulong longcc = 0;
-    sprintf((char*)&longcc, "%3.3f", val);
+    sprintf( (char*)&longcc, "%3.3f", val );
     return longcc;
 }
 
@@ -91,6 +109,17 @@ Wave::Test::AbstractTestCase::pool_setDl( const char* fmt, double val )
     return pool_get();
 }
 
+const char*
+Wave::Test::AbstractTestCase::pool_setHl( const char* fmt, Float16 val )
+{ pool_scope
+
+    char* conv = new char[ strlen(fmt) + 16 ];
+    sprintf( conv, fmt, val.operator float() );
+    pool_set( conv );
+    delete[] conv;
+    return pool_get();
+}
+
 char*
 Wave::Test::AbstractTestCase::FrameToString(Wave::IAudioFrame* testling)
 { pool_scope
@@ -99,7 +128,11 @@ Wave::Test::AbstractTestCase::FrameToString(Wave::IAudioFrame* testling)
         if (i) pool_setc(',', 1);
         switch ( testling->BitDepth() ) {
         case 8:  pool_setfi( "%i", *(Wave::s8*)testling->GetChannel(i) ); break;
-        case 16: pool_setfi( "%i", *(Wave::s16*)testling->GetChannel(i) ); break;
+        case 16: if( testling->FrameType().FormatTag() == Wave::WAV_PCM_TYPE_ID::PCMf ) {
+            pool_setHl( "%f", *(Wave::f16*)testling->GetChannel( i ) );
+        } else {
+            pool_setfi( "%i", *(Wave::s16*)testling->GetChannel( i ) );
+        } break;
         case 24: pool_setfi( "%i", *(Wave::s24*)testling->GetChannel(i) ); break;
         case 32: pool_setFl( *(Wave::f32*)testling->GetChannel(i) ); break;
         case 64: pool_setFl( *(Wave::f64*)testling->GetChannel(i) ); break;

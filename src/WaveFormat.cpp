@@ -11,6 +11,8 @@
 #include <limits.h>
 #include <memory.h>
 
+#include <WaveLib.inl/half.hpp>
+#include <WaveLib.inl/numbersendian.h>
 #include <WaveLib.inl/enumoperators.h>
 #include <WaveLib.inl/indiaccessfuncs.h>
 #include <WaveLib.inl/int24bittypes.hpp>
@@ -32,11 +34,11 @@ const WaveSpace(Audio)::NoData WaveSpace(Audio)::Silence = (void*)&NullBuffer[0]
 }
 
 #define OneType(bi,ty,BI,TY) \
-    OneLine(bi,1,ty,BI,"1",TY),\
-    OneLine(bi,2,ty,BI,"2",TY),\
-    OneLine(bi,4,ty,BI,"4",TY),\
-    OneLine(bi,6,ty,BI,"6",TY),\
-    OneLine(bi,8,ty,BI,"8",TY)
+        OneLine(bi,1,ty,BI,"1",TY),\
+        OneLine(bi,2,ty,BI,"2",TY),\
+        OneLine(bi,4,ty,BI,"4",TY),\
+        OneLine(bi,6,ty,BI,"6",TY),\
+        OneLine(bi,8,ty,BI,"8",TY)
 
 struct FrameType {
     const WaveSpace(FrameTypeCode) code;
@@ -44,18 +46,21 @@ struct FrameType {
 };
 
 BEGIN_WAVESPACE
-const static FrameType AudioFrameTypes[] = {
-    OneType(8,i,"8","i"),
+const static FrameType FrameTypeName[] = {
     OneType(8,s,"8","s"),
+    OneType(8,i,"8","i"),
     OneType(16,s,"16","s"),
-    OneType(24,i,"24","i"),
+    OneType(16,f,"16","f"),
     OneType(24,s,"24","s"),
+    OneType(24,i,"24","i"),
+    OneType(32,s,"32","s"),
     OneType(32,f,"32","f"),
     OneType(64,f,"64","f"),
+    OneType(64,i,"64","i"),
 {{FrameTypeCode(0)},{false}} };
 
 const char* NameFromTypeCode( FrameTypeCode frametypecode ) {
-    const FrameType* frametype = &AudioFrameTypes[0];
+    const FrameType* frametype = &FrameTypeName[0];
     while( frametype->code )
        if( frametype->code == frametypecode ) break;
        else ++frametype;
@@ -65,7 +70,7 @@ const char* NameFromTypeCode( FrameTypeCode frametypecode ) {
 FrameTypeCode TypeCodeFromName( const char* frametypename ) {
     FrameTypeCode code = FrameTypeCode( atoi( frametypename ) );
     if ( NameFromTypeCode( code ) ) return code;
-    const FrameType* frametype = &AudioFrameTypes[0];
+    const FrameType* frametype = &FrameTypeName[0];
     const ulong find = (*(ulong*)(frametypename + 5) & 0x00ffffffffffffffu);
     while( frametype->code )
        if( find == (*(ulong*)(frametype->name + 5) & 0x00ffffffffffffffu) ) break;
@@ -91,7 +96,7 @@ WaveSpace(PictogramFromPan)( Panorama pan ) {
 static WaveSpace(WavFileHeader) WavFileHeaderInit = WaveSpace(WavFileHeader) {
     WaveSpace(HEADER_CHUNK_TYPE)::RIFFChunk, WaveSpace(Constants)::RIFFChunkSize,
     WaveSpace(HEADER_CHUNK_TYPE)::WavFormat, WaveSpace(HEADER_CHUNK_TYPE)::FrmtChunk,
-    WaveSpace(Constants)::FormatChunkSize, { WaveSpace(WAV_PCM_TYPE_ID)::PCMs,
+    WaveSpace(Constants)::FormatChunkSize, { EMPTY_(WaveSpace(WAV_PCM_TYPE_ID)),
     2, 44100, 176400, 4, 16 }, WaveSpace(HEADER_CHUNK_TYPE)::DataChunk, EMPTY,
     { 0,0,0,0,0,0,0,0 }
 };
@@ -106,6 +111,9 @@ static WaveSpace(SndFileHeader) SndFileHeaderInit = {
 const static char PamFileHeaderInitStr[] = "P7_#RATE 44100   _TUPLTYPE 16912        _MAXVAL 32767               _DEPTH 2  _HEIGHT 1  _WIDTH 1                 _ENDHDR__";
 const static byte PamFileHeaderOffsets[] = { 3, 18, 41, 69, 79, 90, 115, 122 };
 const static byte PamFileHeaderLangths[] = { 14, 22, 27, 9, 10, 24, 6, 0 };
+const static word Float16NegInfinity = 0xfc00;
+#define Float32NegInfinity 0x0ff000000u
+
 
 void WaveSpace(initializePamFileHeader)( PamFileHeader* create, const Format* format, ChannelMode mode )
 {
@@ -151,12 +159,13 @@ WaveSpace(CreateWaveFormat)( int frq, int bit, int chn, WAV_PCM_TYPE_ID tag )
 }
 
 WaveSpace(Format)
-WaveSpace(CreateWaveFormat)( uint formatCode, int frq )
+WaveSpace(CreateWaveFormat)( uint formatCode, int sampleRate )
 {
+    uint frq = sampleRate ? sampleRate : reinterpret_cast<AudioFrameType&>( formatCode ).Rate();
     word pcm = AUDIO_SIGN_FROM_TYPECODE(formatCode)
              ? AUDIO_FLOATTYPE_TYPECODE(formatCode) ? 3 : 1 : 0;
     word blk = AUDIO_FRAMESIZE_TYPECODE(formatCode);
-    return{ WAV_PCM_TYPE_ID(pcm), AUDIO_CHANCOUNT_TYPECODE(formatCode), uint(frq), uint(frq*blk),
+    return{ WAV_PCM_TYPE_ID(pcm), AUDIO_CHANCOUNT_TYPECODE(formatCode), frq, uint(frq*blk),
             blk, AUDIO_BITS_FROM_TYPECODE(formatCode) };
 }
 
@@ -193,9 +202,10 @@ WaveSpace(getWaveheaderProtostructure)(void)
 WaveSpace(WavFileHeader*)
 WaveSpace(prepareInitializedHeader)(WaveSpace(WavFileHeader*) whdr, unsigned dataSize)
 {
-    whdr->AudioFormat.PCMFormatTag = whdr->AudioFormat.BitsPerSample >= 32
-                                   ? WAV_PCM_TYPE_ID::PCMf
-                                   : WAV_PCM_TYPE_ID::PCMs;
+    if ( enum_utils::is_not( whdr->AudioFormat.PCMFormatTag ) )
+        whdr->AudioFormat.PCMFormatTag = whdr->AudioFormat.BitsPerSample >= 32
+                                       ? WAV_PCM_TYPE_ID::PCMf
+                                       : WAV_PCM_TYPE_ID::PCMs;
 
     whdr->AudioFormat.BlockAlign = (i16)( (whdr->AudioFormat.BitsPerSample >> 3)
                                          * whdr->AudioFormat.NumChannels );
@@ -204,15 +214,17 @@ WaveSpace(prepareInitializedHeader)(WaveSpace(WavFileHeader*) whdr, unsigned dat
                                * whdr->AudioFormat.BlockAlign;
 
     if (whdr->ChunkHeader.type == HEADER_CHUNK_TYPE::FactChunk ) {
+        whdr->ChunkHeader.size = whdr->ChunkHeader.size 
+                               ? whdr->ChunkHeader.size
+                               : FactChunkSize;
         whdr->DataChunk.extended.ChunkHeader.size =
-            dataSize == EMPTY ? whdr->DataChunk.extended.ChunkHeader.size
-                              : dataSize;
+             dataSize == EMPTY ? whdr->DataChunk.extended.ChunkHeader.size
+                               : dataSize;
     } else {
         whdr->ChunkHeader.size = dataSize == EMPTY
                                ? whdr->ChunkHeader.size
-                               : unsigned( dataSize );
-    }
-    return whdr;
+                               : dataSize;
+    } return whdr;
 }
 
 WAVELIB_API WaveSpace(WavFileHeader)
@@ -233,7 +245,18 @@ WaveSpace(CreateWaveHeader)( uint frq, word bit, word chn,  WavFileHeader* hdr, 
      return *prepareInitializedHeader( hdr, cbs );
  }
 
-static WaveSpace(WavFileHeader)*
+WAVELIB_API WaveSpace(WavFileHeader)
+WaveSpace(CreateWaveHeader)( AudioFrameType type, uint size ) {
+     WavFileHeader whdr = initializeNewWaveheader( size );
+     whdr.ChunkHeader.type = HEADER_CHUNK_TYPE::DataChunk;
+     whdr.AudioFormat.NumChannels = type.Channels();
+     whdr.AudioFormat.SampleRate = type.Rate();
+     whdr.AudioFormat.BitsPerSample = type.BitDepth();
+     whdr.AudioFormat.PCMFormatTag = type.FormatTag();
+     return *prepareInitializedHeader( &whdr, size );
+ }
+
+static WaveSpace( WavFileHeader )*
 _assignWhdr( WaveSpace(WavFileHeader)* This, const WaveSpace(WavFileHeader)* That )
 {
     if( That->ChunkHeader.type == WaveSpace(HEADER_CHUNK_TYPE)::DataChunk )
@@ -242,19 +265,25 @@ _assignWhdr( WaveSpace(WavFileHeader)* This, const WaveSpace(WavFileHeader)* Tha
         return (WaveSpace(WavFileHeader*)) memcpy( This, That, WaveSpace(ExtendedHeaderSize) );
 }
 
-void
-WaveSpace(reverseSndHeader)( SndFileHeader* sndhdr )
+static WaveSpace( SndFileHeader )*
+_assignSndHdr( WaveSpace(SndFileHeader)* This, const WaveSpace(SndFileHeader)* That )
 {
-    byte* it = (byte*)sndhdr;
+    return ( WaveSpace( SndFileHeader * ) ) memcpy( This, That, That->HeaderSize );
+}
+
+void
+WaveSpace(SndFileHeader)::reverseSndHeader()
+{
+    byte* it = (byte*)&SndTag;
     const byte* end = it + ( SndFileHeaderSize + ReadHeadSize );
-    for( ; it!=end; it+=4 ) {
-         byte store = it[0];
-         it[0] = it[3];
-         it[3] = store;
-         store = it[1];
-         it[1] = it[2];
-         it[2] = store;
-    }
+    for( ; it != end; it += 4 ) {
+        byte store = it[0];
+        it[0] = it[3];
+        it[3] = store;
+        store = it[1];
+        it[1] = it[2];
+        it[2] = store;
+    } SndTag = HEADER_CHUNK_TYPE::SndFormat;
 }
 
 WaveSpace(Data)
@@ -287,6 +316,12 @@ WaveSpace(WavFileHeader)::operator= ( WaveSpace(WavFileHeader) that )
     return *_assignWhdr( this, &that );
 }
 
+WaveSpace( SndFileHeader& )
+WaveSpace( SndFileHeader )::operator=( const SndFileHeader& copy )
+{
+    return *_assignSndHdr( this, &copy );
+}
+
 
 WAVELIB_API WaveSpace(SndFileHeader)
 WaveSpace(CreateSndFileHdr)( const WaveSpace(Format&) fmt, int cbs )
@@ -311,6 +346,9 @@ WaveSpace(CreateSndFileHdr)( const WaveSpace(Format&) fmt, int cbs )
 WAVELIB_API double
 WaveSpace(ConversionFactor)(int fromBits, int toBits)
 {
+    fromBits = fromBits > 24 ? 64 : fromBits;
+    toBits = toBits > 24 ? 64 : toBits;
+
     if (fromBits == toBits)
         return 1.0;
 
@@ -319,7 +357,7 @@ WaveSpace(ConversionFactor)(int fromBits, int toBits)
         case ConversionCase( 8,16):
         case ConversionCase(16,24): return 256.0;
         case ConversionCase( 8,24): return 65536.0;
-        case ConversionCase( 8,32):
+        case ConversionCase( 8,32):  
         case ConversionCase( 8,64): return 1.0 / 127.0;
         case ConversionCase(16, 8):
         case ConversionCase(24,16): return 1.0 / 256.0;
@@ -383,9 +421,9 @@ WaveSpace(WavFileHeader)::GetFileFormat(void) const
 word
 WaveSpace(WavFileHeader)::GetHeaderSize(void) const
 {
-    return ChunkHeader.type == DataChunkID
-         ? SimpleHeaderSize
-         : ExtendedHeaderSize;
+    return ChunkHeader.type == FactChunkID
+         ? ExtendedHeaderSize
+         : SimpleHeaderSize;
 }
 uint
 WaveSpace(WavFileHeader)::GetDataSize(void) const
@@ -394,6 +432,16 @@ WaveSpace(WavFileHeader)::GetDataSize(void) const
          ? DataChunk.extended.ChunkHeader.size
          : ChunkHeader.size;
 }
+void
+WaveSpace( WavFileHeader )::SetDataSize( uint size )
+{
+    if( ChunkHeader.type == FactChunkID ) {
+        DataChunk.extended.ChunkHeader.size = size;
+    } else {
+        ChunkHeader.size = size;
+    }
+}
+
 WaveSpace(Data)
 WaveSpace(WavFileHeader)::GetAudioData(void) const
 {
@@ -403,10 +451,17 @@ WaveSpace(WavFileHeader)::GetAudioData(void) const
 }
 
 void
-WaveSpace(WavFileHeader)::GetFormat(Format* getter) const
+WaveSpace(WavFileHeader)::GetFormat( Format* getter ) const
 {
     *getter = AudioFormat;
 }
+
+void
+WaveSpace(WavFileHeader)::SetFormat( Format* getter )
+{
+    AudioFormat = *getter;
+}
+
 
 bool
 WaveSpace(WavFileHeader)::isValid(void) const {
@@ -420,7 +475,7 @@ WaveSpace(WavFileHeader)::GetChannelCount(void) const
     return AudioFormat.NumChannels;
 }
 
-const WaveSpace(AudioFrameType)
+WaveSpace(FrameTypeCode)
 WaveSpace(WavFileHeader)::GetTypeCode(void) const
 {
     return FrameTypeCode( AUDIOFRAME_CODE(
@@ -430,16 +485,23 @@ WaveSpace(WavFileHeader)::GetTypeCode(void) const
     ));
 }
 
+const WaveSpace(AudioFrameType)
+WaveSpace(WavFileHeader)::GetFormatCode(void) const
+{
+    return AudioFrameType( GetTypeCode(),
+           (word)AudioFormat.SampleRate );
+}
+
 bool
 WaveSpace(WavFileHeader)::isFloatType(void) const
 {
-    return AudioFormat.PCMFormatTag == WAV_PCM_TYPE_ID::PCMf;
+    return (AudioFormat.PCMFormatTag & WAV_PCM_TYPE_ID::PCMf);
 }
 
 bool
 WaveSpace(WavFileHeader)::isSignedType(void) const
 {
-    return !(AudioFormat.PCMFormatTag & WAV_PCM_TYPE_ID::PCMs);
+    return (AudioFormat.PCMFormatTag & WAV_PCM_TYPE_ID::PCMs);
 }
 
 word
@@ -456,6 +518,21 @@ uint
 WaveSpace(WavFileHeader)::GetSampleRate(void) const
 {
     return (uint)AudioFormat.SampleRate;
+}
+uint
+WaveSpace( WavFileHeader )::makeReadable( void )
+{
+    return GetHeaderSize();
+}
+
+WaveSpace( Data )
+WaveSpace( WavFileHeader )::makeWritable( void )
+{
+    RiffChunk.size = Constants::RIFFChunkSize;
+    if( ChunkHeader.type == HEADER_CHUNK_TYPE::FactChunk ) {
+        RiffChunk.size += DataChunk.extended.ChunkHeader.size;
+    } RiffChunk.size += (ChunkHeader.size + 8);
+    return &RiffChunk;
 }
 
 WaveSpace(HEADER_CHUNK_TYPE)
@@ -474,6 +551,12 @@ uint
 WaveSpace(SndFileHeader)::GetDataSize(void) const
 {
     return DataSize;
+}
+
+void
+WaveSpace(SndFileHeader)::SetDataSize(uint size)
+{
+    DataSize = size;
 }
 
 WaveSpace(Data)
@@ -498,9 +581,21 @@ WaveSpace(SndFileHeader)::GetFormat( Format* getter ) const
     default:        bitdepth = EMPTY_(word);
     } *getter = CreateWaveFormat( SampleRate,
            bitdepth, NumChannels );
-    getter->PCMFormatTag = ( FormatCode & (FLOAT|DOUBLE) )
-         ? WAV_PCM_TYPE_ID::PCMf
-         : WAV_PCM_TYPE_ID::PCMs;
+    getter->PCMFormatTag = ( FormatCode == FLOAT || FormatCode == DOUBLE )
+         ? WAV_PCM_TYPE_ID::PCMf : WAV_PCM_TYPE_ID::PCMs;
+}
+
+void
+WaveSpace( SndFileHeader )::SetFormat( Format * setter )
+{
+    SampleRate = setter->SampleRate;
+    switch( setter->BitsPerSample ) {
+    case 8:  FormatCode = LINEAR_8; break;
+    case 16: FormatCode = LINEAR_16; break;
+    case 24: FormatCode = LINEAR_24; break;
+    case 32: FormatCode = setter->PCMFormatTag == PCMf ? FLOAT : LINEAR_32; break;
+    case 64: FormatCode = DOUBLE; break;
+    } NumChannels = setter->NumChannels;
 }
 
 bool
@@ -508,7 +603,7 @@ WaveSpace(SndFileHeader)::isValid(void) const
 {
     Format check;
     GetFormat( &check );
-    word tag = (FormatCode & (FLOAT|DOUBLE))
+    word tag = ( FormatCode == FLOAT || FormatCode == DOUBLE )
              ? WAV_PCM_TYPE_ID::PCMf
              : WAV_PCM_TYPE_ID::PCMs;
     return SndTag == SndFormat
@@ -519,7 +614,7 @@ WaveSpace(SndFileHeader)::isValid(void) const
 bool
 WaveSpace(SndFileHeader)::isFloatType(void) const
 {
-    return FormatCode & (FLOAT|DOUBLE);
+    return ( FormatCode == FLOAT || FormatCode == DOUBLE );
 }
 
 bool
@@ -534,35 +629,40 @@ WaveSpace(SndFileHeader)::GetChannelCount(void) const
     return NumChannels;
 }
 
-const WaveSpace(AudioFrameType)
+WaveSpace(FrameTypeCode)
 WaveSpace(SndFileHeader)::GetTypeCode(void) const
 {
-    word tag = (FormatCode & (FLOAT|DOUBLE))
-             ? WAV_PCM_TYPE_ID::PCMf
-             : WAV_PCM_TYPE_ID::PCMs;
+    word tag = (FormatCode == FLOAT || FormatCode == DOUBLE)
+             ? WAV_PCM_TYPE_ID::PCMf : WAV_PCM_TYPE_ID::PCMs;
     FrameTypeCode code;
     switch( FormatCode ) {
         case MULAW_8:
         case ALAW_8:
         case LINEAR_8:
-            code = FrameTypeCode(AUDIOFRAME_CODE(8,NumChannels,tag));
+            code = FrameTypeCode( AUDIOFRAME_CODE( 8, NumChannels, tag ) ); break;
         case LINEAR_16:
-            code = FrameTypeCode(AUDIOFRAME_CODE(16,NumChannels,tag));
+            code = FrameTypeCode( AUDIOFRAME_CODE( 16, NumChannels, tag ) ); break;
         case LINEAR_24:
-            code = FrameTypeCode(AUDIOFRAME_CODE(24,NumChannels,tag));
+            code = FrameTypeCode( AUDIOFRAME_CODE( 24, NumChannels, tag ) ); break;
         case LINEAR_32:
         case FLOAT:
-            code = FrameTypeCode(AUDIOFRAME_CODE(32,NumChannels,tag));
+            code = FrameTypeCode( AUDIOFRAME_CODE( 32, NumChannels, tag ) ); break;
         case DOUBLE:
-            code = FrameTypeCode(AUDIOFRAME_CODE(64,NumChannels,tag));
-        default: code = EMPTY_(FrameTypeCode);
+            code = FrameTypeCode( AUDIOFRAME_CODE( 64, NumChannels, tag ) ); break;
+        default: code = EMPTY_( FrameTypeCode ); break;
     } return code;
+}
+
+const WaveSpace(AudioFrameType)
+WaveSpace( SndFileHeader )::GetFormatCode( void ) const
+{
+    return AudioFrameType( GetTypeCode(), (word)SampleRate );
 }
 
 word
 WaveSpace(SndFileHeader)::GetBitDepth(void) const
 {
-    return GetTypeCode().BitDepth();
+    return ((AudioFrameType)GetTypeCode()).BitDepth();
 }
 
 word
@@ -738,7 +838,12 @@ WaveSpace(PamFileHeader)::operator=( const PamFileHeader& copy )
     bool state = !copy.isStringBased();
     PamFileHeader* nonconst = const_cast<PamFileHeader*>( &copy );
     const char* src = nonconst->makeStringBased();
-    STR_STRCPY( strlen(src), &hdr.dat[0], src );
+    int length = strlen( src )+1;
+    char* dst = &hdr.dat[0];
+    for( int i = 0; i < length; ++i ) {
+        dst[i] = src[i];
+    } dst[length] = '\0';
+    //STR_STRCPY( length, &hdr.dat[0], src );
     if ( state ) nonconst->makeValueBased();
     return *this;
 }
@@ -748,7 +853,7 @@ WaveSpace(PamFileHeader)::GetHeaderSize(void) const
 {
     bool state = !isStringBased();
     PamFileHeader* nonconst = const_cast<PamFileHeader*>( this );
-    word size = (word)strlen( nonconst->makeStringBased() );
+    word size = (word)(strlen( nonconst->makeStringBased() )+1);
     if ( state ) nonconst->makeValueBased();
     return size;
 }
@@ -768,13 +873,23 @@ WaveSpace(PamFileHeader)::GetAudioData(void) const
 void
 WaveSpace(PamFileHeader)::GetFormat( Format* getter ) const
 {
-    const AudioFrameType type = GetTypeCode();
+    const AudioFrameType type = GetFormatCode();
+    getter->PCMFormatTag  = type.FormatTag();
     getter->BitsPerSample = type.BitDepth();
-    getter->SampleRate    = GetSampleRate();
+    getter->SampleRate    = type.Rate();
     getter->NumChannels   = type.Channels();
     getter->BlockAlign    = type.ByteSize();
     getter->ByteRate      = getter->SampleRate
                           * getter->BlockAlign;
+}
+
+void
+WaveSpace(PamFileHeader)::SetFormat( Format* setter )
+{
+    SampleRate = setter->SampleRate;
+    BitDepth = setter->BitsPerSample;
+    ChannelCount = setter->NumChannels;
+    SetPcmFlags( setter->PCMFormatTag );
 }
 
 bool
@@ -817,23 +932,31 @@ WaveSpace(PamFileHeader)::GetChannelCount(void) const
     return find;
 }
 
-const WaveSpace(AudioFrameType)
+WaveSpace(FrameTypeCode)
 WaveSpace(PamFileHeader)::GetTypeCode(void) const
 {
     const char* str = &hdr.dat[TUPLTYPE & 0x0000ffff] + 9;
     return TypeCodeFromName( str );
 }
 
+const WaveSpace(AudioFrameType)
+WaveSpace(PamFileHeader)::GetFormatCode(void) const
+{
+    return AudioFrameType( GetTypeCode(),
+                     (word)GetSampleRate() );
+}
+
+
 bool
 WaveSpace(PamFileHeader)::isFloatType(void) const
 {
-    return GetTypeCode().FormatTag() == 3;
+    return ((const AudioFrameType)GetTypeCode()).FormatTag() == 3;
 }
 
 bool
 WaveSpace(PamFileHeader)::isSignedType(void) const
 {
-    return GetTypeCode().IsSigned();
+    return ((const AudioFrameType)GetTypeCode()).IsSigned();
 }
 
 uint
@@ -941,12 +1064,16 @@ WaveSpace(PamFileHeader)::SetBitDepth( word set )
         } else {
             Value[DEPTH] = 2;
         }
-    } else { max = set == 16
-        ? std::numeric_limits<s16>::max()
+    } else {
+        bool isFloat = typ.FormatTag() == WAV_PCM_TYPE_ID::PCMf;
+             max = set == 16
+             ? isFloat ? Float16NegInfinity
+        : std::numeric_limits<s16>::max()
                  : set == 24
         ? std::numeric_limits<s24>::max()
                  : set == 32
-        ? std::numeric_limits<i32>::max()
+             ? isFloat ? Float32NegInfinity
+        : std::numeric_limits<i32>::max()
         : std::numeric_limits<s8>::max();
         if ( typ.BitDepth() == 64 ) {
             uint d = (Value[DEPTH] / 2);
@@ -959,7 +1086,7 @@ WaveSpace(PamFileHeader)::SetBitDepth( word set )
 void
 WaveSpace(PamFileHeader)::updateTypeCode( void )
 {
-    AudioFrameType typ( BitDepth, ChannelCount );
+    const AudioFrameType typ( (int)BitDepth, (int)ChannelCount );
     char* str = &hdr.dat[(TUPLTYPE & 0x0000ffff) + 8];
     while (*++str) *str = ' ';
     str = &hdr.dat[(TUPLTYPE & 0x0000ffff) + 9];
@@ -983,16 +1110,35 @@ void
 WaveSpace(PamFileHeader)::SetPcmFlags( WAV_PCM_TYPE_ID pcmflags )
 {
     uint isbits = BitDepth;
-    if (!(pcmflags & 1)) {
-        ulong max = isbits == 8
+    ulong max;
+    if( pcmflags == WAV_PCM_TYPE_ID::PCMf ) {
+        max = isbits == 8
             ? i8_MAX
             : isbits == 16
-            ? i16_MAX
+            ? Float16NegInfinity
+            : isbits == 32
+            ? Float32NegInfinity
+            : i32_MAX;
+    } else 
+    if ( pcmflags == WAV_PCM_TYPE_ID::PCMs ) {
+        max = isbits == 8
+            ? s8_MAX
+            : isbits == 16
+            ? s16_MAX
+            : isbits == 24
+            ? s24_MAX
+            : isbits == 32
+            ? s32_MAX : i32_MAX;
+    } else {
+        max = isbits == 8
+            ? i8_MAX
+            : isbits == 16
+            ? i16_MAX 
             : isbits == 24
             ? i24_MAX : i32_MAX;
-        Value[MAXVAL] = max;
-        updateTypeCode();
-    } else BitDepth = isbits;
+    } Value[MAXVAL] = max;
+    updateTypeCode();
+    BitDepth = isbits;
 }
 
 void 

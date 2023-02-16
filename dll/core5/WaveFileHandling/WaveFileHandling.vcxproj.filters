@@ -111,6 +111,9 @@
     <ClInclude Include="..\..\..\etc\namespacer.h">
       <Filter>native</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\dotnet\WowbaggerStream.hpp">
+      <Filter>Quelldateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -150,6 +153,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dotnet\WavWriter.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dotnet\WowbaggerStream.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

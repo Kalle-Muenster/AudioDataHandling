@@ -29,7 +29,8 @@ BEGIN_WAVESPACE
         Audio::Data   attachedBuffer;
         ReadOrWriteHead* writehead;
         void          prepareWavHdr( uint cbSize = 0 );
-        bool          Open( uint cbSize, FILE* file, FileFormat ext = WAV);
+        bool          Open( uint cbSize, FILE* file, FileFormat ext = WAV );
+
     public:
         WaveFileWriter(void);
 
@@ -48,7 +49,8 @@ BEGIN_WAVESPACE
             unsigned      frequency,
             word          bitDepth,
             word          channels,
-            unsigned      dataSize = 0,
+            WAV_PCM_TYPE_ID pcmtag = WAV_PCM_TYPE_ID::PCMs,
+            unsigned      dataSize = 0u,
             Audio::Data   dataBuffer = Audio::Silence,
             StreamingMode streamMode = Store
         );
@@ -72,12 +74,12 @@ BEGIN_WAVESPACE
 
         bool          Open( const char* fileName, FileFormat ext, uint framecount = 0 );
         bool          NewFile( const char* fileName, const Format& fmt, FileFormat ext = Def );
-        bool          NewFile( const char* fileName, const AudioFrameType type, int rate, FileFormat ext = Def );
+        bool          NewFile( const char* fileName, const AudioFrameType type, FileFormat ext = Def );
         bool          NewFile( const char* nam, unsigned frq, unsigned bit, unsigned chn, FileFormat ext = Def );
         uint          Save( const Audio& buffer, const char* filename, FileFormat fileFormat = Def );
         uint          Flush(void);
         void          SetFormat( const Format& fmt );
-        void          SetFormat( unsigned frq, unsigned bit, unsigned chn );
+        void          SetFormat( unsigned frq, unsigned bit, unsigned chn, WAV_PCM_TYPE_ID tag = EMPTY_(WAV_PCM_TYPE_ID) );
         void          ReStart( bool rewriteHeader = false );
 
         uint          Write( void );
@@ -87,6 +89,7 @@ BEGIN_WAVESPACE
 
         uint          WriteSample(s8);
         uint          WriteSample(s16);
+        uint          WriteSample(f16);
         uint          WriteSample(s24);
         uint          WriteSample(i32);
         uint          WriteSample(f32);
@@ -111,10 +114,10 @@ BEGIN_WAVESPACE
                                     bool forceClose = true );
 
         template< typename T >
-        unsigned      MixFrame(T sample) {
+        unsigned      MixFrame( T sample ) {
             if (!f)return 0;
-            const uint sizeofT = whdr.AudioFormat.BitsPerSample / 8;
-            for (int i = 0; i < whdr.AudioFormat.NumChannels; i++) {
+            const uint sizeofT = uint(fmt.BitsPerSample / 8);
+            for (int i = 0; i < fmt.NumChannels; i++) {
                 T smpl = fx ? fx->doChannel<T>(i,sample) : sample;
                 write += WRITE_DATA( &smpl, 1, sizeofT, f );
             } return write >= fixedSize ? Close() : write;
@@ -125,10 +128,10 @@ BEGIN_WAVESPACE
             if( !f ) return 0;
             if( !mixer.isEffective() )
                 return MixFrame<T>( sample );
-            const uint sizeofT = whdr.AudioFormat.BitsPerSample / 8;
-            for( int i = 0; i < whdr.AudioFormat.NumChannels; i++) {
+            const uint sizeofT = uint(fmt.BitsPerSample / 8);
+            for( int i = 0; i < fmt.NumChannels; i++) {
                 T smpl = channelMixer<T>( sample, i, mixer,
-                            whdr.AudioFormat.NumChannels>2 );
+                            fmt.NumChannels>2 );
                 if (fx) smpl = fx->doChannel<T>( i, smpl );
                 write += WRITE_DATA( &smpl, 1, sizeofT, f);
             } return write >= fixedSize ? Close() : write;

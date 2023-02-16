@@ -126,53 +126,53 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../../Float16Type/Float16Type/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticDebug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../../Float16Type/Float16Type/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../../Float16Type/Float16Type/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticDebug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../../Float16Type/Float16Type/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../../Float16Type/Float16Type/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticRelease|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../../Float16Type/Float16Type/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../../Float16Type/Float16Type/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='StaticRelease|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
+    <IncludePath>./;../;../../../inc;../../../../Int24Types/src;../../../../Float16Type/Float16Type/src;../../../etc;../../../src;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\..\bin\native\$(PlatformToolset)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -180,7 +180,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";WAVELIB_VERSION_NUMBER=$(Version)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <LanguageStandard>stdcpp14</LanguageStandard>
@@ -207,7 +207,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";_BUILD_STATIC_LIB;INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";_BUILD_STATIC_LIB;WAVELIB_VERSION_NUMBER=$(Version)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <LanguageStandard>stdcpp14</LanguageStandard>
@@ -236,7 +236,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";WAVELIB_VERSION_NUMBER=$(Version)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -264,7 +264,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";_BUILD_STATIC_LIB;INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";_BUILD_STATIC_LIB;WAVELIB_VERSION_NUMBER=$(Version)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -297,7 +297,7 @@
       </FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";WAVELIB_VERSION_NUMBER=$(Version);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -333,7 +333,7 @@
       </FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";_BUILD_STATIC_LIB;INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";_BUILD_STATIC_LIB;WAVELIB_VERSION_NUMBER=$(Version);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -370,7 +370,7 @@
       </FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";WAVELIB_VERSION_NUMBER=$(Version);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
@@ -408,7 +408,7 @@
       </FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";_BUILD_STATIC_LIB;INT24_TYPETRAIT_SUPPORT=1;WAVELIB_VERSION_NUMBER=$(Version);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;WAVELIB_SETTINGS_HEADER="$(SolutionDir)buildsettings.h";_BUILD_STATIC_LIB;WAVELIB_VERSION_NUMBER=$(Version);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
@@ -452,6 +452,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Int24Types\src\int24bittypes.hpp" />
     <ClInclude Include="..\..\..\etc\enumoperators.h" />
+    <ClInclude Include="..\..\..\etc\numbersendian.h" />
     <ClInclude Include="..\..\..\inc\importsettings.h" />
     <ClInclude Include="..\..\..\inc\settings.h" />
     <ClInclude Include="..\..\..\inc\WaveFileIO.h" />

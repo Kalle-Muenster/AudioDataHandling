@@ -10,11 +10,7 @@
 
 #include "WaveSpacer.h"
 #include "WaveMacros.hpp"
-//#include <enumoperators.h>
-//#include <indiaccessfuncs.h>
-
 #include "WaveFormat.hpp"
-//#include "AudioChannel.hpp"
 #include "WaveAudio.hpp"
 #include "AudioFrame.hpp"
 

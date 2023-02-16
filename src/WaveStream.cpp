@@ -11,6 +11,8 @@
 #include <limits.h>
 #include <memory.h>
 
+#include <WaveLib.inl/half.hpp>
+#include <WaveLib.inl/numbersendian.h>
 #include <WaveLib.inl/enumoperators.h>
 #include <WaveLib.inl/indiaccessfuncs.h>
 #include <WaveLib.inl/Int24bitTypes.hpp>
@@ -30,7 +32,7 @@ WaveSpace(AbstractWaveFileStream)::validCheck(const AbstractWaveFileStream* obj)
 {
     bool checkVal = false;
     if (obj && obj != nullptr) {
-        try { checkVal = (obj->whdr.isValid() && obj->f);
+        try { checkVal = (obj->hdr.isValid() && obj->f);
         } catch (...) { checkVal = false; }
     } return checkVal;
 }
@@ -62,19 +64,19 @@ WaveSpace(AbstractWaveFileStream)::GetFileFormat(void) const
 WaveSpace(Format*)
 WaveSpace(AbstractWaveFileStream)::GetFormat(void) const
 {
-    return const_cast<Format*>(&whdr.AudioFormat);
+    return const_cast<Format*>(&fmt);
 }
 
-WaveSpace(WavFileHeader*)
+WaveSpace(AbstractAudioFileHeader*)
 WaveSpace(AbstractWaveFileStream)::GetHeader(void)
 {
-    return &whdr;
+    return &hdr;
 }
 
 word
 WaveSpace(AbstractWaveFileStream)::GetTypeCode(void) const
 {
-    return whdr.GetTypeCode().Code();
+    return hdr.GetTypeCode();
 }
 
 WaveSpace(AbstractWaveFileStream)::FileFormat
@@ -88,10 +90,17 @@ WaveSpace(AbstractWaveFileStream)::copyFileNameAndCheckExtension( char* dstFnam,
     char ar[4] = { extpos[0], extpos[1], extpos[2], extpos[3] };
     uint Extension = *(uint*)&ar[0];
 
-    if ( Extension == FOURCC('.', 'w', 'a', 'v') && pcmFmt != NULL ) {
-        if (( pcmFmt->BitsPerSample == 8
-           && pcmFmt->PCMFormatTag == PCMs) ) {
-            fileType = SND;
+    if ( pcmFmt != NULL ) {
+        if( Extension != FOURCC( '.', 'p', 'a', 'm' ) ) {
+            if( pcmFmt->BitsPerSample == 16
+             && pcmFmt->PCMFormatTag == PCMf ) {
+                fileType = PAM;
+            } else if( Extension == FOURCC( '.', 'w', 'a', 'v' ) ) {
+                if( ( pcmFmt->BitsPerSample == 8
+                      && pcmFmt->PCMFormatTag == PCMs ) ) {
+                    fileType = SND;
+                }
+            }
         }
     }
     if ( fileType != Def ) {
@@ -113,12 +122,16 @@ WaveSpace(AbstractWaveFileStream)::copyFileNameAndCheckExtension( char* dstFnam,
                 fileFormat = WAV; }
         } else fileFormat = SND;
     } else if ( Extension == FOURCC('.','p','a','m')
-             || Extension == FOURCC('.','p','n','m') ) {
+             || Extension == FOURCC('.','p','n','m')
+             || fileType == PAM ) {
         fileFormat = PAM;
-        if ( pcmFmt ) if ( pcmFmt->BitsPerSample == 8 ) {
-            while (*--dst != '.');
-            *(uint*)dst = FOURCC('.','a','u','\0');
-            fileFormat = SND; }
+        if ( pcmFmt ) {
+            if ( pcmFmt->BitsPerSample == 8 ) {
+                while (*--dst != '.');
+                *(uint*)dst = FOURCC('.','a','u','\0');
+                fileFormat = SND;
+            } 
+        }
     } else fileFormat = WAV;
     return fileFormat;
 }

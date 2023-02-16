@@ -44,8 +44,10 @@ namespace WaveFileHandlingTests
                     if ( bitnes == 64 ) {
                         break;
                     } else if( bitnes == 24 ) {
-                        pcmtag = PcmTag.PCMf;
-                        bitnes += 8;
+                        if( pcmtag == PcmTag.PCMs ) {
+                            pcmtag = PcmTag.PCMf;
+                            bitnes -= 8;
+                        } else bitnes += 8;
                     } else if ( bitnes == 32 ) {
                         bitnes = 64;
                     } else
